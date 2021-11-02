@@ -362,7 +362,7 @@ class _SignUpState extends State<SignUp> {
       setState(() {
         //circus = false;
         validate = false;
-        errort = 'email cannot be empty';
+        errort = 'name cannot be empty';
       });
     }
     var response = await networkhandle.get('/user/checkemail/$email');

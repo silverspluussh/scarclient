@@ -24,6 +24,7 @@ class _CompleteProfileState extends State<CompleteProfile> {
   final _formKey = GlobalKey<FormState>();
   final _bloodTypes = ["A", "AB", "B", "O"];
 
+  final TextEditingController _username = TextEditingController();
   final TextEditingController _fisrtnameController = TextEditingController();
   final TextEditingController _lastnameController = TextEditingController();
   final TextEditingController _nationalityController = TextEditingController();
@@ -68,6 +69,13 @@ class _CompleteProfileState extends State<CompleteProfile> {
                 ),
               ),
               const SizedBox(height: 20),
+              CustomTextField(
+                controller: _username,
+                labelText: "Firstname",
+                hintText: "Firstname",
+                keyboardType: TextInputType.text,
+                textInputAction: TextInputAction.next,
+              ),
               CustomTextField(
                 controller: _fisrtnameController,
                 labelText: "Firstname",

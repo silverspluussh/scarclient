@@ -16,7 +16,7 @@ class SignIn extends StatefulWidget {
 
 class _SignInState extends State<SignIn> {
   var password = '';
-  var email = '';
+  var username = '';
   var token = '';
   String? errort;
   bool validate = false;
@@ -81,19 +81,16 @@ class _SignInState extends State<SignIn> {
                     if (val!.isEmpty) {
                       return "Cannot be blank";
                     }
-                    if (!val.contains('@')) {
-                      return "email is invalid";
-                    }
                   },
                   decoration: InputDecoration(
                     errorText: validate ? null : errort,
                     border: const OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.black, width: 0.0),
                     ),
-                    hintText: "Email",
+                    hintText: "Username",
                   ),
                   onChanged: (val) {
-                    email = val;
+                    username = val;
                   },
                 ),
               ),
@@ -172,7 +169,7 @@ class _SignInState extends State<SignIn> {
                     });
                     if (_globalkey.currentState!.validate() && validate) {
                       Map<String, String> data = {
-                        'email': email,
+                        'name': username,
                         'password': password,
                       };
                       var response =
