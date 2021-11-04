@@ -4,6 +4,7 @@ import 'package:scarclient/screens/dashboard/profilepic.dart';
 import 'dart:async';
 import 'package:scarclient/screens/dashboard/welcomeprofile.dart';
 import 'package:scarclient/screens/reminders/mainremind.dart';
+import 'package:scarclient/services/authen.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key}) : super(key: key);
@@ -16,6 +17,8 @@ class _HomeState extends State<Dashboard> {
   final PageController _slideShowPageController = PageController();
 
   int _index = 0;
+  var user = '';
+  NetworkHanler networkhand = NetworkHanler();
 
   // ignore: unused_element
   void _changeSlideStack() {
@@ -53,6 +56,12 @@ class _HomeState extends State<Dashboard> {
     });
   }
 
+  void getuser() async {
+    var response = await networkhand.get('/name');
+    Map<String, dynamic> outside = response;
+    user = outside['name'];
+  }
+
   @override
   void initState() {
     super.initState();
@@ -86,7 +95,7 @@ class _HomeState extends State<Dashboard> {
           child: Column(
             children: [
               const SizedBox(height: 20),
-              WelcomeProfilePic(width: _width),
+              WelcomeProfilePic(user: user),
               SlideImagesCard(
                 width: _width,
                 index: _index,

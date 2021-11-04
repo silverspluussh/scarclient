@@ -175,7 +175,7 @@ class _SignInState extends State<SignIn> {
                       var response =
                           await networkhand.post('/user/login', data);
                       if (response.statusCode == 200 ||
-                          response.status == 201) {
+                          response.statusCode == 201) {
                         Map<String, dynamic> outside =
                             json.decode(response.body);
                         // print(outside['token']);
