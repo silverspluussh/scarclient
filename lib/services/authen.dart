@@ -1,32 +1,43 @@
 import 'dart:convert';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
 class NetworkHanler {
-  String burl = "gdfd";
+  String burl = "https://murmuring-thicket-37937.herokuapp.com";
 
-  Future<dynamic> get(var _url) async {
-    _url = formater(_url);
-    var response = await http.get(_url);
+  FlutterSecureStorage storage = const FlutterSecureStorage();
 
+  Future<dynamic> get(var url) async {
+    url = formatter(url);
+    url = Uri.parse(url);
+    var token = await storage.read(key: "token");
+
+    var response = await http.get(
+      url,
+      headers: {"Authorization": "Bearer $token"},
+    );
     if (response.statusCode == 200 || response.statusCode == 201) {
       return json.decode(response.body);
     }
   }
 
-  Future<dynamic> post(var _url, Map<String, String> body) async {
-    _url = formater(_url);
+  Future<http.Response> post(var url, Map<String, String> body) async {
+    FlutterSecureStorage storage = const FlutterSecureStorage();
+    var token = await storage.read(key: "token");
+    url = formatter(url);
+    url = Uri.parse(url);
     var response = await http.post(
-      _url,
-      headers: {'Content-type': "application/json"},
+      url,
+      headers: {
+        'Content-type': "application/json",
+        "Authorization": "Bearer $token"
+      },
       body: json.encode(body),
     );
-
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      return response;
-    }
+    return response;
   }
 
-  String formater(String url) {
+  String formatter(String url) {
     return burl + url;
   }
 }

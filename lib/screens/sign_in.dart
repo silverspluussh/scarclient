@@ -19,7 +19,6 @@ class _SignInState extends State<SignIn> {
   var username = '';
   var token = '';
   String? errort;
-  bool validate = false;
   bool circus = false;
 
   bool _showPassword = false;
@@ -82,9 +81,8 @@ class _SignInState extends State<SignIn> {
                       return "Cannot be blank";
                     }
                   },
-                  decoration: InputDecoration(
-                    errorText: validate ? null : errort,
-                    border: const OutlineInputBorder(
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.black, width: 0.0),
                     ),
                     hintText: "Username",
@@ -117,7 +115,6 @@ class _SignInState extends State<SignIn> {
                     password = val;
                   },
                   decoration: InputDecoration(
-                    errorText: validate ? null : errort,
                     suffixIcon: IconButton(
                       icon: Icon(
                         _showPassword ? Icons.visibility : Icons.visibility_off,
@@ -157,8 +154,7 @@ class _SignInState extends State<SignIn> {
               Container(
                 height: 55,
                 margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                child: ElevatedButton.icon(
-                  icon: const Icon(Icons.login_sharp),
+                child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20)),
@@ -167,7 +163,7 @@ class _SignInState extends State<SignIn> {
                     setState(() {
                       circus = true;
                     });
-                    if (_globalkey.currentState!.validate() && validate) {
+                    if (_globalkey.currentState!.validate()) {
                       Map<String, String> data = {
                         'name': username,
                         'password': password,
@@ -178,22 +174,22 @@ class _SignInState extends State<SignIn> {
                           response.statusCode == 201) {
                         Map<String, dynamic> outside =
                             json.decode(response.body);
-                        // print(outside['token']);
-                        await storage.write(
-                            key: 'token', value: outside['token']);
+                        // ignore: avoid_print
+                        print(outside['token']);
+                        await storage
+                            .write(key: 'token', value: outside["token"])
+                            .then(await Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const Home()),
+                                (route) => false));
+
                         setState(() {
-                          validate = true;
                           circus = false;
                         });
-                        Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const Home()),
-                            (route) => false);
                       } else {
                         String output = json.decode(response.body);
                         setState(() {
-                          validate = false;
                           errort = output;
                         });
                       }
@@ -202,7 +198,7 @@ class _SignInState extends State<SignIn> {
                       circus = false;
                     });
                   },
-                  label: circus
+                  child: circus
                       ? const CircularProgressIndicator(strokeWidth: 3)
                       : Text("Sign In",
                           style: GoogleFonts.nunito(

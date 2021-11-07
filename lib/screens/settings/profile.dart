@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:scarclient/services/authen.dart';
 import '../navigation_index.dart';
 
 class CompleteProfile extends StatefulWidget {
@@ -23,18 +24,24 @@ class _CompleteProfileState extends State<CompleteProfile> {
   final _formKey = GlobalKey<FormState>();
   final _bloodTypes = ["A", "AB", "B", "O"];
 
-  final TextEditingController _username = TextEditingController();
-  final TextEditingController _fisrtnameController = TextEditingController();
-  final TextEditingController _lastnameController = TextEditingController();
-  final TextEditingController _nationalityController = TextEditingController();
-  final TextEditingController _phoneController = TextEditingController();
-  final TextEditingController _birthDateController =
-      TextEditingController(text: "");
+  NetworkHanler handler = NetworkHanler();
+  final TextEditingController _fisrtname = TextEditingController();
+  final TextEditingController _surname = TextEditingController();
+  final TextEditingController _nationalityx = TextEditingController();
+  final TextEditingController _contact = TextEditingController();
+  final TextEditingController _dob = TextEditingController(text: "");
+
+  Map<String, dynamic> outside = {};
 
   @override
   void initState() {
-    _nationalityController.text = _nationality;
+    _nationalityx.text = _nationality;
     super.initState();
+  }
+
+  void getprofileinfo() async {
+    var response = await handler.get('/profile');
+    outside = response;
   }
 
   @override
@@ -69,22 +76,15 @@ class _CompleteProfileState extends State<CompleteProfile> {
               ),
               const SizedBox(height: 20),
               CustomTextField(
-                controller: _username,
+                controller: _fisrtname,
                 labelText: "Firstname",
                 hintText: "Firstname",
                 keyboardType: TextInputType.text,
                 textInputAction: TextInputAction.next,
               ),
               CustomTextField(
-                controller: _fisrtnameController,
-                labelText: "Firstname",
-                hintText: "Firstname",
-                keyboardType: TextInputType.text,
-                textInputAction: TextInputAction.next,
-              ),
-              CustomTextField(
-                labelText: "Lastname",
-                controller: _lastnameController,
+                labelText: "Surname",
+                controller: _surname,
                 hintText: "Lastname",
                 keyboardType: TextInputType.text,
                 textInputAction: TextInputAction.next,
@@ -119,7 +119,7 @@ class _CompleteProfileState extends State<CompleteProfile> {
                     flex: 6,
                     child: CustomTextField(
                       labelText: "Phone",
-                      controller: _phoneController,
+                      controller: _contact,
                       hintText: "Phone",
                       keyboardType: TextInputType.phone,
                       textInputAction: TextInputAction.next,
@@ -129,7 +129,7 @@ class _CompleteProfileState extends State<CompleteProfile> {
               ),
               CustomTextField(
                 labelText: "Date of Birth",
-                controller: _birthDateController,
+                controller: _dob,
                 onTap: () {
                   showDatePicker(
                           context: context,
@@ -137,9 +137,8 @@ class _CompleteProfileState extends State<CompleteProfile> {
                           firstDate: DateTime(1990),
                           lastDate: DateTime.now())
                       .then((date) {
-                    _birthDateController.text =
-                        DateFormat(DateFormat.YEAR_MONTH_WEEKDAY_DAY)
-                            .format(date!);
+                    _dob.text = DateFormat(DateFormat.YEAR_MONTH_WEEKDAY_DAY)
+                        .format(date!);
                     setState(() {
                       birthDate = date;
                     });
@@ -155,13 +154,13 @@ class _CompleteProfileState extends State<CompleteProfile> {
               ),
               CustomTextField(
                 labelText: "Country of origin",
-                controller: _nationalityController,
+                controller: _nationalityx,
                 onTap: () {
                   showCountryPicker(
                       context: context,
                       onSelect: (country) {
                         setState(() {
-                          _nationalityController.text = country.name;
+                          _nationalityx.text = country.name;
                         });
                       });
                 },
@@ -222,7 +221,16 @@ class _CompleteProfileState extends State<CompleteProfile> {
                               borderRadius: BorderRadius.circular(20)),
                           primary: Colors.red[300],
                         ),
-                        onPressed: () {},
+                        onPressed: () async {
+                          Map<String, String> data = {
+                            "firstname": _fisrtname.text,
+                            "surname": _surname.text,
+                            "nationality": _nationalityx.text,
+                            "contact": _contact.text,
+                            "DOB": _dob.text,
+                          };
+                          await handler.post('/profile', data);
+                        },
                         label: Text("Update Profile",
                             style: GoogleFonts.nunito(
                                 color: Colors.white,

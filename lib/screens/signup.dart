@@ -106,10 +106,7 @@ class _SignUpState extends State<SignUp> {
                     color: Colors.white),
                 child: TextFormField(
                   validator: (val) {
-                    if (val!.isEmpty) {
-                      return 'field cannot be empty';
-                    }
-                    if (!val.contains('@')) {
+                    if (!val!.contains('@')) {
                       return "email is invalid";
                     }
                     return null;
@@ -138,13 +135,9 @@ class _SignUpState extends State<SignUp> {
                     color: Colors.white),
                 child: TextFormField(
                   validator: (val) {
-                    if (val!.isEmpty) {
-                      return "field cannot be empty";
-                    }
-                    if (val.length < 8) {
+                    if (val!.length < 8) {
                       return "password too short(> 8)";
                     }
-                    return null;
                   },
                   onChanged: (val) {
                     password = val;
@@ -182,9 +175,6 @@ class _SignUpState extends State<SignUp> {
                 ),
                 child: TextFormField(
                   validator: (val) {
-                    if (val!.isEmpty) {
-                      return "field cannot be empty";
-                    }
                     if (val != password) {
                       return "passwords do not match";
                     }
@@ -257,50 +247,48 @@ class _SignUpState extends State<SignUp> {
               const SizedBox(
                 height: 15,
               ),
-              circus
-                  ? const CircularProgressIndicator(strokeWidth: 2)
-                  : Container(
-                      height: 50,
-                      margin: const EdgeInsets.symmetric(vertical: 5),
-                      child: ElevatedButton.icon(
-                        icon: const Icon(Icons.login_sharp),
-                        style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20)),
-                          primary: const Color(0xFF684EAF),
-                        ),
-                        onPressed: () async {
-                          setState(() {
-                            circus = true;
-                          });
-                          await verifyEmail();
-                          if (_globalkey.currentState!.validate() && validate) {
-                            Map<String, String> data = {
-                              "name": username,
-                              "email": email,
-                              "password": password,
-                            };
-                            await networkhandle.post('/user/register', data);
-
-                            Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const Home()),
-                                (route) => false);
-                          }
-                          setState(() {
-                            circus = false;
-                          });
-                        },
-                        label: Text(
+              Container(
+                height: 50,
+                margin: const EdgeInsets.symmetric(vertical: 5),
+                child: ElevatedButton.icon(
+                  icon: const Icon(Icons.login_sharp),
+                  label: circus
+                      ? const CircularProgressIndicator(strokeWidth: 2)
+                      : Text(
                           "Sign Up",
                           style: GoogleFonts.nunito(
                               color: Colors.white,
                               fontSize: 25,
                               fontWeight: FontWeight.bold),
                         ),
-                      ),
-                    ),
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20)),
+                    primary: const Color(0xFF684EAF),
+                  ),
+                  onPressed: () async {
+                    setState(() {
+                      circus = true;
+                    });
+                    await verifyEmail();
+                    if (_globalkey.currentState!.validate() && validate) {
+                      Map<String, String> data = {
+                        "name": username,
+                        "email": email,
+                        "password": password,
+                      };
+                      await networkhandle.post('/user/register', data);
+                      Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(builder: (context) => const Home()),
+                          (route) => false);
+                    }
+                    setState(() {
+                      circus = false;
+                    });
+                  },
+                ),
+              ),
               const SizedBox(
                 height: 10,
               ),
@@ -360,7 +348,6 @@ class _SignUpState extends State<SignUp> {
   verifyEmail() async {
     if (username.isEmpty) {
       setState(() {
-        //circus = false;
         validate = false;
         errort = 'name cannot be empty';
       });
@@ -368,13 +355,11 @@ class _SignUpState extends State<SignUp> {
     var response = await networkhandle.get('/user/checkemail/$email');
     if (response['status']) {
       setState(() {
-        //circus = false;
         validate = false;
         errort = 'email is already used';
       });
     } else {
       setState(() {
-        //circus = true
         validate = true;
       });
     }
