@@ -1,9 +1,13 @@
 // ignore_for_file: prefer_typing_uninitialized_variables
 
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:country_picker/country_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:scarclient/services/authen.dart';
@@ -25,17 +29,19 @@ class _CompleteProfileState extends State<CompleteProfile> {
   final _bloodTypes = ["A", "AB", "B", "O"];
 
   NetworkHanler handler = NetworkHanler();
-  final TextEditingController _fisrtname = TextEditingController();
+  final TextEditingController _firstname = TextEditingController();
   final TextEditingController _surname = TextEditingController();
   final TextEditingController _nationalityx = TextEditingController();
   final TextEditingController _contact = TextEditingController();
   final TextEditingController _dob = TextEditingController(text: "");
+  bool validate = false;
 
   Map<String, dynamic> outside = {};
 
   @override
   void initState() {
     _nationalityx.text = _nationality;
+    verifyProfile();
     super.initState();
   }
 
@@ -49,199 +55,231 @@ class _CompleteProfileState extends State<CompleteProfile> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
-      body: Container(
-        padding: const EdgeInsets.all(10),
-        width: double.infinity,
-        height: double.infinity,
-        margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-        child: Form(
-          key: _formKey,
-          child: ListView(
-            children: [
-              Align(
-                alignment: Alignment.topLeft,
-                child: IconButton(
-                  onPressed: () async {
-                    await Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (_) => const Home()),
-                    );
-                  },
-                  icon: const Icon(
-                    Icons.arrow_back_ios_new,
-                    size: 30,
-                    color: Colors.redAccent,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              CustomTextField(
-                controller: _fisrtname,
-                labelText: "Firstname",
-                hintText: "Firstname",
-                keyboardType: TextInputType.text,
-                textInputAction: TextInputAction.next,
-              ),
-              CustomTextField(
-                labelText: "Surname",
-                controller: _surname,
-                hintText: "Lastname",
-                keyboardType: TextInputType.text,
-                textInputAction: TextInputAction.next,
-              ),
-              Row(
-                children: [
-                  Expanded(
-                      flex: 2,
-                      child: GestureDetector(
-                        onTap: () {
-                          showCountryPicker(
-                              showPhoneCode: true,
-                              context: context,
-                              onSelect: (country) {
-                                setState(() {
-                                  _countryCode = country.phoneCode;
-                                });
-                              });
+      body: validate
+          ? const Center(
+              child: Text('Profile settings have already been done'),
+            )
+          : Container(
+              padding: const EdgeInsets.all(10),
+              width: double.infinity,
+              height: double.infinity,
+              margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              child: Form(
+                key: _formKey,
+                child: ListView(
+                  children: [
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: IconButton(
+                        onPressed: () async {
+                          await Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (_) => const Home()),
+                          );
                         },
-                        child: Chip(
-                            elevation: 2,
-                            backgroundColor: Colors.black26,
-                            label: Text(
-                              "+ " + _countryCode,
-                              style: GoogleFonts.nunito(
-                                color: Colors.white,
-                                fontSize: 20,
-                              ),
-                            )),
-                      )),
-                  Expanded(
-                    flex: 6,
-                    child: CustomTextField(
-                      labelText: "Phone",
-                      controller: _contact,
-                      hintText: "Phone",
-                      keyboardType: TextInputType.phone,
+                        icon: const Icon(
+                          Icons.arrow_back_ios_new,
+                          size: 30,
+                          color: Colors.redAccent,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    CustomTextField(
+                      controller: _firstname,
+                      labelText: "Firstname",
+                      hintText: "Firstname",
+                      keyboardType: TextInputType.text,
                       textInputAction: TextInputAction.next,
                     ),
-                  ),
-                ],
-              ),
-              CustomTextField(
-                labelText: "Date of Birth",
-                controller: _dob,
-                onTap: () {
-                  showDatePicker(
-                          context: context,
-                          initialDate: DateTime.now(),
-                          firstDate: DateTime(1990),
-                          lastDate: DateTime.now())
-                      .then((date) {
-                    _dob.text = DateFormat(DateFormat.YEAR_MONTH_WEEKDAY_DAY)
-                        .format(date!);
-                    setState(() {
-                      birthDate = date;
-                    });
-                  });
-                },
-                readOnly: true,
-                hintText: "Date of birth",
-                textInputAction: TextInputAction.next,
-                suffixIcon: const Icon(
-                  Icons.calendar_today,
-                  color: Colors.black26,
-                ),
-              ),
-              CustomTextField(
-                labelText: "Country of origin",
-                controller: _nationalityx,
-                onTap: () {
-                  showCountryPicker(
-                      context: context,
-                      onSelect: (country) {
-                        setState(() {
-                          _nationalityx.text = country.name;
-                        });
-                      });
-                },
-                readOnly: true,
-                hintText: "Country Of Origin",
-                textInputAction: TextInputAction.next,
-                suffixIcon: const Icon(
-                  Icons.flag,
-                  color: Colors.black26,
-                ),
-              ),
-              Container(
-                margin:
-                    const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text("Blood Type : ",
-                        style: GoogleFonts.nunito(
-                            color: Colors.black,
-                            fontSize: 20,
-                            fontWeight: FontWeight.normal)),
-                    const SizedBox(
-                      width: 20,
+                    CustomTextField(
+                      labelText: "Surname",
+                      controller: _surname,
+                      hintText: "Lastname",
+                      keyboardType: TextInputType.text,
+                      textInputAction: TextInputAction.next,
                     ),
-                    DropdownButton(
-                        value: _bloodType,
-                        onChanged: (String? newValue) {
+                    Row(
+                      children: [
+                        Expanded(
+                            flex: 2,
+                            child: GestureDetector(
+                              onTap: () {
+                                showCountryPicker(
+                                    showPhoneCode: true,
+                                    context: context,
+                                    onSelect: (country) {
+                                      setState(() {
+                                        _countryCode = country.phoneCode;
+                                      });
+                                    });
+                              },
+                              child: Chip(
+                                  elevation: 2,
+                                  backgroundColor: Colors.black26,
+                                  label: Text(
+                                    "+ " + _countryCode,
+                                    style: GoogleFonts.nunito(
+                                      color: Colors.white,
+                                      fontSize: 20,
+                                    ),
+                                  )),
+                            )),
+                        Expanded(
+                          flex: 6,
+                          child: CustomTextField(
+                            labelText: "Phone",
+                            controller: _contact,
+                            hintText: "Phone",
+                            keyboardType: TextInputType.phone,
+                            textInputAction: TextInputAction.next,
+                          ),
+                        ),
+                      ],
+                    ),
+                    CustomTextField(
+                      labelText: "Date of Birth",
+                      controller: _dob,
+                      onTap: () {
+                        showDatePicker(
+                                context: context,
+                                initialDate: DateTime.now(),
+                                firstDate: DateTime(1990),
+                                lastDate: DateTime.now())
+                            .then((date) {
+                          _dob.text =
+                              DateFormat(DateFormat.YEAR_MONTH_WEEKDAY_DAY)
+                                  .format(date!);
                           setState(() {
-                            _bloodType = newValue!;
+                            birthDate = date;
                           });
-                        },
-                        items: _bloodTypes.map((item) {
-                          return DropdownMenuItem<String>(
-                            value: item,
-                            child: Text(
-                              item,
+                        });
+                      },
+                      readOnly: true,
+                      hintText: "Date of birth",
+                      textInputAction: TextInputAction.next,
+                      suffixIcon: const Icon(
+                        Icons.calendar_today,
+                        color: Colors.black26,
+                      ),
+                    ),
+                    CustomTextField(
+                      labelText: "Country of origin",
+                      controller: _nationalityx,
+                      onTap: () {
+                        showCountryPicker(
+                            context: context,
+                            onSelect: (country) {
+                              setState(() {
+                                _nationalityx.text = country.name;
+                              });
+                            });
+                      },
+                      readOnly: true,
+                      hintText: "Country Of Origin",
+                      textInputAction: TextInputAction.next,
+                      suffixIcon: const Icon(
+                        Icons.flag,
+                        color: Colors.black26,
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.symmetric(
+                          vertical: 10, horizontal: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text("Blood Type : ",
                               style: GoogleFonts.nunito(
-                                color: Colors.black,
-                                fontSize: 18,
+                                  color: Colors.black,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.normal)),
+                          const SizedBox(
+                            width: 20,
+                          ),
+                          DropdownButton(
+                              value: _bloodType,
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  _bloodType = newValue!;
+                                });
+                              },
+                              items: _bloodTypes.map((item) {
+                                return DropdownMenuItem<String>(
+                                  value: item,
+                                  child: Text(
+                                    item,
+                                    style: GoogleFonts.nunito(
+                                      color: Colors.black,
+                                      fontSize: 18,
+                                    ),
+                                  ),
+                                );
+                              }).toList()),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 40),
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                          height: 55,
+                          margin: const EdgeInsets.symmetric(vertical: 5),
+                          child: ElevatedButton.icon(
+                              icon: const Icon(Icons.done),
+                              style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20)),
+                                primary: Colors.red[300],
                               ),
-                            ),
-                          );
-                        }).toList()),
+                              onPressed: () async {
+                                Map<String, String> data = {
+                                  "firstname": _firstname.text,
+                                  "surname": _surname.text,
+                                  "nationality": _nationalityx.text,
+                                  "contact": _contact.text,
+                                  "DOB": _dob.text,
+                                };
+                                var output = await handler.post(
+                                    '/profile/addprofile', data);
+                                if (output.statusCode == 200 ||
+                                    output.statusCode == 201) {
+                                  Map<String, dynamic> response =
+                                      json.decode(output.body);
+                                  await Fluttertoast.showToast(
+                                    msg: response["msg"],
+                                    backgroundColor: Colors.green,
+                                    gravity: ToastGravity.BOTTOM,
+                                    toastLength: Toast.LENGTH_LONG,
+                                    fontSize: 23,
+                                  );
+                                }
+                              },
+                              label: Text("Save",
+                                  style: GoogleFonts.nunito(
+                                      color: Colors.white,
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.bold)))),
+                    ),
                   ],
                 ),
               ),
-              const SizedBox(height: 40),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Container(
-                    height: 55,
-                    margin: const EdgeInsets.symmetric(vertical: 5),
-                    child: ElevatedButton.icon(
-                        icon: const Icon(Icons.done),
-                        style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20)),
-                          primary: Colors.red[300],
-                        ),
-                        onPressed: () async {
-                          Map<String, String> data = {
-                            "firstname": _fisrtname.text,
-                            "surname": _surname.text,
-                            "nationality": _nationalityx.text,
-                            "contact": _contact.text,
-                            "DOB": _dob.text,
-                          };
-                          await handler.post('/profile', data);
-                        },
-                        label: Text("Update Profile",
-                            style: GoogleFonts.nunito(
-                                color: Colors.white,
-                                fontSize: 25,
-                                fontWeight: FontWeight.bold)))),
-              ),
-            ],
-          ),
-        ),
-      ),
+            ),
     );
+  }
+
+  verifyProfile() async {
+    var response = await handler.get('/profile/checkprofile/profile');
+    var resp = json.decode(response.body);
+    if (resp != null) {
+      setState(() {
+        validate = true;
+      });
+    } else {
+      setState(() {
+        validate = false;
+      });
+    }
   }
 }
 
