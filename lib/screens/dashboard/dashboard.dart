@@ -4,6 +4,7 @@ import 'package:scarclient/screens/dashboard/profilepic.dart';
 import 'dart:async';
 import 'package:scarclient/screens/dashboard/welcomeprofile.dart';
 import 'package:scarclient/screens/reminders/mainremind.dart';
+import 'package:scarclient/screens/vitals/vitals.dart';
 import 'package:scarclient/services/authen.dart';
 
 class Dashboard extends StatefulWidget {
@@ -118,7 +119,20 @@ class _HomeState extends State<Dashboard> {
                           ),
                         );
                       }),
-                  VitalsCard(width: _width, height: _height),
+                  InkWell(
+                    onTap: () async {
+                      await Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const Vitals(),
+                        ),
+                      );
+                    },
+                    child: VitalsCard(
+                      width: _width,
+                      height: _height,
+                    ),
+                  ),
                 ],
               )
             ],

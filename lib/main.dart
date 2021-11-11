@@ -4,7 +4,6 @@ import 'package:scarclient/screens/intro%20screens/splashdart.dart';
 import 'package:scarclient/screens/settings/account.dart';
 import 'package:scarclient/screens/settings/language.dart';
 import 'package:scarclient/screens/settings/profile.dart';
-import 'package:scarclient/screens/vitals/vitals.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,7 +27,6 @@ class MyApp extends StatelessWidget {
       home: const Splash(),
       routes: {
         '/profile': (context) => const CompleteProfile(),
-        '/vitals': (context) => const Vitals(),
         '/language': (context) => const Language(),
         '/account': (context) => const Account(),
       },

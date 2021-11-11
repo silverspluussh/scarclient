@@ -4,18 +4,31 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:scarclient/screens/navigation_index.dart';
-import 'package:scarclient/screens/settings/profile.dart';
-import 'package:scarclient/screens/vitals/vitalsmodel.dart';
+import 'package:scarclient/screens/vitals/setvitals.dart';
+import 'package:scarclient/screens/vitals/vitalsinfo.dart';
 
-class Reminder extends StatefulWidget {
-  const Reminder({Key? key}) : super(key: key);
+class Vitals extends StatefulWidget {
+  const Vitals({Key? key}) : super(key: key);
 
   @override
-  _ReminderState createState() => _ReminderState();
+  _VitalsState createState() => _VitalsState();
 }
 
-class _ReminderState extends State<Reminder>
-    with SingleTickerProviderStateMixin {
+// ignore: camel_case_types
+class vitalsInfo {
+  int pulserate;
+  String bloodpressure;
+  String? breathingrate;
+  String? bodytemperature;
+  vitalsInfo(
+    this.bloodpressure,
+    this.bodytemperature,
+    this.breathingrate,
+    this.pulserate,
+  );
+}
+
+class _VitalsState extends State<Vitals> with SingleTickerProviderStateMixin {
   static const List<Tab> myTabs = <Tab>[
     Tab(
       child: Text(
@@ -38,13 +51,6 @@ class _ReminderState extends State<Reminder>
   ];
 
   late TabController _tabController;
-
-  List vitals = [
-    {"user": "Micheal", "dueDate": "10-11-2021", "progress": 0.33},
-    {"user": "Wilhelmina", "dueDate": "20-11-2021", "progress": 0.5},
-    {"user": "Bismark", "dueDate": "20-11-2021", "progress": 0.9},
-    {"user": "Kofi Manu Sefa Yeboah", "dueDate": "20-12-2021", "progress": 0.1}
-  ];
 
   @override
   void initState() {
@@ -90,151 +96,55 @@ class _ReminderState extends State<Reminder>
         body: TabBarView(
           controller: _tabController,
           physics: const ScrollPhysics(),
-          children: [buildMyReminders(), const SetReminder()],
+          children: [vitalsbuild(), const SetVitals()],
         ));
   }
-
-  Container buildMyReminders() {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-      child: RefreshIndicator(
-        onRefresh: onPageRefresh,
-        child: ListView.separated(
-            itemBuilder: (context, index) {
-              VitalsModel vital = VitalsModel.fromMap(vitals[index]);
-
-              return VitalsCard(vitals: vital);
-            },
-            separatorBuilder: (context, index) {
-              return const Divider(
-                height: 0.1,
-              );
-            },
-            itemCount: vitals.length),
-      ),
-    );
-  }
-
-  Future onPageRefresh() async {}
 }
 
-class SetReminder extends StatelessWidget {
-  const SetReminder({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+Widget vitalsbuild() {
+  return Container(
+      width: double.infinity,
+      height: double.infinity,
+      padding: const EdgeInsets.all(10),
       child: ListView(
+        padding: const EdgeInsets.all(10.0),
+        physics: const ScrollPhysics(),
         children: [
-          const CustomTextField(
-              hintText: "Name of Drug", labelText: "Name of Drug"),
-          const CustomTextField(hintText: "Pharmacy", labelText: "Pharmacy"),
-          const CustomTextField(hintText: "Set data", labelText: "Set Data"),
-          const CustomTextField(
-              hintText: "Description", labelText: "Description"),
-          Container(
-              height: 55,
-              width: 200,
-              margin: const EdgeInsets.symmetric(vertical: 5),
-              child: ElevatedButton.icon(
-                  icon: const Icon(Icons.save),
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: const Size.fromWidth(200),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20)),
-                    primary: Colors.indigo[300],
-                  ),
-                  onPressed: () {},
-                  label: Text("Save",
-                      style: GoogleFonts.nunito(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold)))),
-        ],
-      ),
-    );
-  }
-}
-
-class VitalsCard extends StatelessWidget {
-  const VitalsCard({
-    Key? key,
-    required this.vitals,
-  }) : super(key: key);
-
-  final VitalsModel vitals;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Card(
-        shadowColor: Colors.blue,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
-        elevation: 5,
-        child: Container(
-          padding: const EdgeInsets.all(5),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          Card(
+            elevation: 4,
+            child: Column(children: [
+              const Text('Overall vitals'),
+              CustomRoundedBars(),
+            ]),
+          ),
+          Row(
             children: [
-              Stack(
-                alignment: Alignment.center,
-                children: [
-                  SizedBox(
-                    height: 70,
-                    width: 80,
-                    child: Padding(
-                      padding: const EdgeInsets.all(3),
-                      child: CircularProgressIndicator(
-                        strokeWidth: 5,
-                        color: Colors.green,
-                        value: vitals.progress,
-                      ),
-                    ),
-                  ),
-                  Text(
-                    "${vitals.progress * 100} %",
-                    style: GoogleFonts.nunito(
-                        fontSize: 15, fontWeight: FontWeight.bold),
-                  )
-                ],
-              ),
-              Column(
-                children: [
-                  Text(
-                    "Due on ${vitals.dueDate}",
-                    style: GoogleFonts.nunito(fontSize: 16),
-                  ),
-                  Text(
-                    vitals.user,
-                    style: GoogleFonts.nunito(
-                        fontSize: 18, fontWeight: FontWeight.bold),
-                  )
-                ],
-              ),
-              IconButton(
-                onPressed: () {},
-                icon: const ImageIcon(
-                  AssetImage('assets/delete-94-512.png'),
-                  color: Colors.red,
-                ),
-              ),
-              IconButton(
-                onPressed: () {},
-                icon: const ImageIcon(
-                  AssetImage('assets/edit-94-512.png'),
-                  color: Colors.purple,
-                ),
-              ),
+              Card(
+                  elevation: 4,
+                  child: Column(children: const [
+                    Text('Pulse rate'),
+                  ])),
+              Card(
+                  elevation: 4,
+                  child: Column(children: const [
+                    Text('Body temperature'),
+                  ]))
             ],
           ),
-        ),
-      ),
-    );
-  }
+          Row(
+            children: [
+              Card(
+                  elevation: 4,
+                  child: Column(children: const [
+                    Text('Blood Pressure'),
+                  ])),
+              Card(
+                  elevation: 4,
+                  child: Column(children: const [
+                    Text('Breathing rate'),
+                  ]))
+            ],
+          )
+        ],
+      ));
 }
