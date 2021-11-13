@@ -174,8 +174,6 @@ class _SignInState extends State<SignIn> {
                           response.statusCode == 201) {
                         Map<String, dynamic> outside =
                             json.decode(response.body);
-                        // ignore: avoid_print
-                        print(outside['token']);
                         await storage
                             .write(key: 'token', value: outside["token"])
                             .then(await Navigator.pushAndRemoveUntil(

@@ -26,7 +26,7 @@ class _ChartsInfoState extends State<ChartsInfo> {
 
   getvitals() async {
     NetworkHanler networkhandle = NetworkHanler();
-    var response = await networkhandle.get('/vitals/vitals');
+    var response = await networkhandle.get('/vitals/vitalsinfo');
     if (response != null) {
       pulse = response['pulse_rate'];
       bodytemp = response['body_temperature'];
@@ -44,31 +44,31 @@ class _ChartsInfoState extends State<ChartsInfo> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    return SizedBox(
-      height: size.height / 4,
-      child: SfCircularChart(
-        title: ChartTitle(
-          text: "Overall Vitals",
-          textStyle: GoogleFonts.lato(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
+    return Scaffold(
+      body: SafeArea(
+        child: SfCircularChart(
+          title: ChartTitle(
+            text: "Overall Vitals",
+            textStyle: GoogleFonts.lato(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
           ),
+          legend: Legend(
+            isVisible: true,
+            overflowMode: LegendItemOverflowMode.wrap,
+          ),
+          tooltipBehavior: tooltipbehave,
+          series: <CircularSeries>[
+            RadialBarSeries<Vitalsinfo, String>(
+              dataSource: _datachart,
+              xValueMapper: (Vitalsinfo data, _) => data.vital,
+              yValueMapper: (Vitalsinfo data, _) => data.reads,
+              enableTooltip: true,
+              maximumValue: 200,
+            )
+          ],
         ),
-        legend: Legend(
-          isVisible: true,
-          overflowMode: LegendItemOverflowMode.wrap,
-        ),
-        tooltipBehavior: tooltipbehave,
-        series: <CircularSeries>[
-          RadialBarSeries<Vitalsinfo, String>(
-            dataSource: _datachart,
-            xValueMapper: (Vitalsinfo data, _) => data.vital,
-            yValueMapper: (Vitalsinfo data, _) => data.reads,
-            enableTooltip: true,
-            maximumValue: 200,
-          )
-        ],
       ),
     );
   }
@@ -85,7 +85,7 @@ class _ChartsInfoState extends State<ChartsInfo> {
 }
 
 class Vitalsinfo {
-  final String vital;
-  final int reads;
+  String vital;
+  int reads;
   Vitalsinfo(this.vital, this.reads);
 }

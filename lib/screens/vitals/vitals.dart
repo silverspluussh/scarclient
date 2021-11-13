@@ -66,8 +66,6 @@ class _VitalsState extends State<Vitals> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -108,14 +106,9 @@ class _VitalsState extends State<Vitals> with SingleTickerProviderStateMixin {
 
 Widget vitalsbuild() {
   return SizedBox(
-    height: double.infinity,
-    width: double.infinity,
     child: ListView(
       children: const [
-        Card(
-          elevation: 4,
-          child: ChartsInfo(),
-        ),
+        ChartsInfo(),
       ],
     ),
   );

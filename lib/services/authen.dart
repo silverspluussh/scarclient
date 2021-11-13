@@ -14,7 +14,9 @@ class NetworkHanler {
 
     var response = await http.get(
       url,
-      headers: {"Authorization": "Bearer $token"},
+      headers: {
+        "Content-type":"application/json",
+        "Authorization": "Bearer $token"},
     );
     if (response.statusCode == 200 || response.statusCode == 201) {
       return json.decode(response.body);
