@@ -1,77 +1,91 @@
-import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
+import 'package:flutter/widgets.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:scarclient/services/authen.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 
-// ignore: must_be_immutable
-class CustomRoundedBars extends StatelessWidget {
-  List<charts.Series<OrdinalSales, String>>? seriesList;
-  bool? animate;
-  List<charts.Series<OrdinalSales, String>>? createSampleData;
+class ChartsInfo extends StatefulWidget {
+  const ChartsInfo({Key? key}) : super(key: key);
 
-  // ignore: use_key_in_widget_constructors
-  CustomRoundedBars({
-    this.createSampleData,
-    this.seriesList,
-    this.animate,
-  });
+  @override
+  State<ChartsInfo> createState() => _ChartsInfoState();
+}
 
-  factory CustomRoundedBars.withSampleData() {
-    return CustomRoundedBars(
-      createSampleData: _createSampleData(),
-      animate: false,
-      seriesList: const [],
-    );
-  }
+class _ChartsInfoState extends State<ChartsInfo> {
+  String pulse = '23.0';
 
-  static List<charts.Series<OrdinalSales, String>> _createSampleData() {
-    var pulse = '';
-    var bodytemp = '';
-    var pressure = '';
-    var breathrate = '';
+  String bodytemp = '27.0';
 
-    // ignore: unused_element
-    getvitals() async {
-      NetworkHanler networkhandle = NetworkHanler();
-      var response = await networkhandle.get('/vitals/vitals');
+  String pressure = '120.0';
+
+  String breathrate = '12.0';
+
+  List<Vitalsinfo>? _datachart;
+  late TooltipBehavior tooltipbehave;
+
+  getvitals() async {
+    NetworkHanler networkhandle = NetworkHanler();
+    var response = await networkhandle.get('/vitals/vitals');
+    if (response != null) {
       pulse = response['pulse_rate'];
       bodytemp = response['body_temperature'];
       pressure = response['blood_pressure'];
       breathrate = response['breathing_rate'];
     }
+  }
 
-    final data = [
-      OrdinalSales('Blood pressure', int.parse(pressure)),
-      OrdinalSales('Breathing rate', int.parse(breathrate)),
-      OrdinalSales('Temperature', int.parse(bodytemp)),
-      OrdinalSales('Pulse rate', int.parse(pulse)),
-    ];
-
-    return [
-      charts.Series<OrdinalSales, String>(
-        id: 'Sales',
-        colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
-        domainFn: (OrdinalSales vitals, _) => vitals.vital,
-        measureFn: (OrdinalSales vitals, _) => vitals.reading,
-        data: data,
-      )
-    ];
+  @override
+  void initState() {
+    _datachart = getdatachart();
+    tooltipbehave = TooltipBehavior(enable: true);
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return charts.BarChart(
-      seriesList!,
-      animate: animate,
-      defaultRenderer: charts.BarRendererConfig(
-        cornerStrategy: const charts.ConstCornerStrategy(30),
+    Size size = MediaQuery.of(context).size;
+    return SizedBox(
+      height: size.height / 4,
+      child: SfCircularChart(
+        title: ChartTitle(
+          text: "Overall Vitals",
+          textStyle: GoogleFonts.lato(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        legend: Legend(
+          isVisible: true,
+          overflowMode: LegendItemOverflowMode.wrap,
+        ),
+        tooltipBehavior: tooltipbehave,
+        series: <CircularSeries>[
+          RadialBarSeries<Vitalsinfo, String>(
+            dataSource: _datachart,
+            xValueMapper: (Vitalsinfo data, _) => data.vital,
+            yValueMapper: (Vitalsinfo data, _) => data.reads,
+            enableTooltip: true,
+            maximumValue: 200,
+          )
+        ],
       ),
     );
   }
+
+  List<Vitalsinfo> getdatachart() {
+    final List<Vitalsinfo> datachart = [
+      Vitalsinfo('Pulse rate', int.parse(pulse)),
+      Vitalsinfo('Temperature', int.parse(bodytemp)),
+      Vitalsinfo('Blood Pressure', int.parse(pressure)),
+      Vitalsinfo('Breathing Rate', int.parse(breathrate)),
+    ];
+    return datachart;
+  }
 }
 
-class OrdinalSales {
+class Vitalsinfo {
   final String vital;
-  final int reading;
-
-  OrdinalSales(this.vital, this.reading);
+  final int reads;
+  Vitalsinfo(this.vital, this.reads);
 }

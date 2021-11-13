@@ -181,7 +181,7 @@ class _SplashScreenState extends State<SplashScreen> {
               Align(
                 alignment: Alignment.topRight,
                 child: SizedBox(
-                  width: _width / 3.8,
+                  width: _width / 4,
                   child: ElevatedButton(
                     child: Text(
                       "LOGIN",
@@ -199,7 +199,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   ),
                 ),
               ),
-              SizedBox(height: _height / 2.3),
+              SizedBox(height: _height / 2.5),
               Wrap(
                 children: [
                   Text(

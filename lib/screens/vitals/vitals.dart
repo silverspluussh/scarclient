@@ -66,85 +66,57 @@ class _VitalsState extends State<Vitals> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+
     return Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            padding: const EdgeInsets.only(left: 20),
-            onPressed: () async {
-              await Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (_) => const Home()),
-              );
-            },
-            icon: const Icon(Icons.arrow_back_ios),
-            iconSize: 35,
-            color: Colors.red,
-          ),
-          backgroundColor: Colors.white,
-          bottom: TabBar(
-            indicatorColor: Colors.indigo,
-            isScrollable: false,
-            dragStartBehavior: DragStartBehavior.start,
-            labelStyle:
-                GoogleFonts.nunito(fontSize: 12, fontWeight: FontWeight.bold),
-            labelColor: Colors.black,
-            indicatorWeight: 3,
-            tabs: myTabs,
-            controller: _tabController,
-          ),
+      appBar: AppBar(
+        leading: IconButton(
+          padding: const EdgeInsets.only(left: 20),
+          onPressed: () async {
+            await Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (_) => const Home(),
+              ),
+            );
+          },
+          icon: const Icon(Icons.arrow_back_ios),
+          iconSize: 35,
+          color: Colors.red,
         ),
-        body: TabBarView(
+        backgroundColor: Colors.white,
+        bottom: TabBar(
+          indicatorColor: Colors.indigo,
+          isScrollable: false,
+          dragStartBehavior: DragStartBehavior.start,
+          labelStyle:
+              GoogleFonts.nunito(fontSize: 12, fontWeight: FontWeight.bold),
+          labelColor: Colors.black,
+          indicatorWeight: 3,
+          tabs: myTabs,
           controller: _tabController,
-          physics: const ScrollPhysics(),
-          children: [vitalsbuild(), const SetVitals()],
-        ));
+        ),
+      ),
+      body: TabBarView(
+        controller: _tabController,
+        physics: const ScrollPhysics(),
+        children: [vitalsbuild(), const SetVitals()],
+      ),
+    );
   }
 }
 
 Widget vitalsbuild() {
-  return Container(
-      width: double.infinity,
-      height: double.infinity,
-      padding: const EdgeInsets.all(10),
-      child: ListView(
-        padding: const EdgeInsets.all(10.0),
-        physics: const ScrollPhysics(),
-        children: [
-          Card(
-            elevation: 4,
-            child: Column(children: [
-              const Text('Overall vitals'),
-              CustomRoundedBars(),
-            ]),
-          ),
-          Row(
-            children: [
-              Card(
-                  elevation: 4,
-                  child: Column(children: const [
-                    Text('Pulse rate'),
-                  ])),
-              Card(
-                  elevation: 4,
-                  child: Column(children: const [
-                    Text('Body temperature'),
-                  ]))
-            ],
-          ),
-          Row(
-            children: [
-              Card(
-                  elevation: 4,
-                  child: Column(children: const [
-                    Text('Blood Pressure'),
-                  ])),
-              Card(
-                  elevation: 4,
-                  child: Column(children: const [
-                    Text('Breathing rate'),
-                  ]))
-            ],
-          )
-        ],
-      ));
+  return SizedBox(
+    height: double.infinity,
+    width: double.infinity,
+    child: ListView(
+      children: const [
+        Card(
+          elevation: 4,
+          child: ChartsInfo(),
+        ),
+      ],
+    ),
+  );
 }

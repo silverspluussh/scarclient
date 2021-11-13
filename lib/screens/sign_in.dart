@@ -188,9 +188,9 @@ class _SignInState extends State<SignIn> {
                           circus = false;
                         });
                       } else {
-                        String output = json.decode(response.body);
+                        var output = json.decode(response.body);
                         setState(() {
-                          errort = output;
+                          errort = output['msg'];
                         });
                       }
                     }
