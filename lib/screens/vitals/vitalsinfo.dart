@@ -13,6 +13,8 @@ class ChartsInfo extends StatefulWidget {
 }
 
 class _ChartsInfoState extends State<ChartsInfo> {
+  NetworkHanler networkhandle = NetworkHanler();
+
   String pulse = '23.0';
 
   String bodytemp = '27.0';
@@ -24,15 +26,8 @@ class _ChartsInfoState extends State<ChartsInfo> {
   List<Vitalsinfo>? _datachart;
   late TooltipBehavior tooltipbehave;
 
-  getvitals() async {
-    NetworkHanler networkhandle = NetworkHanler();
+  void getvitals() async {
     var response = await networkhandle.get('/vitals/vitalsinfo');
-    if (response != null) {
-      pulse = response['pulse_rate'];
-      bodytemp = response['body_temperature'];
-      pressure = response['blood_pressure'];
-      breathrate = response['breathing_rate'];
-    }
   }
 
   @override
@@ -40,6 +35,7 @@ class _ChartsInfoState extends State<ChartsInfo> {
     _datachart = getdatachart();
     tooltipbehave = TooltipBehavior(enable: true);
     super.initState();
+    getvitals();
   }
 
   @override

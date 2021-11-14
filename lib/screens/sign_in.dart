@@ -81,8 +81,9 @@ class _SignInState extends State<SignIn> {
                       return "Cannot be blank";
                     }
                   },
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(
+                  decoration: InputDecoration(
+                    errorText: errort,
+                    border: const OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.black, width: 0.0),
                     ),
                     hintText: "Username",
@@ -115,6 +116,7 @@ class _SignInState extends State<SignIn> {
                     password = val;
                   },
                   decoration: InputDecoration(
+                    errorText: errort,
                     suffixIcon: IconButton(
                       icon: Icon(
                         _showPassword ? Icons.visibility : Icons.visibility_off,
@@ -174,13 +176,14 @@ class _SignInState extends State<SignIn> {
                           response.statusCode == 201) {
                         Map<String, dynamic> outside =
                             json.decode(response.body);
-                        await storage
-                            .write(key: 'token', value: outside["token"])
-                            .then(await Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const Home()),
-                                (route) => false));
+                        await storage.write(
+                            key: 'token', value: outside["token"]);
+
+                        Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const Home()),
+                            (route) => false);
 
                         setState(() {
                           circus = false;
@@ -198,11 +201,13 @@ class _SignInState extends State<SignIn> {
                   },
                   child: circus
                       ? const CircularProgressIndicator(strokeWidth: 3)
-                      : Text("Sign In",
+                      : Text(
+                          "Sign In",
                           style: GoogleFonts.nunito(
                               color: Colors.white,
                               fontSize: 25,
-                              fontWeight: FontWeight.bold)),
+                              fontWeight: FontWeight.bold),
+                        ),
                 ),
               ),
               const SizedBox(

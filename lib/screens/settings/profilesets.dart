@@ -21,13 +21,13 @@ class CompleteProfile extends StatefulWidget {
 }
 
 class _CompleteProfileState extends State<CompleteProfile> {
-  final String _nationality = "Ghana";
-  String _bloodType = "O";
-  String _countryCode = "233";
+  final String nationality = "Ghana";
+  String bloodType = "O";
+  String countryCode = "233";
   DateTime? birthDate;
   final _formKey = GlobalKey<FormState>();
 
-  final _bloodTypes = ["A", "AB", "B", "O"];
+  final bloodTypes = ["A", "AB", "B", "O"];
 
   NetworkHanler handler = NetworkHanler();
   final TextEditingController _firstname = TextEditingController();
@@ -43,7 +43,7 @@ class _CompleteProfileState extends State<CompleteProfile> {
 
   @override
   void initState() {
-    _nationalityx.text = _nationality;
+    _nationalityx.text = nationality;
     verifyProfile();
     super.initState();
   }
@@ -147,14 +147,15 @@ class _CompleteProfileState extends State<CompleteProfile> {
                             backgroundColor: Colors.white10,
                           ),
                           Positioned(
-                              child: InkWell(
-                            onTap: bottomsheet,
-                            child: const Icon(
-                              Icons.camera_alt_rounded,
-                              color: Colors.lightBlue,
-                              size: 27,
+                            child: InkWell(
+                              onTap: bottomsheet,
+                              child: const Icon(
+                                Icons.camera_alt_rounded,
+                                color: Colors.lightBlue,
+                                size: 27,
+                              ),
                             ),
-                          ))
+                          ),
                         ],
                       ),
                     ),
@@ -176,29 +177,31 @@ class _CompleteProfileState extends State<CompleteProfile> {
                     Row(
                       children: [
                         Expanded(
-                            flex: 2,
-                            child: GestureDetector(
-                              onTap: () {
-                                showCountryPicker(
-                                    showPhoneCode: true,
-                                    context: context,
-                                    onSelect: (country) {
-                                      setState(() {
-                                        _countryCode = country.phoneCode;
-                                      });
+                          flex: 2,
+                          child: GestureDetector(
+                            onTap: () {
+                              showCountryPicker(
+                                  showPhoneCode: true,
+                                  context: context,
+                                  onSelect: (country) {
+                                    setState(() {
+                                      countryCode = country.phoneCode;
                                     });
-                              },
-                              child: Chip(
-                                  elevation: 2,
-                                  backgroundColor: Colors.black26,
-                                  label: Text(
-                                    "+ " + _countryCode,
-                                    style: GoogleFonts.nunito(
-                                      color: Colors.white,
-                                      fontSize: 20,
-                                    ),
-                                  )),
-                            )),
+                                  });
+                            },
+                            child: Chip(
+                              elevation: 2,
+                              backgroundColor: Colors.black26,
+                              label: Text(
+                                "+ " + countryCode,
+                                style: GoogleFonts.nunito(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
                         Expanded(
                           flex: 6,
                           child: CustomTextField(
@@ -272,13 +275,13 @@ class _CompleteProfileState extends State<CompleteProfile> {
                             width: 20,
                           ),
                           DropdownButton(
-                              value: _bloodType,
+                              value: bloodType,
                               onChanged: (String? newValue) {
                                 setState(() {
-                                  _bloodType = newValue!;
+                                  bloodType = newValue!;
                                 });
                               },
-                              items: _bloodTypes.map((item) {
+                              items: bloodTypes.map((item) {
                                 return DropdownMenuItem<String>(
                                   value: item,
                                   child: Text(
@@ -331,6 +334,17 @@ class _CompleteProfileState extends State<CompleteProfile> {
                                   '/profile/addprofile', data);
                               if (output.statusCode == 200 ||
                                   output.statusCode == 201) {
+                                if (_filepicker!.path.isNotEmpty) {
+                                  var imageresp = await handler.imagepatch(
+                                      '/profile/addprofile/image',
+                                      _filepicker!.path);
+                                  if (imageresp.statusCode == 200 ||
+                                      imageresp.statusCode == 201) {
+                                    setState(() {
+                                      progress = false;
+                                    });
+                                  }
+                                }
                                 Map<String, dynamic> response =
                                     json.decode(output.body);
                                 await Fluttertoast.showToast(
@@ -345,6 +359,10 @@ class _CompleteProfileState extends State<CompleteProfile> {
                             setState(() {
                               progress = false;
                             });
+                            Navigator.of(context).pushAndRemoveUntil(
+                                MaterialPageRoute(
+                                    builder: (context) => const Home()),
+                                (route) => false);
                           },
                         ),
                       ),
@@ -389,7 +407,6 @@ class CustomTextField extends StatelessWidget {
         _keyboardType = keyboardType,
         _suffixIcon = suffixIcon,
         _prefix = prefix,
-        _onTap = onTap,
         _readOnly = readOnly,
         _textInputAction = textInputAction,
         super(key: key);
@@ -401,7 +418,6 @@ class CustomTextField extends StatelessWidget {
   final _textInputAction;
   final Widget? _suffixIcon;
   final Widget? _prefix;
-  final _onTap;
   final _readOnly;
 
   @override
@@ -416,7 +432,6 @@ class CustomTextField extends StatelessWidget {
         color: Colors.transparent,
       ),
       child: TextFormField(
-        onTap: _onTap,
         textInputAction: _textInputAction,
         keyboardType: _keyboardType,
         controller: _controller,
@@ -433,9 +448,7 @@ class CustomTextField extends StatelessWidget {
             fontSize: 18,
           ),
           labelText: _labelText,
-          // prefix: _prefix,
           suffixIcon: _suffixIcon,
-
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(5),
             borderSide: const BorderSide(

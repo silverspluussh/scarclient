@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:scarclient/screens/intro%20screens/splashdart.dart';
+import 'package:scarclient/screens/intro_screens/splashdart.dart';
 import 'package:scarclient/screens/settings/account.dart';
 import 'package:scarclient/screens/settings/language.dart';
-import 'package:scarclient/screens/settings/profile.dart';
+import 'package:scarclient/screens/settings/profilesets.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

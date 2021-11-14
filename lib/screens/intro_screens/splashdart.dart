@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:scarclient/screens/intro%20screens/intro_screen.dart';
+import 'package:scarclient/screens/intro_screens/intro_screen.dart';
 
 class Splash extends StatelessWidget {
   const Splash({Key? key}) : super(key: key);

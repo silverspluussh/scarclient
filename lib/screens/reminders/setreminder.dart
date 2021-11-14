@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:scarclient/screens/settings/profile.dart';
+import 'package:scarclient/screens/settings/profilesets.dart';
 
 class SetReminder extends StatelessWidget {
   const SetReminder({
