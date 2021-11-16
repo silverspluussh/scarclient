@@ -184,10 +184,6 @@ class _SignInState extends State<SignIn> {
                             MaterialPageRoute(
                                 builder: (context) => const Home()),
                             (route) => false);
-
-                        setState(() {
-                          circus = false;
-                        });
                       } else {
                         var output = json.decode(response.body);
                         setState(() {
