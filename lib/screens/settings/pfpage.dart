@@ -20,6 +20,7 @@ class _ProfilepageState extends State<Profilepage> {
   static String? nationality;
 
   static String? surname;
+  static String? name;
 
   @override
   void initState() {
@@ -28,7 +29,7 @@ class _ProfilepageState extends State<Profilepage> {
   }
 
   ProfileModel profile =
-      ProfileModel(contact!, dob!, firstname!, nationality!, surname!);
+      ProfileModel(contact!, dob!, firstname!, nationality!, surname!, name!);
   final networkhandler = NetworkHanler();
   bool progress = true;
 

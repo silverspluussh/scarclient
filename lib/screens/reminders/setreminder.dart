@@ -21,12 +21,11 @@ class SetReminder extends StatelessWidget {
               hintText: "Description", labelText: "Description"),
           Container(
               height: 55,
-              width: 200,
+              width: 50,
               margin: const EdgeInsets.symmetric(vertical: 5),
               child: ElevatedButton.icon(
                   icon: const Icon(Icons.save),
                   style: ElevatedButton.styleFrom(
-                    minimumSize: const Size.fromWidth(200),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20)),
                     primary: Colors.indigo[300],

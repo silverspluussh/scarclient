@@ -4,13 +4,15 @@ part 'profilemodel.g.dart';
 
 @JsonSerializable()
 class ProfileModel {
-  String? firstname;
-  String? surname;
-  String? nationality;
-  String? contact;
-  String? dob;
+  String name;
+  String firstname;
+  String surname;
+  String nationality;
+  String contact;
+  String dob;
 
   ProfileModel(
+    this.name,
     this.contact,
     this.dob,
     this.firstname,

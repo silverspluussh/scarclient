@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:scarclient/screens/navigation_index.dart';
+import 'package:scarclient/screens/startscreen/navigation_index.dart';
 import 'package:scarclient/screens/reminders/setreminder.dart';
 import 'reminderclass.dart';
 

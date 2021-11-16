@@ -3,7 +3,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:scarclient/screens/navigation_index.dart';
+import 'package:scarclient/screens/startscreen/navigation_index.dart';
 import 'package:scarclient/services/authen.dart';
 import 'signup.dart';
 

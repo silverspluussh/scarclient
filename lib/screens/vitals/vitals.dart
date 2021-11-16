@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:scarclient/screens/navigation_index.dart';
+import 'package:scarclient/screens/startscreen/navigation_index.dart';
 import 'package:scarclient/screens/vitals/setvitals.dart';
-import 'package:scarclient/screens/vitals/vitalsinfo.dart';
+import 'package:scarclient/services/authen.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 
 class Vitals extends StatefulWidget {
   const Vitals({Key? key}) : super(key: key);
@@ -29,22 +30,26 @@ class vitalsInfo {
 }
 
 class _VitalsState extends State<Vitals> with SingleTickerProviderStateMixin {
-  static const List<Tab> myTabs = <Tab>[
+  static List<Tab> myTabs = <Tab>[
     Tab(
       child: Text(
         'MY VITALS',
-        style: TextStyle(
-          fontSize: 15,
-          fontWeight: FontWeight.bold,
+        style: GoogleFonts.merriweather(
+          textStyle: const TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
     ),
     Tab(
       child: Text(
         'ADD VITALS',
-        style: TextStyle(
-          fontSize: 15,
-          fontWeight: FontWeight.bold,
+        style: GoogleFonts.merriweather(
+          textStyle: const TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
     ),
@@ -98,18 +103,90 @@ class _VitalsState extends State<Vitals> with SingleTickerProviderStateMixin {
       body: TabBarView(
         controller: _tabController,
         physics: const ScrollPhysics(),
-        children: [vitalsbuild(), const SetVitals()],
+        children: const [ChartsInfo(), SetVitals()],
       ),
     );
   }
 }
 
-Widget vitalsbuild() {
-  return SizedBox(
-    child: ListView(
-      children: const [
-        ChartsInfo(),
-      ],
-    ),
-  );
+class ChartsInfo extends StatefulWidget {
+  const ChartsInfo({Key? key}) : super(key: key);
+
+  @override
+  State<ChartsInfo> createState() => _ChartsInfoState();
+}
+
+class _ChartsInfoState extends State<ChartsInfo> {
+  NetworkHanler networkhandle = NetworkHanler();
+
+  String pulse = '23';
+
+  String bodytemp = '27';
+
+  String pressure = '120';
+
+  String breathrate = '12';
+
+  List<Vitalsinfo>? _datachart;
+  late TooltipBehavior tooltipbehave;
+
+  @override
+  void initState() {
+    _datachart = getdatachart();
+    tooltipbehave = TooltipBehavior(enable: true);
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        padding: const EdgeInsets.all(30),
+        child: SfCircularChart(
+          title: ChartTitle(
+            text: "VITALS",
+            textStyle: GoogleFonts.nunito(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Colors.brown,
+            ),
+          ),
+          tooltipBehavior: tooltipbehave,
+          series: <CircularSeries>[
+            RadialBarSeries<Vitalsinfo, String>(
+              dataSource: _datachart,
+              xValueMapper: (Vitalsinfo data, _) => data.vital,
+              yValueMapper: (Vitalsinfo data, _) => data.reads,
+              enableTooltip: true,
+              maximumValue: 150,
+            ),
+          ],
+          legend: Legend(
+            textStyle:
+                const TextStyle(fontSize: 17, fontWeight: FontWeight.w300),
+            iconHeight: 20,
+            iconWidth: 20,
+            isVisible: true,
+            overflowMode: LegendItemOverflowMode.wrap,
+          ),
+        ),
+      ),
+    );
+  }
+
+  List<Vitalsinfo> getdatachart() {
+    final List<Vitalsinfo> datachart = [
+      Vitalsinfo('Pulse rate', int.parse(pulse)),
+      Vitalsinfo('Temperature', int.parse(bodytemp)),
+      Vitalsinfo('Blood Pressure', int.parse(pressure)),
+      Vitalsinfo('Breathing Rate', int.parse(breathrate)),
+    ];
+    return datachart;
+  }
+}
+
+class Vitalsinfo {
+  String vital;
+  int reads;
+  Vitalsinfo(this.vital, this.reads);
 }
