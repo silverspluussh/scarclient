@@ -1,9 +1,9 @@
-class ReminderModel {
+class ReminderModelx {
   double progress = 0.0;
   String dueDate = "";
   String user = "";
 
-  ReminderModel(
+  ReminderModelx(
       {required this.dueDate, required this.user, required this.progress});
 
   Map<String, dynamic> toMap() {
@@ -16,7 +16,7 @@ class ReminderModel {
     return data;
   }
 
-  ReminderModel.fromMap(Map<String, dynamic> map) {
+  ReminderModelx.fromMap(Map<String, dynamic> map) {
     user = map["user"];
     progress = map["progress"];
     dueDate = map["dueDate"];

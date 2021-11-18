@@ -12,17 +12,17 @@ class RemindView extends StatefulWidget {
 class _RemindState extends State<RemindView> {
   @override
   void initState() {
-    super.initState();
-    Timer(const Duration(seconds: 10), () {
+    Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {});
     });
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: MediaQuery.of(context).size.width / 2,
-      height: MediaQuery.of(context).size.height / 3,
+      width: MediaQuery.of(context).size.width / 2.1,
+      height: MediaQuery.of(context).size.height / 3.1,
       child: Transform.rotate(
         angle: -pi / 2,
         child: CustomPaint(
@@ -37,8 +37,8 @@ class ReminderPainter extends CustomPainter {
   var datetime = DateTime.now();
   @override
   void paint(Canvas canvas, Size size) {
-    var midx = 140.0;
-    var midy = 140.0;
+    var midx = 125.0;
+    var midy = 125.0;
     var center = Offset(midy, midy);
     var rad = min(midx, midy);
 
@@ -50,6 +50,8 @@ class ReminderPainter extends CustomPainter {
       ..strokeWidth = 7;
 
     var filebrush2 = Paint()..color = const Color(0xFFBABEDB);
+
+    var filebrush3 = Paint()..color = const Color(0xFFCA5734);
 
     var secondhand = Paint()
       ..shader = const RadialGradient(
@@ -96,8 +98,20 @@ class ReminderPainter extends CustomPainter {
         80 * cos((datetime.hour * 30 + datetime.minute * 0.5) * pi / 180);
     var hrhandy = midx +
         80 * sin((datetime.hour * 30 + datetime.minute * 0.5) * pi / 180);
+
     canvas.drawLine(center, Offset(hrhandx, hrhandy), hourhand);
     canvas.drawCircle(center, 14, filebrush2);
+
+    var outerCircle = rad - 5;
+    var innerCircle = rad - 12;
+    for (double i = 0; i < 360; i++) {
+      var xi = midx + outerCircle * cos(i * pi / 180);
+      var yi = midx + outerCircle * sin(i * pi / 180);
+
+      var xii = midx + innerCircle * cos(i * pi / 180);
+      var yii = midx + innerCircle * sin(i * pi / 180);
+      canvas.drawLine(Offset(xi, yi), Offset(xii, yii), filebrush3);
+    }
   }
 
   @override

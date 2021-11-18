@@ -102,7 +102,8 @@ class _ReminderState extends State<Reminder>
         onRefresh: onPageRefresh,
         child: ListView.separated(
             itemBuilder: (context, index) {
-              ReminderModel reminder = ReminderModel.fromMap(reminders[index]);
+              ReminderModelx reminder =
+                  ReminderModelx.fromMap(reminders[index]);
 
               return MyReminderCard(reminder: reminder);
             },
@@ -125,7 +126,7 @@ class MyReminderCard extends StatelessWidget {
     required this.reminder,
   }) : super(key: key);
 
-  final ReminderModel reminder;
+  final ReminderModelx reminder;
 
   @override
   Widget build(BuildContext context) {
