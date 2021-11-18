@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:scarclient/reminderMe/rem.dart';
 import 'package:scarclient/screens/dashboard/profilepic.dart';
 import 'dart:async';
 import 'package:scarclient/screens/dashboard/welcomeprofile.dart';
-import 'package:scarclient/screens/reminders/mainremind.dart';
 import 'package:scarclient/screens/vitals/vitals.dart';
 import 'package:scarclient/services/authen.dart';
 
@@ -115,7 +115,7 @@ class _HomeState extends State<Dashboard> {
                         await Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                            builder: (_) => const Reminder(),
+                            builder: (_) => const Remind(),
                           ),
                         );
                       }),
