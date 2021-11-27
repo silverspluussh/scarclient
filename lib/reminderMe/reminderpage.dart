@@ -1,19 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+//import 'package:timezone/data/latest_all.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:scarclient/Models/remindermodel.dart';
+import 'package:scarclient/main.dart';
+import 'package:scarclient/reminderMe/remhome.dart';
 import 'package:scarclient/reminderMe/sideicons.dart';
 import 'package:scarclient/screens/startscreen/navigation_index.dart';
 
 class ReminderPage extends StatefulWidget {
   const ReminderPage({Key? key}) : super(key: key);
-
   @override
   _RemindState createState() => _RemindState();
 }
 
 class _RemindState extends State<ReminderPage> {
+  DateTime? _alarmTime;
+  String? _alarmTimeString;
+  Future<List<ReminderModel>>? _alarms;
+  List<ReminderModel>? _currentAlarms;
+
+  @override
+  void initState() {
+    _alarmTime = DateTime.now();
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -28,27 +45,43 @@ class _RemindState extends State<ReminderPage> {
             Column(children: [
               SizedBox(height: size.height / 24),
               Align(
-                alignment: Alignment.topLeft,
-                child: IconButton(
-                  onPressed: () async {
+                  alignment: Alignment.topLeft,
+                  child: Row(
+                    children: [
+                      IconButton(
+                        onPressed: () async {
+                          await Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const Home(),
+                            ),
+                          );
+                        },
+                        icon: const Icon(
+                          Icons.arrow_back_ios,
+                          size: 35,
+                        ),
+                      ),
+                      const Text(
+                        'Home',
+                        style: TextStyle(fontSize: 20),
+                      ),
+                    ],
+                  )),
+              SizedBox(height: size.height / 15),
+              InkWell(
+                  child: Sideicons(
+                      color: Colors.transparent,
+                      data: 'Clock',
+                      iconadd: 'assets/clock-120-512.png'),
+                  onTap: () async {
                     await Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                        builder: (_) => const Home(),
+                        builder: (_) => const Clock(),
                       ),
                     );
-                  },
-                  icon: const Icon(
-                    Icons.arrow_back_ios,
-                    size: 35,
-                  ),
-                ),
-              ),
-              SizedBox(height: size.height / 15),
-              Sideicons(
-                  color: Colors.transparent,
-                  data: 'Clock',
-                  iconadd: 'assets/clock-120-512.png'),
+                  }),
               SizedBox(height: size.height / 10),
               Sideicons(
                   color: Colors.grey.withOpacity(0.4),
@@ -73,16 +106,9 @@ class Reminders extends StatefulWidget {
 
 class _RemindersState extends State<Reminders> {
   List<ReminderModel> alarms = [
-    ReminderModel(
-      'afdfdddffsdf',
-      true,
-      DateTime.now(),
-    ),
-    ReminderModel(
-      'description',
-      false,
-      DateTime.now(),
-    )
+    ReminderModel('afdfdddffsdf', true, DateTime.now(), '', ''),
+    ReminderModel('description', false, DateTime.now(), '', ''),
+    // ReminderModel('description', 'isSet', 'dueDate', 'drug', 'name'),
   ];
   @override
   Widget build(BuildContext context) {
@@ -108,6 +134,7 @@ class _RemindersState extends State<Reminders> {
           Expanded(
             child: ListView(
               children: alarms.map((e) {
+                var alarmtime = DateFormat("hh:mm: aa").format(e.dueDate);
                 return Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Container(
@@ -160,7 +187,7 @@ class _RemindersState extends State<Reminders> {
                           ),
                         ),
                         Text(
-                          "10:30am",
+                          alarmtime,
                           style: GoogleFonts.lato(
                             fontSize: 19,
                             fontWeight: FontWeight.bold,
@@ -174,19 +201,22 @@ class _RemindersState extends State<Reminders> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Container(
+                    height: 90,
                     decoration: BoxDecoration(
-                      color: Colors.grey[50],
+                      borderRadius: BorderRadius.circular(20),
+                      color: Colors.grey[200],
                     ),
-                    child: TextButton(
-                      onPressed: () {},
+                    child: InkWell(
+                      onTap: schedulereminder,
                       child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: const [
                           Icon(
-                            Icons.add_box,
-                            size: 1.5,
+                            Icons.add_box_outlined,
+                            size: 30,
                             color: Colors.black,
                           ),
-                          Text('Add Eeminder')
+                          Text('Add Reminder')
                         ],
                       ),
                     ),
@@ -198,5 +228,35 @@ class _RemindersState extends State<Reminders> {
         ],
       ),
     );
+  }
+
+  void schedulereminder() async {
+    var androidPlatformChannelSpecifics = const AndroidNotificationDetails(
+      'alarm notif ',
+      'alarm ',
+      icon: 'ic_launcher',
+      sound: RawResourceAndroidNotificationSound('a_long_cold_sting'),
+      largeIcon: DrawableResourceAndroidBitmap('ic_launcher'),
+    );
+
+    var iosPlatform = const IOSNotificationDetails(
+      sound: 'a_long_cold_sting',
+      presentAlert: true,
+      presentBadge: true,
+      presentSound: true,
+    );
+
+    var platformChannelSpecs = NotificationDetails(
+        android: androidPlatformChannelSpecifics, iOS: iosPlatform);
+
+    await flutterLocalNotificationsPlugin.zonedSchedule(
+        0,
+        'Medication time',
+        'you need to take your drugs now',
+        tz.TZDateTime.now(tz.local).add(const Duration(seconds: 5)),
+        platformChannelSpecs,
+        androidAllowWhileIdle: true,
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime);
   }
 }

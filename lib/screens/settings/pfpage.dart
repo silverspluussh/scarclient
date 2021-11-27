@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:scarclient/Models/profilemodel.dart';
+import 'package:scarclient/screens/dashboard/dashboard.dart';
 import 'package:scarclient/services/authen.dart';
 
 class Profilepage extends StatefulWidget {
@@ -48,24 +49,28 @@ class _ProfilepageState extends State<Profilepage> {
       child: ListView(
         children: [
           Row(
-            children: const [
+            children: [
               IconButton(
-                onPressed: null,
-                icon: Icon(Icons.arrow_back_ios),
+                onPressed: () async {
+                  await Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const Dashboard(),
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.arrow_back_ios),
               ),
-              IconButton(
+              const IconButton(
                 onPressed: null,
                 icon: Icon(Icons.edit),
               ),
             ],
           ),
           const SizedBox(height: 20),
-          const CircleAvatar(
+          CircleAvatar(
             backgroundColor: Colors.transparent,
-            backgroundImage: AssetImage(
-              'assetName',
-            ),
-            maxRadius: 20,
+            backgroundImage: networkhandler.getimage(profile.name),
           ),
           const SizedBox(height: 20),
           Form(

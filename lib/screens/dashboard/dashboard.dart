@@ -4,6 +4,7 @@ import 'package:scarclient/reminderMe/remhome.dart';
 import 'package:scarclient/screens/dashboard/profilepic.dart';
 import 'dart:async';
 import 'package:scarclient/screens/dashboard/welcomeprofile.dart';
+import 'package:scarclient/screens/settings/pfpage.dart';
 import 'package:scarclient/screens/vitals/vitals.dart';
 import 'package:scarclient/services/authen.dart';
 
@@ -59,14 +60,14 @@ class _HomeState extends State<Dashboard> {
 
   void getuser() async {
     var response = await networkhand.get('/name');
-    Map<String, dynamic> outside = response;
-    user = outside['name'];
+    user = response['data']['name'];
   }
 
   @override
   void initState() {
     super.initState();
     // _changeSlideStack();
+
     _changeSlidePage();
     _index = 0;
   }
@@ -96,7 +97,16 @@ class _HomeState extends State<Dashboard> {
           child: Column(
             children: [
               const SizedBox(height: 20),
-              WelcomeProfilePic(user: user),
+              InkWell(
+                  onTap: () async {
+                    await Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const Profilepage(),
+                      ),
+                    );
+                  },
+                  child: WelcomeProfilePic(user: user)),
               SlideImagesCard(
                 width: _width,
                 index: _index,

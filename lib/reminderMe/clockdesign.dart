@@ -102,8 +102,8 @@ class ReminderPainter extends CustomPainter {
     canvas.drawLine(center, Offset(hrhandx, hrhandy), hourhand);
     canvas.drawCircle(center, 14, filebrush2);
 
-    var outerCircle = rad - 5;
-    var innerCircle = rad - 12;
+    var outerCircle = rad - 15;
+    var innerCircle = rad - 20;
     for (double i = 0; i < 360; i++) {
       var xi = midx + outerCircle * cos(i * pi / 180);
       var yi = midx + outerCircle * sin(i * pi / 180);

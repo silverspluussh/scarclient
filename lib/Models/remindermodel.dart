@@ -4,11 +4,14 @@ part 'remindermodel.g.dart';
 
 @JsonSerializable()
 class ReminderModel {
-  DateTime reminderTime;
+  DateTime dueDate;
   String description;
   bool isSet;
+  String name;
+  String drug;
 
-  ReminderModel(this.description, this.isSet, this.reminderTime);
+  ReminderModel(
+      this.description, this.isSet, this.dueDate, this.drug, this.name);
 
   factory ReminderModel.fromJson(Map<String, dynamic> json) =>
       _$ReminderModelFromJson(json);
