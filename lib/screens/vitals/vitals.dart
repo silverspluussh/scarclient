@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:scarclient/Models/vitalsmodel.dart';
 import 'package:scarclient/screens/startscreen/navigation_index.dart';
 import 'package:scarclient/screens/vitals/setvitals.dart';
 import 'package:scarclient/services/authen.dart';
@@ -13,20 +14,6 @@ class Vitals extends StatefulWidget {
 
   @override
   _VitalsState createState() => _VitalsState();
-}
-
-// ignore: camel_case_types
-class vitalsInfo {
-  int pulserate;
-  String bloodpressure;
-  String? breathingrate;
-  String? bodytemperature;
-  vitalsInfo(
-    this.bloodpressure,
-    this.bodytemperature,
-    this.breathingrate,
-    this.pulserate,
-  );
 }
 
 class _VitalsState extends State<Vitals> with SingleTickerProviderStateMixin {
@@ -118,23 +105,48 @@ class ChartsInfo extends StatefulWidget {
 
 class _ChartsInfoState extends State<ChartsInfo> {
   NetworkHanler networkhandle = NetworkHanler();
+  VitalsModel vitals = VitalsModel(
+      name!, bodytemperature!, pulserate!, bloodpressure!, breathingrate!);
 
-  String pulse = '23';
+  var pulse = '23';
 
-  String bodytemp = '27';
+  var bodytemp = '27';
 
-  String pressure = '120';
+  var pressure = '120';
 
-  String breathrate = '12';
+  var breathrate = '12';
 
   List<Vitalsinfo>? _datachart;
   late TooltipBehavior tooltipbehave;
+
+  static String? bloodpressure;
+
+  static String? bodytemperature;
+
+  static String? breathingrate;
+
+  static String? name;
+
+  static String? pulserate;
 
   @override
   void initState() {
     _datachart = getdatachart();
     tooltipbehave = TooltipBehavior(enable: true);
     super.initState();
+  }
+
+  void getdata() async {
+    var resp = await networkhandle.get('/vitals/vitalsinfo');
+    setState(() {
+      vitals = VitalsModel.fromJson(resp["data"]);
+    });
+    while (resp != null) {
+      pulse = vitals.pulserate;
+      bodytemp = vitals.bodytemperature;
+      pressure = vitals.bloodpressure;
+      breathrate = vitals.breathingrate;
+    }
   }
 
   @override
@@ -176,10 +188,10 @@ class _ChartsInfoState extends State<ChartsInfo> {
 
   List<Vitalsinfo> getdatachart() {
     final List<Vitalsinfo> datachart = [
-      Vitalsinfo('Pulse rate', int.parse(pulse)),
-      Vitalsinfo('Temperature', int.parse(bodytemp)),
-      Vitalsinfo('Blood Pressure', int.parse(pressure)),
-      Vitalsinfo('Breathing Rate', int.parse(breathrate)),
+      Vitalsinfo('Pulse rate', double.parse(pulse)),
+      Vitalsinfo('Temperature', double.parse(bodytemp)),
+      Vitalsinfo('Blood Pressure', double.parse(pressure)),
+      Vitalsinfo('Breathing Rate', double.parse(breathrate)),
     ];
     return datachart;
   }
@@ -187,6 +199,6 @@ class _ChartsInfoState extends State<ChartsInfo> {
 
 class Vitalsinfo {
   String vital;
-  int reads;
+  double reads;
   Vitalsinfo(this.vital, this.reads);
 }

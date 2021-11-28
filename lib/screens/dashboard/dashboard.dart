@@ -60,7 +60,9 @@ class _HomeState extends State<Dashboard> {
 
   void getuser() async {
     var response = await networkhand.get('/name');
-    user = response['data']['name'];
+    setState(() {
+      user = response['data']['name'];
+    });
   }
 
   @override
