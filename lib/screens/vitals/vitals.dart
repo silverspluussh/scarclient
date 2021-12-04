@@ -120,6 +120,7 @@ class _ChartsInfoState extends State<ChartsInfo> {
   var breathrate = '12';
 
   List<Vitalsinfo>? _datachart;
+
   late TooltipBehavior tooltipbehave;
 
   @override
@@ -176,7 +177,9 @@ class _ChartsInfoState extends State<ChartsInfo> {
               } else if (snapshot.hasError) {
                 return Text('${snapshot.error}');
               }
-              return SfCircularChart(
+              return const Center(child: Text('vitals not set'));
+
+              /*SfCircularChart(
                 title: ChartTitle(
                   text: "VITALS",
                   textStyle: GoogleFonts.nunito(
@@ -203,7 +206,7 @@ class _ChartsInfoState extends State<ChartsInfo> {
                   isVisible: true,
                   overflowMode: LegendItemOverflowMode.wrap,
                 ),
-              );
+              );*/
             }),
       ),
     );
