@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:scarclient/screens/settings/profilesets.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:scarclient/services/authen.dart';
 
 class SetVitals extends StatelessWidget {
   const SetVitals({
@@ -12,6 +15,9 @@ class SetVitals extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final _formKey = GlobalKey<FormState>();
+
+    NetworkHanler hanler = NetworkHanler();
     TextEditingController pulserate = TextEditingController();
     TextEditingController temperature = TextEditingController();
     TextEditingController bloodpressure = TextEditingController();
@@ -95,7 +101,31 @@ class SetVitals extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.fromLTRB(50, 20, 50, 0),
               child: ElevatedButton.icon(
-                onPressed: () {},
+                onPressed: () async {
+                  if (_formKey.currentState!.validate()) {
+                    Map<String, String> data = {
+                      "pulserate": pulserate.text,
+                      "bloodpressure": bloodpressure.text,
+                      "bodytemperature": temperature.text,
+                      "breathingrate": breathingrate.text,
+                    };
+                    var output = await hanler.post('/vitals/addvitals', data);
+
+                    Map<String, dynamic> response = json.decode(output.body);
+                    await Fluttertoast.showToast(
+                      msg: response["msg"],
+                      backgroundColor: Colors.green,
+                      gravity: ToastGravity.BOTTOM,
+                      toastLength: Toast.LENGTH_LONG,
+                      fontSize: 23,
+                    ).then((value) {
+                      pulserate.text = '';
+                      bloodpressure.text = '';
+                      temperature.text = '';
+                      breathingrate.text = '';
+                    });
+                  }
+                },
                 icon: const Icon(Icons.save_alt_outlined),
                 label: const Text(
                   'Save',

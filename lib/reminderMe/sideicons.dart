@@ -22,6 +22,7 @@ class Sideicons extends StatelessWidget {
         children: [
           Image.asset(
             iconadd,
+
             // color: Colors.transparent,
           ),
           const SizedBox(height: 10),

@@ -1,8 +1,3 @@
-import 'package:json_annotation/json_annotation.dart';
-
-part 'vitalsmodel.g.dart';
-
-@JsonSerializable()
 class VitalsModel {
   String name;
   String bodytemperature;
@@ -11,14 +6,18 @@ class VitalsModel {
   String bloodpressure;
 
   VitalsModel(
-    this.name,
-    this.bodytemperature,
-    this.pulserate,
-    this.bloodpressure,
-    this.breathingrate,
-  );
+      {required this.name,
+      required this.bodytemperature,
+      required this.pulserate,
+      required this.breathingrate,
+      required this.bloodpressure});
 
-  factory VitalsModel.fromJson(Map<String, dynamic> json) =>
-      _$VitalsModelFromJson(json);
-  Map<String, dynamic> toJson() => _$VitalsModelToJson(this);
+  factory VitalsModel.fromJson(Map<String, dynamic> json) {
+    return VitalsModel(
+        name: json['name'],
+        bodytemperature: json['bodytemperature'],
+        pulserate: json['pulserate'],
+        breathingrate: json['breathingrate'],
+        bloodpressure: json['bloodpressure']);
+  }
 }

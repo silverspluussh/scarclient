@@ -51,7 +51,7 @@ class _SignUpState extends State<SignUp> {
                   "Let's get started ! ",
                   style: GoogleFonts.lato(
                       color: Colors.black,
-                      fontSize: 41,
+                      fontSize: 30,
                       fontWeight: FontWeight.bold),
                 ),
               ),
@@ -293,14 +293,14 @@ class _SignUpState extends State<SignUp> {
                 height: 10,
               ),
               Container(
-                margin: const EdgeInsets.only(top: 10),
+                margin: const EdgeInsets.symmetric(horizontal: 10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
                       "Already have an account? ",
                       style: GoogleFonts.workSans(
-                          color: Colors.black, fontSize: 20),
+                          color: Colors.black, fontSize: 15),
                     ),
                     GestureDetector(
                       onTap: () {
@@ -315,7 +315,7 @@ class _SignUpState extends State<SignUp> {
                         " Sign In",
                         style: GoogleFonts.workSans(
                           color: Colors.blue,
-                          fontSize: 25,
+                          fontSize: 20,
                           decoration: TextDecoration.underline,
                           fontStyle: FontStyle.italic,
                         ),

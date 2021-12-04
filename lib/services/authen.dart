@@ -4,7 +4,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
 class NetworkHanler {
-  String burl = "https://mighty-headland-63561.herokuapp.com";
+  String burl = "https://morning-basin-74575.herokuapp.com";
 
   FlutterSecureStorage storage = const FlutterSecureStorage();
 
@@ -57,6 +57,7 @@ class NetworkHanler {
 
   NetworkImage getimage(String username) {
     String url = formatter('/uploads//$username');
+
     return NetworkImage(url);
   }
 }

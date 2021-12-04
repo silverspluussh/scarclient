@@ -51,31 +51,28 @@ class _SplashScreenState extends State<SplashScreen> {
       },
       child: Container(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(20, 0, 20, 2),
+          padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
           child: ListView(
             children: [
               Align(
                 alignment: Alignment.topRight,
-                child: SizedBox(
-                  width: _width / 3.8,
-                  child: ElevatedButton(
-                    child: Text(
-                      "LOGIN",
-                      style: GoogleFonts.acme(
-                          color: Colors.black,
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
-                      primary: const Color(0xFFB5ADCC),
-                    ),
-                    onPressed: onLogIN,
+                child: ElevatedButton(
+                  child: Text(
+                    "LOGIN",
+                    style: GoogleFonts.acme(
+                        color: Colors.black,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold),
                   ),
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    primary: const Color(0xFFB5ADCC),
+                  ),
+                  onPressed: onLogIN,
                 ),
               ),
-              SizedBox(height: _height / 2.3),
+              SizedBox(height: _height / 3.0),
               Wrap(
                 children: [
                   Text(
@@ -125,7 +122,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 ],
               ),
               Padding(
-                padding: const EdgeInsets.fromLTRB(90, 10, 90, 1),
+                padding: const EdgeInsets.fromLTRB(60, 10, 60, 1),
                 child: SizedBox(
                   width: _width / 3,
                   child: ElevatedButton(
@@ -175,31 +172,28 @@ class _SplashScreenState extends State<SplashScreen> {
       },
       child: Container(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(20, 0, 20, 2),
+          padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
           child: ListView(
             children: [
               Align(
                 alignment: Alignment.topRight,
-                child: SizedBox(
-                  width: _width / 4,
-                  child: ElevatedButton(
-                    child: Text(
-                      "LOGIN",
-                      style: GoogleFonts.acme(
-                          color: Colors.black,
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
-                      primary: const Color(0xFFB5ADCC),
-                    ),
-                    onPressed: onLogIN,
+                child: ElevatedButton(
+                  child: Text(
+                    "LOGIN",
+                    style: GoogleFonts.acme(
+                        color: Colors.black,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold),
                   ),
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    primary: const Color(0xFFB5ADCC),
+                  ),
+                  onPressed: onLogIN,
                 ),
               ),
-              SizedBox(height: _height / 2.5),
+              SizedBox(height: _height / 2.8),
               Wrap(
                 children: [
                   Text(
@@ -249,9 +243,9 @@ class _SplashScreenState extends State<SplashScreen> {
                 ],
               ),
               Padding(
-                padding: const EdgeInsets.fromLTRB(90, 10, 90, 1),
+                padding: const EdgeInsets.fromLTRB(60, 10, 60, 1),
                 child: SizedBox(
-                  width: _width / 3,
+                  width: _width / 5,
                   child: ElevatedButton(
                     child: Text(
                       "Get Started",
@@ -300,31 +294,28 @@ class _SplashScreenState extends State<SplashScreen> {
         },
         child: Container(
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(20, 0, 20, 2),
+            padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
             child: ListView(
               children: [
                 Align(
                   alignment: Alignment.topRight,
-                  child: SizedBox(
-                    width: _width / 3.8,
-                    child: ElevatedButton(
-                      child: Text(
-                        "LOGIN",
-                        style: GoogleFonts.acme(
-                            color: Colors.black,
-                            fontSize: 25,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10)),
-                        primary: const Color(0xFFB5ADCC),
-                      ),
-                      onPressed: onLogIN,
+                  child: ElevatedButton(
+                    child: Text(
+                      "LOGIN",
+                      style: GoogleFonts.acme(
+                          color: Colors.black,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold),
                     ),
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                      primary: const Color(0xFFB5ADCC),
+                    ),
+                    onPressed: onLogIN,
                   ),
                 ),
-                SizedBox(height: _height / 2.3),
+                SizedBox(height: _height / 3.0),
                 Wrap(
                   children: [
                     Text(
@@ -375,7 +366,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   ],
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(90, 10, 90, 1),
+                  padding: const EdgeInsets.fromLTRB(60, 10, 60, 1),
                   child: SizedBox(
                     width: _width / 3,
                     child: ElevatedButton(
@@ -422,31 +413,28 @@ class _SplashScreenState extends State<SplashScreen> {
         },
         child: Container(
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(20, 0, 20, 2),
+            padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
             child: ListView(
               children: [
                 Align(
                   alignment: Alignment.topRight,
-                  child: SizedBox(
-                    width: _width / 3.8,
-                    child: ElevatedButton(
-                      child: Text(
-                        "LOGIN",
-                        style: GoogleFonts.acme(
-                            color: Colors.black,
-                            fontSize: 25,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10)),
-                        primary: const Color(0xFFB5ADCC),
-                      ),
-                      onPressed: onLogIN,
+                  child: ElevatedButton(
+                    child: Text(
+                      "LOGIN",
+                      style: GoogleFonts.acme(
+                          color: Colors.black,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold),
                     ),
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                      primary: const Color(0xFFB5ADCC),
+                    ),
+                    onPressed: onLogIN,
                   ),
                 ),
-                SizedBox(height: _height / 2.3),
+                SizedBox(height: _height / 4.2),
                 Wrap(
                   children: [
                     Text(
@@ -497,7 +485,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   ],
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(90, 10, 90, 1),
+                  padding: const EdgeInsets.fromLTRB(60, 10, 60, 1),
                   child: SizedBox(
                     width: _width / 3,
                     child: ElevatedButton(

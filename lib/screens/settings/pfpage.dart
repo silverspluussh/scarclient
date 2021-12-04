@@ -12,94 +12,97 @@ class Profilepage extends StatefulWidget {
 }
 
 class _ProfilepageState extends State<Profilepage> {
-  static String? contact;
+  NetworkHanler networkhandler = NetworkHanler();
+  bool progress = true;
+  late Future<ProfileModel> fetchprofile;
 
-  static String? dob;
+  Future<ProfileModel> getdata() async {
+    var resp = await networkhandler.get('/profile/profileinfo');
 
-  static String? firstname;
-
-  static String? nationality;
-
-  static String? surname;
-  static String? name;
+    if (resp != null) {
+      return ProfileModel.fromJson(resp);
+    } else {
+      throw Exception('Failed to load album');
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-    getdata();
-  }
-
-  ProfileModel profile =
-      ProfileModel(contact!, dob!, firstname!, nationality!, surname!, name!);
-  final networkhandler = NetworkHanler();
-  bool progress = true;
-
-  void getdata() async {
-    var resp = await networkhandler.get('/profile/profileinfo');
-    setState(() {
-      profile = ProfileModel.fromJson(resp["data"]);
-    });
+    fetchprofile = getdata();
   }
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: double.infinity,
-      width: double.infinity,
-      child: ListView(
-        children: [
-          Row(
-            children: [
-              IconButton(
-                onPressed: () async {
-                  await Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => const Dashboard(),
-                    ),
-                  );
-                },
-                icon: const Icon(Icons.arrow_back_ios),
-              ),
-              const IconButton(
-                onPressed: null,
-                icon: Icon(Icons.edit),
-              ),
-            ],
-          ),
-          const SizedBox(height: 20),
-          CircleAvatar(
-            backgroundColor: Colors.transparent,
-            backgroundImage: networkhandler.getimage(profile.name),
-          ),
-          const SizedBox(height: 20),
-          Form(
-            child: Column(
+    return Scaffold(
+      body: Container(
+        padding: const EdgeInsets.all(10),
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        child: ListView(
+          children: [
+            Row(
               children: [
-                Infoslide(
-                  title: 'Firstname',
-                  txt: profile.firstname,
+                IconButton(
+                  onPressed: () async {
+                    await Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const Dashboard(),
+                      ),
+                    );
+                  },
+                  icon: const Icon(Icons.arrow_back_ios),
                 ),
-                Infoslide(
-                  title: 'Surname',
-                  txt: profile.surname,
-                ),
-                Infoslide(
-                  title: 'Nationality',
-                  txt: profile.nationality,
-                ),
-                Infoslide(
-                  title: 'Date of Birth',
-                  txt: profile.dob,
-                ),
-                Infoslide(
-                  title: 'Contact',
-                  txt: profile.contact,
+                const Spacer(),
+                IconButton(
+                  onPressed: () {},
+                  icon: const Icon(Icons.edit),
                 ),
               ],
             ),
-          )
-        ],
+            const SizedBox(height: 20),
+            FutureBuilder<ProfileModel>(
+                future: fetchprofile,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return Column(
+                      children: [
+                        const CircleAvatar(
+                            backgroundColor: Colors.transparent,
+                            backgroundImage: AssetImage('assets/logo.png')
+                            // networkhandler.getimage(snapshot.data!.name),
+                            ),
+                        const SizedBox(height: 20),
+                        Infoslide(
+                          title: 'Firstname',
+                          txt: snapshot.data!.firstname,
+                        ),
+                        Infoslide(
+                          title: 'Surname',
+                          txt: snapshot.data!.surname,
+                        ),
+                        Infoslide(
+                          title: 'Nationality',
+                          txt: snapshot.data!.nationality,
+                        ),
+                        Infoslide(
+                          title: 'Date of Birth',
+                          txt: snapshot.data!.dob,
+                        ),
+                        Infoslide(
+                          title: 'Contact',
+                          txt: '${snapshot.data!.contact}',
+                        ),
+                      ],
+                    );
+                  } else if (snapshot.hasError) {
+                    return Text('${snapshot.error}');
+                  }
+                  return const Center(child: CircularProgressIndicator());
+                })
+          ],
+        ),
       ),
     );
   }
@@ -126,6 +129,7 @@ class Infoslide extends StatelessWidget {
             fontSize: 18,
           ),
         ),
+        const Spacer(),
         Wrap(children: [
           Text(
             txt,

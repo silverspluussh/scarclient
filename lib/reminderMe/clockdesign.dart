@@ -12,17 +12,22 @@ class RemindView extends StatefulWidget {
 class _RemindState extends State<RemindView> {
   @override
   void initState() {
-    Timer.periodic(const Duration(seconds: 1), (timer) {
-      setState(() {});
+    Timer.periodic(const Duration(seconds: 1), (t) {
+      if (mounted) {
+        setState(() {});
+      } else {
+        t.cancel();
+      }
     });
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: MediaQuery.of(context).size.width / 2.1,
-      height: MediaQuery.of(context).size.height / 3.1,
+      width: MediaQuery.of(context).size.width / 2,
+      height: MediaQuery.of(context).size.height / 3,
       child: Transform.rotate(
         angle: -pi / 2,
         child: CustomPaint(
@@ -37,8 +42,8 @@ class ReminderPainter extends CustomPainter {
   var datetime = DateTime.now();
   @override
   void paint(Canvas canvas, Size size) {
-    var midx = 125.0;
-    var midy = 125.0;
+    var midx = 135.0;
+    var midy = 135.0;
     var center = Offset(midy, midy);
     var rad = min(midx, midy);
 
@@ -61,7 +66,7 @@ class ReminderPainter extends CustomPainter {
       )
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round
-      ..strokeWidth = 4;
+      ..strokeWidth = 2;
 
     var hourhand = Paint()
       ..shader = const RadialGradient(
@@ -81,13 +86,13 @@ class ReminderPainter extends CustomPainter {
       )
       ..strokeCap = StrokeCap.round
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 7;
+      ..strokeWidth = 5;
 
     canvas.drawCircle(center, rad - 30, filebrush);
     canvas.drawCircle(center, rad - 30, filebrush1);
 
-    var minHandx = midx + 80 * cos(datetime.minute * 6 * pi / 180);
-    var minHandy = midx + 80 * sin(datetime.minute * 6 * pi / 180);
+    var minHandx = midx + 60 * cos(datetime.minute * 6 * pi / 180);
+    var minHandy = midx + 60 * sin(datetime.minute * 6 * pi / 180);
     canvas.drawLine(center, Offset(minHandx, minHandy), minutehand);
 
     var sechandx = midx + 80 * cos(datetime.second * 6 * pi / 180);
@@ -95,15 +100,15 @@ class ReminderPainter extends CustomPainter {
     canvas.drawLine(center, Offset(sechandx, sechandy), secondhand);
 
     var hrhandx = midx +
-        80 * cos((datetime.hour * 30 + datetime.minute * 0.5) * pi / 180);
+        50 * cos((datetime.hour * 30 + datetime.minute * 0.5) * pi / 180);
     var hrhandy = midx +
-        80 * sin((datetime.hour * 30 + datetime.minute * 0.5) * pi / 180);
+        50 * sin((datetime.hour * 30 + datetime.minute * 0.5) * pi / 180);
 
     canvas.drawLine(center, Offset(hrhandx, hrhandy), hourhand);
     canvas.drawCircle(center, 14, filebrush2);
 
-    var outerCircle = rad - 15;
-    var innerCircle = rad - 20;
+    var outerCircle = rad - 27;
+    var innerCircle = rad - 25;
     for (double i = 0; i < 360; i++) {
       var xi = midx + outerCircle * cos(i * pi / 180);
       var yi = midx + outerCircle * sin(i * pi / 180);

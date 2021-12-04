@@ -18,7 +18,7 @@ class WelcomeProfilePic extends StatelessWidget {
         child: Wrap(
           children: [
             Text(
-              "How's your health today,\n$user?",
+              "How's your health today,\n$user ?",
               style: GoogleFonts.firaSansExtraCondensed(
                 color: Colors.black,
                 fontSize: 25,

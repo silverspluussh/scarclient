@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:scarclient/reminderMe/clockpage.dart';
+import 'package:scarclient/reminderMe/reminderpage.dart';
 import 'package:scarclient/screens/dashboard/dashboard.dart';
 import 'package:scarclient/screens/settings/settings.dart';
+import 'package:scarclient/screens/vitals/vitals.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -14,6 +17,9 @@ class _HomeState extends State<Home> {
 
   final navigationtabs = const [
     Center(child: Dashboard()),
+    Center(child: ReminderPage()),
+    Center(child: Clock()),
+    Center(child: Vitals()),
     Center(child: Settings()),
   ];
 
@@ -43,6 +49,27 @@ class _HomeState extends State<Home> {
                 //color: Colors.redAccent,
               ),
               label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: ImageIcon(
+                AssetImage('assets/clock-111-128.png'),
+                //color: Colors.redAccent,
+              ),
+              label: 'Reminders',
+            ),
+            BottomNavigationBarItem(
+              icon: ImageIcon(
+                AssetImage('assets/clock-137-128.png'),
+                //color: Colors.redAccent,
+              ),
+              label: 'Clock',
+            ),
+            BottomNavigationBarItem(
+              icon: ImageIcon(
+                AssetImage('assets/heart-rate-11-128.png'),
+                //color: Colors.redAccent,
+              ),
+              label: 'Vitals',
             ),
             BottomNavigationBarItem(
               icon: ImageIcon(

@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:scarclient/reminderMe/remhome.dart';
 import 'package:scarclient/screens/dashboard/profilepic.dart';
 import 'dart:async';
 import 'package:scarclient/screens/dashboard/welcomeprofile.dart';
 import 'package:scarclient/screens/settings/pfpage.dart';
-import 'package:scarclient/screens/vitals/vitals.dart';
 import 'package:scarclient/services/authen.dart';
 
 class Dashboard extends StatefulWidget {
@@ -25,51 +24,59 @@ class _HomeState extends State<Dashboard> {
   // ignore: unused_element
   void _changeSlideStack() {
     Timer.periodic(const Duration(seconds: 5), (timer) {
-      setState(() {
-        if (_index >= 3) {
-          _index = 0;
-        } else {
-          _index += 1;
-        }
-      });
-      debugPrint("Timer " + timer.tick.toString());
+      if (mounted) {
+        setState(() {
+          if (_index >= 3) {
+            _index = 0;
+          } else {
+            _index += 1;
+          }
+        });
+        debugPrint("Timer " + timer.tick.toString());
+      } else {
+        timer.cancel;
+      }
     });
   }
 
   void _changeSlidePage() {
     Timer.periodic(const Duration(seconds: 10), (timer) {
-      setState(() {
-        if (_index >= 3) {
-          _index = 0;
-        } else {
-          _index += 1;
+      if (mounted) {
+        setState(() {
+          if (_index >= 3) {
+            _index = 0;
+          } else {
+            _index += 1;
+          }
+        });
+
+        if (_slideShowPageController.hasClients) {
+          _slideShowPageController.animateToPage(
+            _index,
+            duration: const Duration(milliseconds: 200),
+            curve: Curves.easeInOutBack,
+          );
         }
-      });
 
-      if (_slideShowPageController.hasClients) {
-        _slideShowPageController.animateToPage(
-          _index,
-          duration: const Duration(milliseconds: 200),
-          curve: Curves.easeInOutBack,
-        );
+        debugPrint("Timer " + timer.tick.toString());
+      } else {
+        timer.cancel();
       }
-
-      debugPrint("Timer " + timer.tick.toString());
     });
   }
 
-  void getuser() async {
-    var response = await networkhand.get('/name');
+  Future getuser() async {
+    var response = await networkhand.get('/user/name');
     setState(() {
-      user = response['data']['name'];
+      user = response['name'];
     });
   }
 
   @override
   void initState() {
     super.initState();
-    // _changeSlideStack();
-
+    _changeSlideStack();
+    getuser();
     _changeSlidePage();
     _index = 0;
   }
@@ -89,7 +96,16 @@ class _HomeState extends State<Dashboard> {
       backgroundColor: Colors.white24,
       appBar: AppBar(
         backgroundColor: const Color(0xFFEEF0EB),
-        title: ProfilePicture(width: _width),
+        title: InkWell(
+            onTap: () async {
+              await Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const Profilepage(),
+                ),
+              );
+            },
+            child: ProfilePicture(width: _width)),
       ),
       body: Container(
         width: double.infinity,
@@ -99,54 +115,14 @@ class _HomeState extends State<Dashboard> {
           child: Column(
             children: [
               const SizedBox(height: 20),
-              InkWell(
-                  onTap: () async {
-                    await Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => const Profilepage(),
-                      ),
-                    );
-                  },
-                  child: WelcomeProfilePic(user: user)),
+              WelcomeProfilePic(user: user),
               SlideImagesCard(
                 width: _width,
                 index: _index,
                 height: _height,
                 slideShowPageController: _slideShowPageController,
               ),
-              const SizedBox(height: 30.0),
-              Row(
-                children: [
-                  GestureDetector(
-                      child: RemindersCard(
-                        width: _width,
-                        height: _height,
-                      ),
-                      onTap: () async {
-                        await Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => const Clock(),
-                          ),
-                        );
-                      }),
-                  InkWell(
-                    onTap: () async {
-                      await Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => const Vitals(),
-                        ),
-                      );
-                    },
-                    child: VitalsCard(
-                      width: _width,
-                      height: _height,
-                    ),
-                  ),
-                ],
-              )
+              const SizedBox(height: 25.0),
             ],
           ),
         ),
@@ -156,16 +132,7 @@ class _HomeState extends State<Dashboard> {
 }
 
 class VitalsCard extends StatelessWidget {
-  const VitalsCard({
-    Key? key,
-    required double width,
-    required double height,
-  })  : _width = width,
-        _height = height,
-        super(key: key);
-
-  final double _width;
-  final double _height;
+  const VitalsCard({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -175,7 +142,7 @@ class VitalsCard extends StatelessWidget {
       shadowColor: Colors.green,
       margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       child: Container(
-        width: _width / 2.3,
+        width: MediaQuery.of(context).size.width / 2.5,
         margin: const EdgeInsets.all(1),
         child: Center(
             child: Text("Vitals",
@@ -183,7 +150,7 @@ class VitalsCard extends StatelessWidget {
                     color: Colors.black,
                     fontSize: 25,
                     fontWeight: FontWeight.bold))),
-        height: _height / 3,
+        height: MediaQuery.of(context).size.height / 7,
         decoration: BoxDecoration(
           color: Colors.black12,
           borderRadius: BorderRadius.circular(10),
@@ -194,16 +161,7 @@ class VitalsCard extends StatelessWidget {
 }
 
 class RemindersCard extends StatelessWidget {
-  const RemindersCard({
-    Key? key,
-    required double width,
-    required double height,
-  })  : _width = width,
-        _height = height,
-        super(key: key);
-
-  final double _width;
-  final double _height;
+  const RemindersCard({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -213,7 +171,7 @@ class RemindersCard extends StatelessWidget {
       shadowColor: Colors.green,
       margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       child: Container(
-        width: _width / 2.3,
+        width: MediaQuery.of(context).size.width / 2.5,
         margin: const EdgeInsets.all(1),
         child: Center(
           child: Text(
@@ -225,7 +183,7 @@ class RemindersCard extends StatelessWidget {
             ),
           ),
         ),
-        height: _height / 3,
+        height: MediaQuery.of(context).size.height / 7,
         decoration: BoxDecoration(
           color: Colors.black26,
           borderRadius: BorderRadius.circular(10),
