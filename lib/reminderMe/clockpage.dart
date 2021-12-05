@@ -3,7 +3,6 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:scarclient/reminderMe/clock.dart';
-import 'package:scarclient/reminderMe/sideicons.dart';
 
 class Clock extends StatefulWidget {
   const Clock({Key? key}) : super(key: key);
@@ -13,6 +12,16 @@ class Clock extends StatefulWidget {
 }
 
 class _RemindState extends State<Clock> {
+  @override
+  void initState() {
+    super.initState();
+    if (mounted) {
+      setState(() {});
+    } else {
+      return;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;

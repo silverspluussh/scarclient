@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:scarclient/Models/profilemodel.dart';
-import 'package:scarclient/screens/dashboard/dashboard.dart';
+import 'package:scarclient/screens/startscreen/navigation_index.dart';
 import 'package:scarclient/services/authen.dart';
 
 class Profilepage extends StatefulWidget {
@@ -16,20 +16,24 @@ class _ProfilepageState extends State<Profilepage> {
   bool progress = true;
   late Future<ProfileModel> fetchprofile;
 
+  @override
+  void initState() {
+    if (mounted) {
+      setState(() {});
+      fetchprofile = getdata();
+    } else {
+      return;
+    }
+    super.initState();
+  }
+
   Future<ProfileModel> getdata() async {
     var resp = await networkhandler.get('/profile/profileinfo');
-
     if (resp != null) {
       return ProfileModel.fromJson(resp);
     } else {
       throw Exception('Failed to load album');
     }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    fetchprofile = getdata();
   }
 
   @override
@@ -48,7 +52,7 @@ class _ProfilepageState extends State<Profilepage> {
                     await Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                        builder: (_) => const Dashboard(),
+                        builder: (_) => const Home(),
                       ),
                     );
                   },
@@ -65,39 +69,44 @@ class _ProfilepageState extends State<Profilepage> {
             FutureBuilder<ProfileModel>(
                 future: fetchprofile,
                 builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return Text('${snapshot.error}');
+                  }
+
                   if (snapshot.hasData) {
                     return Column(
                       children: [
-                        const CircleAvatar(
-                            backgroundColor: Colors.transparent,
-                            backgroundImage: AssetImage('assets/logo.png')
-                            // networkhandler.getimage(snapshot.data!.name),
-                            ),
+                        CircleAvatar(
+                          backgroundColor: Colors.transparent,
+                          backgroundImage: const AssetImage(
+                            'assets/logo.png',
+                          ),
+                          radius: MediaQuery.of(context).size.width / 4.5,
+                          //   networkhandler.getimage(snapshot.data!.name),
+                        ),
                         const SizedBox(height: 20),
                         Infoslide(
-                          title: 'Firstname',
+                          title: 'Firstname:',
                           txt: snapshot.data!.firstname,
                         ),
                         Infoslide(
-                          title: 'Surname',
+                          title: 'Surname:',
                           txt: snapshot.data!.surname,
                         ),
                         Infoslide(
-                          title: 'Nationality',
+                          title: 'Nationality:',
                           txt: snapshot.data!.nationality,
                         ),
                         Infoslide(
-                          title: 'Date of Birth',
+                          title: 'Date of Birth:',
                           txt: snapshot.data!.dob,
                         ),
                         Infoslide(
-                          title: 'Contact',
+                          title: 'Contact:',
                           txt: '${snapshot.data!.contact}',
                         ),
                       ],
                     );
-                  } else if (snapshot.hasError) {
-                    return Text('${snapshot.error}');
                   }
                   return const Center(child: CircularProgressIndicator());
                 })
@@ -119,24 +128,32 @@ class Infoslide extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        Text(
-          title,
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 18,
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Text(
+                title,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                ),
+              ),
+              const Spacer(),
+              Wrap(children: [
+                Text(
+                  txt.toUpperCase(),
+                  style: const TextStyle(fontSize: 18),
+                ),
+              ]),
+            ],
           ),
-        ),
-        const Spacer(),
-        Wrap(children: [
-          Text(
-            txt,
-            style: const TextStyle(fontSize: 18),
-          ),
-        ]),
-      ],
+          const Divider(color: Colors.black),
+        ],
+      ),
     );
   }
 }

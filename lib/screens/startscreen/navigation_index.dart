@@ -13,6 +13,22 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  @override
+  void initState() {
+    if (mounted) {
+      setState(() {});
+    } else {
+      dispose();
+      return;
+    }
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   int _currentIndex = 0;
 
   final navigationtabs = const [

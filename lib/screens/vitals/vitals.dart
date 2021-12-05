@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:scarclient/Models/vitalsmodel.dart';
 import 'package:scarclient/screens/vitals/setvitals.dart';
 import 'package:scarclient/services/authen.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -16,6 +15,18 @@ class Vitals extends StatefulWidget {
 }
 
 class _VitalsState extends State<Vitals> with SingleTickerProviderStateMixin {
+  @override
+  void initState() {
+    if (mounted) {
+      setState(() {});
+      _tabController = TabController(length: myTabs.length, vsync: this);
+    } else {
+      dispose();
+      return;
+    }
+    super.initState();
+  }
+
   static List<Tab> myTabs = <Tab>[
     Tab(
       child: Text(
@@ -43,14 +54,8 @@ class _VitalsState extends State<Vitals> with SingleTickerProviderStateMixin {
 
   late TabController _tabController;
 
-  @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(length: myTabs.length, vsync: this);
-  }
-
-  @override
-  void dispose() {
+  // ignore: annotate_overrides
+  dispose() {
     super.dispose();
     _tabController.dispose();
   }
@@ -90,136 +95,92 @@ class ChartsInfo extends StatefulWidget {
 
 class _ChartsInfoState extends State<ChartsInfo> {
   NetworkHanler networkhandle = NetworkHanler();
-  var resp;
+  Widget page = const Center(child: CircularProgressIndicator());
 
-  late Future<VitalsModel> fetchvitals;
+  TooltipBehavior? tooltipbehave;
 
   @override
   void initState() {
-    _datachart = getdatachart();
-    tooltipbehave = TooltipBehavior(enable: true);
-    fetchvitals = getdata();
+    if (mounted) {
+      setState(() {});
+      getdata();
+      tooltipbehave = TooltipBehavior(enable: true);
+    } else {
+      dispose();
+      return;
+    }
+
     super.initState();
   }
 
-  Future<VitalsModel> getdata() async {
-    resp = await networkhandle.get('/vitals/vitalsinfo');
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  getdata() async {
+    var pulse, bodytemp, pressure, breathrate;
+    var resp = await networkhandle.get('/vitals/vitalsinfo');
+    //print(resp['pulserate']);
+
     if (resp != null) {
-      return VitalsModel.fromJson(resp);
+      setState(() {
+        pulse = resp['pulserate'];
+        bodytemp = resp['bodytemperature'];
+        pressure = resp['bloodpressure'];
+        breathrate = resp['breathingrate'];
+      });
+
+      List<Vitalsinfo> getdatachart() {
+        final List<Vitalsinfo> datachart = [
+          Vitalsinfo('Pulse rate', double.parse(pulse)),
+          Vitalsinfo('Temperature', double.parse(bodytemp)),
+          Vitalsinfo('Blood Pressure', double.parse(pressure)),
+          Vitalsinfo('Breathing Rate', double.parse(breathrate)),
+        ];
+        return datachart;
+      }
+
+      page = SfCircularChart(
+        title: ChartTitle(
+          text: "VITALS",
+          textStyle: GoogleFonts.nunito(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Colors.brown,
+          ),
+        ),
+        tooltipBehavior: tooltipbehave,
+        series: <CircularSeries>[
+          RadialBarSeries<Vitalsinfo, String>(
+            dataSource: getdatachart(),
+            xValueMapper: (Vitalsinfo data, _) => data.vital,
+            yValueMapper: (Vitalsinfo data, _) => data.reads,
+            enableTooltip: true,
+            maximumValue: 150,
+          ),
+        ],
+        legend: Legend(
+          textStyle: const TextStyle(fontSize: 17, fontWeight: FontWeight.w300),
+          iconHeight: 20,
+          iconWidth: 20,
+          isVisible: true,
+          overflowMode: LegendItemOverflowMode.wrap,
+        ),
+      );
     } else {
+      page = const Center(
+        child: Text('Failed to load vitals'),
+      );
       throw Exception('Failed to load album');
     }
   }
 
-  var pulse = '23';
-
-  var bodytemp = '27';
-
-  var pressure = '120';
-
-  var breathrate = '12';
-
-  List<Vitalsinfo>? _datachart;
-
-  late TooltipBehavior tooltipbehave;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        padding: const EdgeInsets.all(30),
-        child: FutureBuilder<VitalsModel>(
-            future: fetchvitals,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                List<Vitalsinfo> getdatachart() {
-                  final List<Vitalsinfo> datachart = [
-                    Vitalsinfo(
-                        'Pulse rate', double.parse(snapshot.data!.pulserate)),
-                    Vitalsinfo('Temperature',
-                        double.parse(snapshot.data!.bodytemperature)),
-                    Vitalsinfo('Blood Pressure',
-                        double.parse(snapshot.data!.bloodpressure)),
-                    Vitalsinfo('Breathing Rate',
-                        double.parse(snapshot.data!.breathingrate)),
-                  ];
-                  return datachart;
-                }
-
-                SfCircularChart(
-                  title: ChartTitle(
-                    text: "VITALS",
-                    textStyle: GoogleFonts.nunito(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.brown,
-                    ),
-                  ),
-                  tooltipBehavior: tooltipbehave,
-                  series: <CircularSeries>[
-                    RadialBarSeries<Vitalsinfo, String>(
-                      dataSource: getdatachart(),
-                      xValueMapper: (Vitalsinfo data, _) => data.vital,
-                      yValueMapper: (Vitalsinfo data, _) => data.reads,
-                      enableTooltip: true,
-                      maximumValue: 150,
-                    ),
-                  ],
-                  legend: Legend(
-                    textStyle: const TextStyle(
-                        fontSize: 17, fontWeight: FontWeight.w300),
-                    iconHeight: 20,
-                    iconWidth: 20,
-                    isVisible: true,
-                    overflowMode: LegendItemOverflowMode.wrap,
-                  ),
-                );
-              } else if (snapshot.hasError) {
-                return Text('${snapshot.error}');
-              }
-              return const Center(child: Text('vitals not set'));
-
-              /*SfCircularChart(
-                title: ChartTitle(
-                  text: "VITALS",
-                  textStyle: GoogleFonts.nunito(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.brown,
-                  ),
-                ),
-                tooltipBehavior: tooltipbehave,
-                series: <CircularSeries>[
-                  RadialBarSeries<Vitalsinfo, String>(
-                    dataSource: _datachart,
-                    xValueMapper: (Vitalsinfo data, _) => data.vital,
-                    yValueMapper: (Vitalsinfo data, _) => data.reads,
-                    enableTooltip: true,
-                    maximumValue: 150,
-                  ),
-                ],
-                legend: Legend(
-                  textStyle: const TextStyle(
-                      fontSize: 17, fontWeight: FontWeight.w300),
-                  iconHeight: 20,
-                  iconWidth: 20,
-                  isVisible: true,
-                  overflowMode: LegendItemOverflowMode.wrap,
-                ),
-              );*/
-            }),
-      ),
+      body: Container(padding: const EdgeInsets.all(30), child: page),
     );
-  }
-
-  List<Vitalsinfo> getdatachart() {
-    final List<Vitalsinfo> datachart = [
-      Vitalsinfo('Pulse rate', double.parse(pulse)),
-      Vitalsinfo('Temperature', double.parse(bodytemp)),
-      Vitalsinfo('Blood Pressure', double.parse(pressure)),
-      Vitalsinfo('Breathing Rate', double.parse(breathrate)),
-    ];
-    return datachart;
   }
 }
 

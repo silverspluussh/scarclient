@@ -21,9 +21,25 @@ class _HomeState extends State<Dashboard> {
   var user = '';
   NetworkHanler networkhand = NetworkHanler();
 
+  @override
+  void initState() {
+    if (mounted) {
+      setState(() {});
+    } else {
+      dispose();
+      return;
+    }
+    super.initState();
+
+    //_changeSlideStack();
+    getuser();
+    _changeSlidePage();
+    _index = 0;
+  }
+
   // ignore: unused_element
   void _changeSlideStack() {
-    Timer.periodic(const Duration(seconds: 5), (timer) {
+    Timer.periodic(const Duration(seconds: 10), (timer) {
       if (mounted) {
         setState(() {
           if (_index >= 3) {
@@ -34,7 +50,7 @@ class _HomeState extends State<Dashboard> {
         });
         debugPrint("Timer " + timer.tick.toString());
       } else {
-        timer.cancel;
+        timer.cancel();
       }
     });
   }
@@ -70,15 +86,6 @@ class _HomeState extends State<Dashboard> {
     setState(() {
       user = response['name'];
     });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _changeSlideStack();
-    getuser();
-    _changeSlidePage();
-    _index = 0;
   }
 
   // ignore: annotate_overrides
