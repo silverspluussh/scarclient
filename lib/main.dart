@@ -13,7 +13,7 @@ void main() async {
   final SharedPreferences sharedPereferences =
       await SharedPreferences.getInstance();
   int? opened = sharedPereferences.getInt('opened');
-  String? login = sharedPereferences.getString('success');
+  bool? login = sharedPereferences.getBool('success');
 
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
@@ -22,7 +22,7 @@ void main() async {
     ),
     home: opened == null
         ? const Splash()
-        : opened != null && login == 'True'
+        : opened != null && login == true
             ? const Home()
             : const SignIn(),
   ));

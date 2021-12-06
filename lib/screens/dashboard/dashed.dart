@@ -34,7 +34,7 @@ class _DashedState extends State<Dashed> {
     var _user = sharedPereferences.getString('name');
     //  var response = await networkhand.get('/user/name');
     setState(() {
-      if (_user!.isNotEmpty) {
+      if (_user != null) {
         user = _user;
       } else {
         user = 'user001';
@@ -67,27 +67,35 @@ class _DashedState extends State<Dashed> {
             child: ProfilePicture(width: size.width)),
       ),
       body: Container(
+        padding: const EdgeInsets.symmetric(vertical: 20),
         decoration: const BoxDecoration(color: Colors.white),
         width: size.width,
         height: size.height,
         child: Stack(
           children: [
-            SizedBox(
-              height: size.height / 10,
+            Padding(
+              padding: const EdgeInsets.fromLTRB(5, 0, 5, 10),
               child: WelcomeProfilePic(user: user),
             ),
             ListView(
               scrollDirection: Axis.vertical,
-              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+              padding: const EdgeInsets.symmetric(vertical: 90, horizontal: 15),
               children: [
+                const Text(
+                  'My Health Overview:',
+                  style: TextStyle(fontSize: 15),
+                ),
+                const SizedBox(height: 5),
                 Container(
+                  height: size.height / 4,
+                  width: size.width / 2,
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   decoration: BoxDecoration(
                     gradient: const LinearGradient(
                       colors: [
-                        Color(0xFFE0E7D8),
-                        Color(0xFF765FA1),
+                        Color(0xFFF1E7E7),
+                        //  Color(0xFF765FA1),
                         Color(0xFF8BAFA6),
                       ],
                       begin: Alignment.centerLeft,
@@ -95,20 +103,127 @@ class _DashedState extends State<Dashed> {
                     ),
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      vitalsL(Colors.red.withOpacity(0.1)),
-                      vitalsL(Colors.red.withOpacity(0.1)),
-                      Column(
-                        children: [
-                          vitlasS(Colors.red.withOpacity(0.1)),
-                          vitlasS(Colors.red.withOpacity(0.1)),
-                        ],
-                      )
-                    ],
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        vitalsL(Colors.green.withOpacity(0.1)),
+                        vitalsL(Colors.red.withOpacity(0.1)),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            vitlasS(
+                                Colors.red.withOpacity(0.1), Colors.blueGrey),
+                            vitlasS(Colors.purple.withOpacity(0.1),
+                                Colors.pink[50]),
+                          ],
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            circularcard(
+                                Colors.blue.withOpacity(0.1), Colors.grey[400]),
+                            circularcard(Colors.blue.withOpacity(0.1),
+                                Colors.orange[100]),
+                          ],
+                        )
+                      ],
+                    ),
                   ),
-                )
+                ),
+                const SizedBox(height: 20),
+                const Text(
+                  'My Drugs:',
+                  style: TextStyle(fontSize: 15),
+                ),
+                const SizedBox(height: 5),
+                Container(
+                  height: size.height / 5,
+                  width: size.width / 2,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [
+                        Color(0xFFD6A6B1),
+                        //  Color(0xFFA09676),
+                        Color(0xFFFCECEC),
+                      ],
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                    ),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        ListTile(
+                          hoverColor: Colors.grey[50],
+                          leading: const Text('Name of drug'),
+                          trailing: const ImageIcon(
+                            AssetImage('assets/i-pharmacy-256.png'),
+                            size: 30,
+                          ),
+                        ),
+                        const Divider(color: Colors.black),
+                        ListTile(
+                          hoverColor: Colors.grey[50],
+                          leading: const Text('Name of drug'),
+                          trailing: const ImageIcon(
+                            AssetImage('assets/i-pharmacy-256.png'),
+                            size: 30,
+                          ),
+                        ),
+                        const Divider(color: Colors.black),
+                        ListTile(
+                          hoverColor: Colors.grey[50],
+                          leading: const Text('Name of drug'),
+                          trailing: const ImageIcon(
+                            AssetImage('assets/i-pharmacy-256.png'),
+                            size: 30,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                const Text(
+                  'My Pharmacies:',
+                  style: TextStyle(fontSize: 15),
+                ),
+                const SizedBox(height: 5),
+                Container(
+                  height: size.height / 5,
+                  width: size.width / 2,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [
+                        Color(0xFFE0E7B6),
+                        //  Color(0xFFECC8D1),
+                        Color(0xFFD1D6D5),
+                      ],
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                    ),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.vertical,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          pharmacy(),
+                          pharmacy(),
+                          pharmacy(),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
               ],
             )
           ],
@@ -117,13 +232,48 @@ class _DashedState extends State<Dashed> {
     );
   }
 
-  Card vitlasS(Color scolor) {
+  Card pharmacy() {
     return Card(
-      elevation: 3,
+      color: Colors.grey[200],
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      elevation: 5,
+      child: ListTile(
+          hoverColor: Colors.grey[50],
+          leading: const Text('Name of drug'),
+          trailing: const Text('Location')),
+    );
+  }
+
+  Widget circularcard(Color scolor, color) => Padding(
+        padding: const EdgeInsets.symmetric(vertical: 3),
+        child: Card(
+          color: color,
+          elevation: 10,
+          shadowColor: scolor,
+          shape: const CircleBorder(),
+          child: SizedBox(
+            height: 65,
+            width: 70,
+            child: Column(
+              children: [labels('label'), labels('label%')],
+            ),
+          ),
+        ),
+      );
+
+  Card vitlasS(Color scolor, color) {
+    return Card(
+      elevation: 4,
       shadowColor: scolor,
-      color: scolor,
-      child: Column(
-        children: [labels('')],
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+      color: color,
+      child: SizedBox(
+        width: 60,
+        height: 65,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [labels('label'), labels('value%')],
+        ),
       ),
     );
   }
@@ -132,11 +282,16 @@ class _DashedState extends State<Dashed> {
 
   Card vitalsL(Color scolor) {
     return Card(
-      elevation: 3,
+      elevation: 5,
       shadowColor: scolor,
-      color: scolor,
-      child: Column(
-        children: [labels('')],
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      child: SizedBox(
+        width: 60,
+        height: 135,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [labels('label'), labels('value%')],
+        ),
       ),
     );
   }

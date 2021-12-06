@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:scarclient/screens/settings/sections.dart';
 
@@ -11,8 +12,19 @@ class Settings extends StatelessWidget {
     return Scaffold(
       body: ListView(
         children: [
+          Align(
+            alignment: Alignment.topRight,
+            child: IconButton(
+              onPressed: () {},
+              icon: const ImageIcon(
+                AssetImage(
+                  'assets/shutdown-16-512.png',
+                ),
+              ),
+            ),
+          ),
           SizedBox(
-            height: size.height / 9,
+            height: size.height / 30,
           ),
           Card(
             shadowColor: Colors.green,
@@ -76,7 +88,7 @@ class Settings extends StatelessWidget {
             ),
           ),
           SizedBox(
-            height: size.height / 8,
+            height: size.height / 20,
           ),
           Container(
             padding: const EdgeInsets.fromLTRB(10, 30, 10, 5),

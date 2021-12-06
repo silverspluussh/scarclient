@@ -184,9 +184,9 @@ class _SignInState extends State<SignIn> {
                         Map<String, dynamic> outside =
                             json.decode(response.body);
 
-                        sharedPereferences.setString(
+                        sharedPereferences.setBool(
                             'success', outside['success']);
-                        sharedPereferences.setInt('_id', outside['_id']);
+                        sharedPereferences.setString('_id', outside['_id']);
                         sharedPereferences.setString('name', "${data['name']}");
 
                         await storage.write(
