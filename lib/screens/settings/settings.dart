@@ -1,10 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:scarclient/screens/settings/sections.dart';
+import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class Settings extends StatelessWidget {
+class Settings extends StatefulWidget {
   const Settings({Key? key}) : super(key: key);
+
+  @override
+  State<Settings> createState() => _SettingsState();
+}
+
+class _SettingsState extends State<Settings> {
+  logout() async {
+    final SharedPreferences sharedPereferences =
+        await SharedPreferences.getInstance();
+
+    await sharedPereferences.clear();
+
+    Get.toNamed('/startpage');
+  }
+
+  exitapp() {
+    SystemNavigator.pop();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -14,17 +35,74 @@ class Settings extends StatelessWidget {
         children: [
           Align(
             alignment: Alignment.topRight,
-            child: IconButton(
-              onPressed: () {},
-              icon: const ImageIcon(
-                AssetImage(
-                  'assets/shutdown-16-512.png',
+            child: Column(
+              children: [
+                IconButton(
+                  onPressed: () => Get.snackbar(
+                    "Logout/Exit?",
+                    "Select an option:",
+                    duration: const Duration(seconds: 4),
+                    isDismissible: true,
+                    dismissDirection: DismissDirection.horizontal,
+                    animationDuration: const Duration(milliseconds: 3000),
+                    borderRadius: 15,
+                    margin: const EdgeInsets.all(8.0),
+                    snackStyle: SnackStyle.FLOATING,
+                    backgroundGradient: const LinearGradient(
+                      colors: [
+                        Color(0xFF607062),
+                        Color(0xFFDBD3D5),
+                        Color(0xFF768A86),
+                      ],
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                    ),
+                    snackPosition: SnackPosition.TOP,
+                    colorText: Colors.black,
+                    userInputForm: Form(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Column(
+                            children: [
+                              IconButton(
+                                onPressed: () {},
+                                icon: const ImageIcon(
+                                  AssetImage('assets/safe-exit-512.png'),
+                                ),
+                                iconSize: 35,
+                              ),
+                              const Text('Exit'),
+                            ],
+                          ),
+                          Column(
+                            children: [
+                              IconButton(
+                                onPressed: logout,
+                                icon: const ImageIcon(
+                                  AssetImage('assets/shutdown-16-512.png'),
+                                ),
+                                iconSize: 35,
+                              ),
+                              const Text('Logout'),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  icon: const ImageIcon(
+                    AssetImage('assets/poweroff-3-256.png'),
+                  ),
+                  iconSize: 50,
+                  color: Colors.red,
                 ),
-              ),
+                const Text('logout')
+              ],
             ),
           ),
           SizedBox(
-            height: size.height / 30,
+            height: size.height / 45,
           ),
           Card(
             shadowColor: Colors.green,
@@ -36,67 +114,50 @@ class Settings extends StatelessWidget {
             child: Column(
               children: [
                 ListTile(
-                  leading: const ImageIcon(
-                    AssetImage('assets/edit-profile-256.png'),
-                  ),
-                  title: Text(
-                    'Complete Profile',
-                    style: GoogleFonts.nunito(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
+                    leading: const ImageIcon(
+                      AssetImage('assets/edit-profile-256.png'),
                     ),
-                  ),
-                  trailing: const Icon(
-                    Icons.arrow_forward_ios,
-                    color: Colors.green,
-                  ),
-                  onTap: () async => Navigator.pushNamed(context, '/profile'),
-                ),
+                    title: Text(
+                      'Complete Profile',
+                      style: GoogleFonts.nunito(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    ),
+                    trailing: const Icon(
+                      Icons.arrow_forward_ios,
+                      color: Colors.green,
+                    ),
+                    onTap: () => Get.toNamed("/completeprofile")),
                 const DividerX(),
                 ListTile(
-                  leading: const ImageIcon(
-                    AssetImage('assets/profile-19-512.png'),
-                  ),
-                  title: Text(
-                    'Account Settings',
-                    style: GoogleFonts.nunito(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
+                    leading: const ImageIcon(
+                      AssetImage('assets/profile-19-512.png'),
                     ),
-                  ),
-                  trailing:
-                      const Icon(Icons.arrow_forward_ios, color: Colors.green),
-                  onTap: () => Navigator.pushNamed(context, '/account'),
-                ),
+                    title: Text(
+                      'Account Settings',
+                      style: GoogleFonts.nunito(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    ),
+                    trailing: const Icon(Icons.arrow_forward_ios,
+                        color: Colors.green),
+                    onTap: () => Get.toNamed("account")),
                 const DividerX(),
-                ListTile(
-                  leading: const ImageIcon(
-                    AssetImage('assets/language-6-256.png'),
-                  ),
-                  title: Text(
-                    'Application Settings',
-                    style: GoogleFonts.nunito(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
-                    ),
-                  ),
-                  trailing:
-                      const Icon(Icons.arrow_forward_ios, color: Colors.green),
-                  onTap: () => Navigator.pushNamed(context, '/language'),
-                ),
               ],
             ),
           ),
           SizedBox(
-            height: size.height / 20,
+            height: size.height / 25,
           ),
           Container(
             padding: const EdgeInsets.fromLTRB(10, 30, 10, 5),
             child: Column(
               children: [
                 GestureDetector(
-                  child: const Surplus(
-                    text: 'Product Reviews and Referrals',
+                  child: surplus(
+                    'Product Reviews and Referrals',
                   ),
                   onLongPress: null,
                 ),
@@ -105,8 +166,8 @@ class Settings extends StatelessWidget {
                   height: 20,
                 ),
                 GestureDetector(
-                  child: const Surplus(
-                    text: 'Terms and Conditions',
+                  child: surplus(
+                    'Terms and Conditions',
                   ),
                 ),
                 const Divider(),
@@ -114,8 +175,8 @@ class Settings extends StatelessWidget {
                   height: 20,
                 ),
                 GestureDetector(
-                  child: const Surplus(
-                    text: 'Contact Us',
+                  child: surplus(
+                    'Contact Us',
                   ),
                   onLongPress: null,
                 ),
@@ -141,16 +202,8 @@ class Settings extends StatelessWidget {
       ),
     );
   }
-}
 
-class Surplus extends StatelessWidget {
-  const Surplus({
-    Key? key,
-    required this.text,
-  }) : super(key: key);
-  final String text;
-  @override
-  Widget build(BuildContext context) {
+  Widget surplus(String text) {
     return Text(
       text,
       style: GoogleFonts.nunito(fontSize: 20),

@@ -1,4 +1,5 @@
 // ignore_for_file: prefer_typing_uninitialized_variables
+
 import 'dart:convert';
 import 'dart:io';
 import 'package:country_picker/country_picker.dart';
@@ -12,7 +13,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:scarclient/services/authen.dart';
-import '../startscreen/navigation_index.dart';
+import 'package:get/get.dart';
 
 class CompleteProfile extends StatefulWidget {
   const CompleteProfile({Key? key}) : super(key: key);
@@ -22,6 +23,18 @@ class CompleteProfile extends StatefulWidget {
 }
 
 class _CompleteProfileState extends State<CompleteProfile> {
+  @override
+  void initState() {
+    if (mounted) {
+      _nationalityx.text = nationality;
+      verifyProfile();
+    } else {
+      dispose();
+      return;
+    }
+    super.initState();
+  }
+
   final String nationality = "Ghana";
   String bloodType = "O";
   String countryCode = "233";
@@ -41,13 +54,6 @@ class _CompleteProfileState extends State<CompleteProfile> {
   Widget page = const CircularProgressIndicator();
   PickedFile? _filepicker;
   final ImagePicker _picker = ImagePicker();
-
-  @override
-  void initState() {
-    _nationalityx.text = nationality;
-    verifyProfile();
-    super.initState();
-  }
 
   Widget bottomsheet() {
     return Container(
@@ -122,7 +128,7 @@ class _CompleteProfileState extends State<CompleteProfile> {
               SizedBox(height: MediaQuery.of(context).size.height / 2.5),
               const Text('Profile already set'),
               TextButton.icon(
-                onPressed: () {},
+                onPressed: () => Get.toNamed('/profile'),
                 icon: const ImageIcon(AssetImage('assets/profile-19-512.png')),
                 label: const Text(
                   'Goto Profile',
@@ -152,12 +158,7 @@ class _CompleteProfileState extends State<CompleteProfile> {
                 Align(
                   alignment: Alignment.topLeft,
                   child: IconButton(
-                    onPressed: () async {
-                      await Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (_) => const Home()),
-                      );
-                    },
+                    onPressed: () => Get.toNamed("/navpage"),
                     icon: const Icon(
                       Icons.arrow_back_ios_new,
                       size: 30,
@@ -371,10 +372,7 @@ class _CompleteProfileState extends State<CompleteProfile> {
                         setState(() {
                           progress = false;
                         });
-                        Navigator.of(context).pushAndRemoveUntil(
-                            MaterialPageRoute(
-                                builder: (context) => const Home()),
-                            (route) => false);
+                        Get.toNamed("/navpage");
                       },
                       icon: const Icon(Icons.save_alt_outlined),
                       label: const Text(
