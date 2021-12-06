@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:scarclient/screens/settings/sections.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -59,35 +58,41 @@ class _SettingsState extends State<Settings> {
                     ),
                     snackPosition: SnackPosition.TOP,
                     colorText: Colors.black,
+                    overlayBlur: 4,
+                    overlayColor: Colors.blue,
                     userInputForm: Form(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Column(
-                            children: [
-                              IconButton(
-                                onPressed: () {},
-                                icon: const ImageIcon(
-                                  AssetImage('assets/safe-exit-512.png'),
+                      child: SizedBox(
+                        height: MediaQuery.of(context).size.height / 6,
+                        width: MediaQuery.of(context).size.width / 1.2,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Column(
+                              children: [
+                                IconButton(
+                                  onPressed: exitapp,
+                                  icon: const ImageIcon(
+                                    AssetImage('assets/safe-exit-512.png'),
+                                  ),
+                                  iconSize: 35,
                                 ),
-                                iconSize: 35,
-                              ),
-                              const Text('Exit'),
-                            ],
-                          ),
-                          Column(
-                            children: [
-                              IconButton(
-                                onPressed: logout,
-                                icon: const ImageIcon(
-                                  AssetImage('assets/shutdown-16-512.png'),
+                                const Text('Exit'),
+                              ],
+                            ),
+                            Column(
+                              children: [
+                                IconButton(
+                                  onPressed: logout,
+                                  icon: const ImageIcon(
+                                    AssetImage('assets/shutdown-16-512.png'),
+                                  ),
+                                  iconSize: 35,
                                 ),
-                                iconSize: 35,
-                              ),
-                              const Text('Logout'),
-                            ],
-                          ),
-                        ],
+                                const Text('Logout'),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -129,7 +134,7 @@ class _SettingsState extends State<Settings> {
                       color: Colors.green,
                     ),
                     onTap: () => Get.toNamed("/completeprofile")),
-                const DividerX(),
+                dividerx(),
                 ListTile(
                     leading: const ImageIcon(
                       AssetImage('assets/profile-19-512.png'),
@@ -143,8 +148,8 @@ class _SettingsState extends State<Settings> {
                     ),
                     trailing: const Icon(Icons.arrow_forward_ios,
                         color: Colors.green),
-                    onTap: () => Get.toNamed("account")),
-                const DividerX(),
+                    onTap: () => Get.toNamed("/account")),
+                dividerx(),
               ],
             ),
           ),
@@ -161,7 +166,7 @@ class _SettingsState extends State<Settings> {
                   ),
                   onLongPress: null,
                 ),
-                const Divider(),
+                dividerx(),
                 const SizedBox(
                   height: 20,
                 ),
@@ -170,7 +175,7 @@ class _SettingsState extends State<Settings> {
                     'Terms and Conditions',
                   ),
                 ),
-                const Divider(),
+                dividerx(),
                 const SizedBox(
                   height: 20,
                 ),
@@ -180,7 +185,7 @@ class _SettingsState extends State<Settings> {
                   ),
                   onLongPress: null,
                 ),
-                const Divider(),
+                dividerx(),
                 SizedBox(height: size.height / 12),
                 Align(
                   alignment: Alignment.bottomCenter,
@@ -200,6 +205,14 @@ class _SettingsState extends State<Settings> {
           )
         ],
       ),
+    );
+  }
+
+  Widget dividerx() {
+    return Container(
+      width: double.infinity,
+      height: 1.0,
+      color: Colors.grey[400],
     );
   }
 
