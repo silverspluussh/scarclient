@@ -6,6 +6,7 @@ import 'dart:async';
 import 'package:scarclient/screens/dashboard/welcomeprofile.dart';
 import 'package:scarclient/screens/settings/pfpage.dart';
 import 'package:scarclient/services/authen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key}) : super(key: key);
@@ -18,7 +19,7 @@ class _HomeState extends State<Dashboard> {
   final PageController _slideShowPageController = PageController();
 
   int _index = 0;
-  var user = '';
+  String user = '';
   NetworkHanler networkhand = NetworkHanler();
 
   @override
@@ -82,9 +83,17 @@ class _HomeState extends State<Dashboard> {
   }
 
   Future getuser() async {
-    var response = await networkhand.get('/user/name');
+    final SharedPreferences sharedPereferences =
+        await SharedPreferences.getInstance();
+
+    var _user = sharedPereferences.getString('name');
+    //  var response = await networkhand.get('/user/name');
     setState(() {
-      user = response['name'];
+      if (_user!.isNotEmpty) {
+        user = _user;
+      } else {
+        user = 'user001';
+      }
     });
   }
 

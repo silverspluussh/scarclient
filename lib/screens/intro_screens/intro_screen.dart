@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:scarclient/screens/startscreen/signup.dart';
 import '../startscreen/sign_in.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -36,6 +37,9 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   onLogIN() async {
+    final SharedPreferences sharedPereferences =
+        await SharedPreferences.getInstance();
+    sharedPereferences.setInt('opened', 1);
     await Navigator.pushReplacement(
         context, MaterialPageRoute(builder: (_) => const SignIn()));
   }

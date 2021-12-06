@@ -32,8 +32,9 @@ class _RemindersState extends State<ReminderPage> {
       setState(() {});
       fetchreminders = fetchAlbum();
       DateTime.now();
+    } else {
+      return;
     }
-
     super.initState();
   }
 

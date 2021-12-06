@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:scarclient/screens/startscreen/navigation_index.dart';
 import 'package:scarclient/services/authen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'signup.dart';
 
 class SignIn extends StatefulWidget {
@@ -162,20 +163,32 @@ class _SignInState extends State<SignIn> {
                           borderRadius: BorderRadius.circular(20)),
                       primary: const Color(0xFF260975)),
                   onPressed: () async {
+                    final SharedPreferences sharedPereferences =
+                        await SharedPreferences.getInstance();
+
                     setState(() {
                       circus = true;
                     });
+
                     if (_globalkey.currentState!.validate()) {
                       Map<String, String> data = {
                         'name': username,
                         'password': password,
                       };
+
                       var response =
                           await networkhand.post('/user/login', data);
+
                       if (response.statusCode == 200 ||
                           response.statusCode == 201) {
                         Map<String, dynamic> outside =
                             json.decode(response.body);
+
+                        sharedPereferences.setString(
+                            'success', outside['success']);
+                        sharedPereferences.setInt('_id', outside['_id']);
+                        sharedPereferences.setString('name', "${data['name']}");
+
                         await storage.write(
                             key: 'token', value: outside["token"]);
 

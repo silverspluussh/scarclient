@@ -25,7 +25,7 @@ class Splash extends StatelessWidget {
       animationDuration: const Duration(seconds: 2),
       backgroundColor: Colors.white,
       centered: true,
-      duration: 4500,
+      duration: 2500,
     );
   }
 }
