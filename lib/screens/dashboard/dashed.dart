@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:scarclient/screens/dashboard/profilepic.dart';
 import 'package:scarclient/screens/dashboard/welcomeprofile.dart';
-import 'package:scarclient/screens/settings/pfpage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:get/get.dart';
 
 class Dashed extends StatefulWidget {
   const Dashed({Key? key}) : super(key: key);
@@ -54,16 +54,11 @@ class _DashedState extends State<Dashed> {
       extendBody: true,
       backgroundColor: Colors.white24,
       appBar: AppBar(
+        elevation: 0,
+        leading: const Text(''),
         backgroundColor: const Color(0xFFEEF0EB),
         title: InkWell(
-            onTap: () async {
-              await Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => const Profilepage(),
-                ),
-              );
-            },
+            onTap: () => Get.toNamed("/profile"),
             child: ProfilePicture(width: size.width)),
       ),
       body: Container(
@@ -73,10 +68,7 @@ class _DashedState extends State<Dashed> {
         height: size.height,
         child: Stack(
           children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(5, 0, 5, 10),
-              child: WelcomeProfilePic(user: user),
-            ),
+            WelcomeProfilePic(user: user),
             ListView(
               scrollDirection: Axis.vertical,
               padding: const EdgeInsets.symmetric(vertical: 90, horizontal: 15),
@@ -108,13 +100,13 @@ class _DashedState extends State<Dashed> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        vitalsL(Colors.green.withOpacity(0.1)),
-                        vitalsL(Colors.red.withOpacity(0.1)),
+                        vitalsL(Colors.green.withOpacity(0.3)),
+                        vitalsL(Colors.red.withOpacity(0.4)),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             vitlasS(
-                                Colors.red.withOpacity(0.1), Colors.blueGrey),
+                                Colors.blue.withOpacity(0.3), Colors.blueGrey),
                             vitlasS(Colors.purple.withOpacity(0.1),
                                 Colors.pink[50]),
                           ],
@@ -255,7 +247,8 @@ class _DashedState extends State<Dashed> {
             height: 65,
             width: 70,
             child: Column(
-              children: [labels('label'), labels('label%')],
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [labels('45'), labels('pulse')],
             ),
           ),
         ),
@@ -272,7 +265,7 @@ class _DashedState extends State<Dashed> {
         height: 65,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [labels('label'), labels('value%')],
+          children: [labels('Temp.'), labels('35%')],
         ),
       ),
     );
@@ -290,7 +283,7 @@ class _DashedState extends State<Dashed> {
         height: 135,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [labels('label'), labels('value%')],
+          children: [labels('weight'), labels('85kg')],
         ),
       ),
     );

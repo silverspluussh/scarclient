@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:scarclient/screens/startscreen/navigation_index.dart';
 import 'package:scarclient/services/authen.dart';
-import 'sign_in.dart';
+import 'package:get/get.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({Key? key}) : super(key: key);
@@ -76,7 +76,6 @@ class _SignUpState extends State<SignUp> {
               Container(
                 padding: const EdgeInsets.all(5),
                 decoration: BoxDecoration(
-                    shape: BoxShape.rectangle,
                     borderRadius: BorderRadius.circular(20),
                     color: Colors.white),
                 child: TextFormField(
@@ -91,8 +90,7 @@ class _SignUpState extends State<SignUp> {
                   },
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(
-                      borderSide:
-                          BorderSide(color: Color(0xFF260975), width: 0.0),
+                      borderSide: BorderSide(color: Color(0xFF260975)),
                     ),
                     hintText: "Username",
                   ),
@@ -101,7 +99,6 @@ class _SignUpState extends State<SignUp> {
               Container(
                 padding: const EdgeInsets.all(5),
                 decoration: BoxDecoration(
-                    shape: BoxShape.rectangle,
                     borderRadius: BorderRadius.circular(20),
                     color: Colors.white),
                 child: TextFormField(
@@ -130,7 +127,6 @@ class _SignUpState extends State<SignUp> {
               Container(
                 padding: const EdgeInsets.all(5),
                 decoration: BoxDecoration(
-                    shape: BoxShape.rectangle,
                     borderRadius: BorderRadius.circular(20),
                     color: Colors.white),
                 child: TextFormField(
@@ -169,7 +165,6 @@ class _SignUpState extends State<SignUp> {
               Container(
                 padding: const EdgeInsets.all(5),
                 decoration: BoxDecoration(
-                  shape: BoxShape.rectangle,
                   borderRadius: BorderRadius.circular(20),
                   color: Colors.white,
                 ),
@@ -248,17 +243,18 @@ class _SignUpState extends State<SignUp> {
                 height: 15,
               ),
               Container(
-                height: 50,
-                margin: const EdgeInsets.symmetric(vertical: 5),
-                child: ElevatedButton.icon(
-                  icon: const Icon(Icons.login_sharp),
-                  label: circus
+                height: 40,
+                width: size.width / 3,
+                margin:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 60),
+                child: ElevatedButton(
+                  child: circus
                       ? const CircularProgressIndicator(strokeWidth: 2)
                       : Text(
-                          "Sign Up",
+                          "Sign up",
                           style: GoogleFonts.nunito(
                               color: Colors.white,
-                              fontSize: 25,
+                              fontSize: 20,
                               fontWeight: FontWeight.bold),
                         ),
                   style: ElevatedButton.styleFrom(
@@ -303,14 +299,7 @@ class _SignUpState extends State<SignUp> {
                           color: Colors.black, fontSize: 15),
                     ),
                     GestureDetector(
-                      onTap: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => const SignIn(),
-                          ),
-                        );
-                      },
+                      onTap: () => Get.toNamed("/login"),
                       child: Text(
                         " Sign In",
                         style: GoogleFonts.workSans(

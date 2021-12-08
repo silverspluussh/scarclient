@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:scarclient/Models/profilemodel.dart';
-import 'package:scarclient/screens/startscreen/navigation_index.dart';
 import 'package:scarclient/services/authen.dart';
+import 'package:get/get.dart';
 
 class Profilepage extends StatefulWidget {
   const Profilepage({Key? key}) : super(key: key);
@@ -48,19 +48,12 @@ class _ProfilepageState extends State<Profilepage> {
             Row(
               children: [
                 IconButton(
-                  onPressed: () async {
-                    await Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => const Home(),
-                      ),
-                    );
-                  },
+                  onPressed: () => Get.toNamed("/navpage"),
                   icon: const Icon(Icons.arrow_back_ios),
                 ),
                 const Spacer(),
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () => Get.toNamed("/completeprofile"),
                   icon: const Icon(Icons.edit),
                 ),
               ],

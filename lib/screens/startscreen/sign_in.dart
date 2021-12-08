@@ -6,7 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:scarclient/screens/startscreen/navigation_index.dart';
 import 'package:scarclient/services/authen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'signup.dart';
+import 'package:get/get.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({Key? key}) : super(key: key);
@@ -155,8 +155,9 @@ class _SignInState extends State<SignIn> {
                 height: 15,
               ),
               Container(
-                height: 55,
-                margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                height: 40,
+                margin:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 60),
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(
@@ -186,7 +187,7 @@ class _SignInState extends State<SignIn> {
 
                         sharedPereferences.setBool(
                             'success', outside['success']);
-                        sharedPereferences.setString('_id', outside['_id']);
+                        //   sharedPereferences.setString('_id', outside['_id']);
                         sharedPereferences.setString('name', "${data['name']}");
 
                         await storage.write(
@@ -209,18 +210,15 @@ class _SignInState extends State<SignIn> {
                     });
                   },
                   child: circus
-                      ? const CircularProgressIndicator(strokeWidth: 3)
+                      ? const CircularProgressIndicator(strokeWidth: 1)
                       : Text(
-                          "Sign In",
+                          "Login",
                           style: GoogleFonts.nunito(
                               color: Colors.white,
                               fontSize: 25,
                               fontWeight: FontWeight.bold),
                         ),
                 ),
-              ),
-              const SizedBox(
-                height: 10,
               ),
               Container(
                 margin: const EdgeInsets.only(top: 10),
@@ -230,20 +228,15 @@ class _SignInState extends State<SignIn> {
                     Text(
                       "Not yet a user? ",
                       style: GoogleFonts.workSans(
-                          color: Colors.black, fontSize: 20),
+                          color: Colors.black, fontSize: 18),
                     ),
                     GestureDetector(
-                      onTap: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(builder: (_) => const SignUp()),
-                        );
-                      },
+                      onTap: () => Get.toNamed("/signup"),
                       child: Text(
                         " Sign Up",
                         style: GoogleFonts.workSans(
                           color: Colors.blue,
-                          fontSize: 25,
+                          fontSize: 20,
                           fontStyle: FontStyle.italic,
                           decoration: TextDecoration.underline,
                         ),

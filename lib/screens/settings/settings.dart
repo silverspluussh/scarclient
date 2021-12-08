@@ -43,7 +43,7 @@ class _SettingsState extends State<Settings> {
                     duration: const Duration(seconds: 4),
                     isDismissible: true,
                     dismissDirection: DismissDirection.horizontal,
-                    animationDuration: const Duration(milliseconds: 3000),
+                    animationDuration: const Duration(milliseconds: 1000),
                     borderRadius: 15,
                     margin: const EdgeInsets.all(8.0),
                     snackStyle: SnackStyle.FLOATING,
@@ -59,7 +59,6 @@ class _SettingsState extends State<Settings> {
                     snackPosition: SnackPosition.TOP,
                     colorText: Colors.black,
                     overlayBlur: 4,
-                    overlayColor: Colors.blue,
                     userInputForm: Form(
                       child: SizedBox(
                         height: MediaQuery.of(context).size.height / 6,
@@ -76,7 +75,7 @@ class _SettingsState extends State<Settings> {
                                   ),
                                   iconSize: 35,
                                 ),
-                                const Text('Exit'),
+                                const Text('Exit App'),
                               ],
                             ),
                             Column(
@@ -186,7 +185,7 @@ class _SettingsState extends State<Settings> {
                   onLongPress: null,
                 ),
                 dividerx(),
-                SizedBox(height: size.height / 12),
+                SizedBox(height: size.height / 7),
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: Text(

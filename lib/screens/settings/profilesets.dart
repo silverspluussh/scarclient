@@ -122,30 +122,6 @@ class _CompleteProfileState extends State<CompleteProfile> {
     if (response['status'] == true) {
       setState(() {
         validate = true;
-        page = Card(
-          child: Column(
-            children: [
-              SizedBox(height: MediaQuery.of(context).size.height / 2.5),
-              const Text('Profile already set'),
-              TextButton.icon(
-                onPressed: () => Get.toNamed('/profile'),
-                icon: const ImageIcon(AssetImage('assets/profile-19-512.png')),
-                label: const Text(
-                  'Goto Profile',
-                  style: TextStyle(
-                    fontSize: 19,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.blue,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
-      });
-    } else {
-      setState(() {
-        validate = false;
         page = Container(
           padding: const EdgeInsets.all(10),
           width: double.infinity,
@@ -372,7 +348,7 @@ class _CompleteProfileState extends State<CompleteProfile> {
                         setState(() {
                           progress = false;
                         });
-                        Get.toNamed("/navpage");
+                        Get.toNamed("/profile");
                       },
                       icon: const Icon(Icons.save_alt_outlined),
                       label: const Text(
@@ -387,6 +363,30 @@ class _CompleteProfileState extends State<CompleteProfile> {
                 ),
               ],
             ),
+          ),
+        );
+      });
+    } else {
+      setState(() {
+        validate = false;
+        page = Card(
+          child: Column(
+            children: [
+              SizedBox(height: MediaQuery.of(context).size.height / 2.5),
+              const Text('Profile not set'),
+              TextButton.icon(
+                onPressed: () => Get.toNamed('/completeprofile'),
+                icon: const ImageIcon(AssetImage('assets/profile-19-512.png')),
+                label: const Text(
+                  'Set Profile',
+                  style: TextStyle(
+                    fontSize: 19,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blue,
+                  ),
+                ),
+              ),
+            ],
           ),
         );
       });

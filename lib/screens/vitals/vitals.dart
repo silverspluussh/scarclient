@@ -138,6 +138,7 @@ class _ChartsInfoState extends State<ChartsInfo> {
           Vitalsinfo('Blood Pressure', double.parse(pressure)),
           Vitalsinfo('Breathing Rate', double.parse(breathrate)),
         ];
+
         return datachart;
       }
 
