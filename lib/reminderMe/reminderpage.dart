@@ -7,6 +7,7 @@ import 'package:scarclient/Models/reminderclass.dart';
 import 'package:scarclient/reminderMe/matbutton.dart';
 import 'package:scarclient/services/authen.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:get/get.dart';
 
 class ReminderPage extends StatefulWidget {
   const ReminderPage({Key? key}) : super(key: key);
@@ -18,6 +19,7 @@ class ReminderPage extends StatefulWidget {
 class _RemindersState extends State<ReminderPage> {
   NetworkHanler networkhandler = NetworkHanler();
   late Future<Remindme> fetchreminders;
+  DateTime select = DateTime.now();
 
   Future<Remindme> fetchAlbum() async {
     var response = await networkhandler.get('/reminders/remindersinfo');
@@ -51,64 +53,47 @@ class _RemindersState extends State<ReminderPage> {
         child: ListView(
           children: [
             SizedBox(height: MediaQuery.of(context).size.height / 20),
-
             _addreminderbar(),
-            Container(
-              margin: const EdgeInsets.only(top: 10),
-              decoration:
-                  BoxDecoration(borderRadius: BorderRadius.circular(10)),
-              padding: const EdgeInsets.symmetric(horizontal: 1, vertical: 5),
-              child: DatePicker(DateTime.now(),
-                  height: 100,
-                  width: 70,
-                  selectionColor: Colors.red.withOpacity(0.5),
-                  initialSelectedDate: DateTime.now()),
-            ),
+            _datepickerbar(),
             _futurereminderlist(),
-
-            // const SizedBox(height: 15),
-            Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: Container(
-                margin: const EdgeInsets.only(bottom: 20),
-                padding: const EdgeInsets.all(5),
-                height: 120,
-                width: MediaQuery.of(context).size.width / 1.1,
-                decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [
-                        Color(0xFFBCC0B6),
-                        Color(0xFFBDBCC2),
-                      ],
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
-                    ),
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.green.withOpacity(0.3),
-                        blurRadius: 9,
-                        spreadRadius: 3,
-                      )
-                    ]),
-                child: InkWell(
-                  onTap: () {},
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Icon(
-                        Icons.add_box_outlined,
-                        size: 30,
-                        color: Colors.black,
-                      ),
-                      Text('Add Reminder')
-                    ],
-                  ),
-                ),
-              ),
-            ),
+            _addreminders()
           ],
         ),
+      ),
+    );
+  }
+
+  InkWell _addreminders() {
+    return InkWell(
+      onTap: () => Get.toNamed("/addreminders"),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: const [
+          Icon(
+            Icons.add_box_outlined,
+            size: 30,
+            color: Colors.black,
+          ),
+          Text('Add Reminder')
+        ],
+      ),
+    );
+  }
+
+  Container _datepickerbar() {
+    return Container(
+      margin: const EdgeInsets.only(top: 10),
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
+      padding: const EdgeInsets.symmetric(horizontal: 1, vertical: 5),
+      child: DatePicker(
+        DateTime.now(),
+        height: 100,
+        width: 70,
+        selectionColor: Colors.red.withOpacity(0.5),
+        initialSelectedDate: DateTime.now(),
+        onDateChange: (datechanges) {
+          select = datechanges;
+        },
       ),
     );
   }
@@ -189,7 +174,10 @@ class _RemindersState extends State<ReminderPage> {
         } else if (snapshot.hasError) {
           return Text('${snapshot.error}');
         }
-        return const Center(child: CircularProgressIndicator());
+        return const Padding(
+          padding: EdgeInsets.symmetric(vertical: 30),
+          child: Center(child: CircularProgressIndicator()),
+        );
       },
     );
   }
@@ -213,7 +201,10 @@ class _RemindersState extends State<ReminderPage> {
           ],
         ),
         const Spacer(),
-        Button(label: 'Add task+', ontap: () {})
+        Button(
+          label: 'Add task',
+          ontap: () {},
+        )
       ],
     );
   }

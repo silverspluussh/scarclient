@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:scarclient/reminderMe/addreminder.dart';
 import 'package:scarclient/screens/intro_screens/intro_screen.dart';
 import 'package:scarclient/screens/intro_screens/splashdart.dart';
 import 'package:scarclient/screens/settings/account.dart';
@@ -44,7 +45,8 @@ void main() async {
         GetPage(name: "/navpage", page: () => const Home()),
         GetPage(name: "/profile", page: () => const Profilepage()),
         GetPage(name: "/account", page: () => const Account()),
-        GetPage(name: "/completeprofile", page: () => const CompleteProfile())
+        GetPage(name: "/completeprofile", page: () => const CompleteProfile()),
+        GetPage(name: "/addreminders", page: () => const SetReminders())
       ],
     ),
   );

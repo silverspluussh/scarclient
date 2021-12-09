@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:scarclient/screens/settings/profilesets.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:scarclient/reminderMe/matbutton.dart';
 import 'package:scarclient/services/authen.dart';
 
 class SetVitals extends StatelessWidget {
@@ -40,16 +41,10 @@ class SetVitals extends StatelessWidget {
         child: ListView(
           children: [
             const SizedBox(height: 5),
-            const Align(
-              alignment: Alignment.topLeft,
-              child: Chip(
-                  backgroundColor: Colors.blueAccent,
-                  label: Text(
-                    'Hint:',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                  avatar: ImageIcon(AssetImage('assets/messagehint.png'))),
-            ),
+            Align(
+                alignment: Alignment.topLeft,
+                child: Button(label: 'Hint:', ontap: () {})),
+                const SizedBox(height: 15),
             CarouselSlider(
               options: CarouselOptions(
                 height: MediaQuery.of(context).size.height / 6,
@@ -137,6 +132,82 @@ class SetVitals extends StatelessWidget {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class CustomTextField extends StatelessWidget {
+  const CustomTextField({
+    Key? key,
+    this.controller,
+    this.hintText,
+    this.labelText,
+    this.keyboardType,
+    this.textInputAction,
+    this.suffixicon,
+  }) : super(key: key);
+
+  final TextEditingController? controller;
+  final String? hintText;
+  final String? labelText;
+  final TextInputType? keyboardType;
+  final TextInputAction? textInputAction;
+  final Widget? suffixicon;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 75,
+      margin: const EdgeInsets.only(top: 5),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 3),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(5),
+        color: Colors.transparent,
+      ),
+      child: TextFormField(
+        textInputAction: textInputAction,
+        keyboardType: keyboardType,
+        controller: controller,
+        cursorColor: Colors.green[300],
+        readOnly: suffixicon == null ? false : true,
+        style: GoogleFonts.nunito(
+          color: Colors.black,
+          fontSize: 18,
+        ),
+        decoration: InputDecoration(
+          labelStyle: GoogleFonts.nunito(
+            color: Colors.black,
+            fontSize: 18,
+          ),
+          labelText: labelText,
+          suffixIcon: suffixicon,
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(25),
+            borderSide: const BorderSide(
+              color: Colors.grey,
+              width: 1.0,
+              style: BorderStyle.solid,
+            ),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(25),
+            borderSide: const BorderSide(
+              color: Colors.green,
+              width: 2.0,
+              style: BorderStyle.solid,
+            ),
+          ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(25),
+            borderSide: const BorderSide(
+              color: Colors.black,
+              width: 3.0,
+              style: BorderStyle.solid,
+            ),
+          ),
+          hintText: hintText,
         ),
       ),
     );
