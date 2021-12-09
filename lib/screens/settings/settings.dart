@@ -43,7 +43,7 @@ class _SettingsState extends State<Settings> {
                     duration: const Duration(seconds: 4),
                     isDismissible: true,
                     dismissDirection: DismissDirection.horizontal,
-                    animationDuration: const Duration(milliseconds: 1000),
+                    animationDuration: const Duration(milliseconds: 300),
                     borderRadius: 15,
                     margin: const EdgeInsets.all(8.0),
                     snackStyle: SnackStyle.FLOATING,

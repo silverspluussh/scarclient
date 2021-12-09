@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
@@ -9,10 +8,25 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:scarclient/reminderMe/matbutton.dart';
 import 'package:scarclient/services/authen.dart';
 
-class SetVitals extends StatelessWidget {
+class SetVitals extends StatefulWidget {
   const SetVitals({
     Key? key,
   }) : super(key: key);
+
+  @override
+  State<SetVitals> createState() => _SetVitalsState();
+}
+
+class _SetVitalsState extends State<SetVitals> {
+  @override
+  void initState() {
+    if (mounted) {
+      setState(() {});
+    } else {
+      return;
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,10 +55,9 @@ class SetVitals extends StatelessWidget {
         child: ListView(
           children: [
             const SizedBox(height: 5),
-            Align(
-                alignment: Alignment.topLeft,
-                child: Button(label: 'Hint:', ontap: () {})),
-                const SizedBox(height: 15),
+            const Align(
+                alignment: Alignment.topLeft, child: Button(label: 'Hint:')),
+            const SizedBox(height: 15),
             CarouselSlider(
               options: CarouselOptions(
                 height: MediaQuery.of(context).size.height / 6,
@@ -73,141 +86,179 @@ class SetVitals extends StatelessWidget {
               }).toList(),
             ),
             SizedBox(height: MediaQuery.of(context).size.width / 8),
-            CustomTextField(
-              hintText: "Pulse Rate",
-              labelText: "Pulse rate",
-              controller: pulserate,
-            ),
-            CustomTextField(
-              hintText: "Body Temperature",
-              labelText: "Body temperature",
-              controller: temperature,
-            ),
-            CustomTextField(
-              hintText: "Blood pressure",
-              labelText: "Blood pressure",
-              controller: bloodpressure,
-            ),
-            CustomTextField(
-              hintText: "Breathing rate",
-              labelText: "Breathing rate",
-              controller: breathingrate,
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(50, 20, 50, 0),
-              child: ElevatedButton.icon(
-                onPressed: () async {
-                  if (_formKey.currentState!.validate()) {
-                    Map<String, String> data = {
-                      "pulserate": pulserate.text,
-                      "bloodpressure": bloodpressure.text,
-                      "bodytemperature": temperature.text,
-                      "breathingrate": breathingrate.text,
-                    };
-                    var output = await hanler.post('/vitals/addvitals', data);
-
-                    Map<String, dynamic> response = json.decode(output.body);
-                    await Fluttertoast.showToast(
-                      msg: response["msg"],
-                      backgroundColor: Colors.green,
-                      gravity: ToastGravity.BOTTOM,
-                      toastLength: Toast.LENGTH_LONG,
-                      fontSize: 23,
-                    ).then((value) {
-                      pulserate.text = '';
-                      bloodpressure.text = '';
-                      temperature.text = '';
-                      breathingrate.text = '';
-                    });
-                  }
+            Container(
+              height: 50,
+              margin: const EdgeInsets.only(top: 5),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 3),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5),
+                color: Colors.transparent,
+              ),
+              child: TextField(
+                onChanged: (val) {
+                  pulserate.text = val;
                 },
-                icon: const Icon(Icons.save_alt_outlined),
-                label: const Text(
-                  'Save',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
+                decoration: InputDecoration(
+                  labelStyle: GoogleFonts.nunito(
+                    color: Colors.black,
+                    fontSize: 18,
                   ),
+                  labelText: 'Pulse rate',
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(25),
+                    borderSide: const BorderSide(
+                      color: Colors.grey,
+                      width: 1.0,
+                      style: BorderStyle.solid,
+                    ),
+                  ),
+                  hintText: 'hintText',
+                ),
+                cursorColor: Colors.green[300],
+                style: GoogleFonts.nunito(
+                  color: Colors.black,
+                  fontSize: 18,
                 ),
               ),
             ),
+            Container(
+              height: 50,
+              margin: const EdgeInsets.only(top: 5),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 3),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5),
+                color: Colors.transparent,
+              ),
+              child: TextField(
+                onChanged: (val) {
+                  temperature.text = val;
+                },
+                decoration: InputDecoration(
+                  labelStyle: GoogleFonts.nunito(
+                    color: Colors.black,
+                    fontSize: 18,
+                  ),
+                  labelText: 'Body temperature',
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(25),
+                    borderSide: const BorderSide(
+                      color: Colors.grey,
+                      width: 1.0,
+                      style: BorderStyle.solid,
+                    ),
+                  ),
+                  hintText: 'hintText',
+                ),
+                cursorColor: Colors.green[300],
+                style: GoogleFonts.nunito(
+                  color: Colors.black,
+                  fontSize: 18,
+                ),
+              ),
+            ),
+            Container(
+              height: 50,
+              margin: const EdgeInsets.only(top: 5),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 3),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5),
+                color: Colors.transparent,
+              ),
+              child: TextField(
+                onChanged: (val) {
+                  bloodpressure.text = val;
+                },
+                decoration: InputDecoration(
+                  labelStyle: GoogleFonts.nunito(
+                    color: Colors.black,
+                    fontSize: 18,
+                  ),
+                  labelText: 'Blood pressure',
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(25),
+                    borderSide: const BorderSide(
+                      color: Colors.grey,
+                      width: 1.0,
+                      style: BorderStyle.solid,
+                    ),
+                  ),
+                  hintText: 'hintText',
+                ),
+                cursorColor: Colors.green[300],
+                style: GoogleFonts.nunito(
+                  color: Colors.black,
+                  fontSize: 18,
+                ),
+              ),
+            ),
+            Container(
+              height: 50,
+              margin: const EdgeInsets.only(top: 5),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 3),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5),
+                color: Colors.transparent,
+              ),
+              child: TextField(
+                onChanged: (val) {
+                  breathingrate.text = val;
+                },
+                decoration: InputDecoration(
+                  labelStyle: GoogleFonts.nunito(
+                    color: Colors.black,
+                    fontSize: 18,
+                  ),
+                  labelText: 'Breathing rate',
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(25),
+                    borderSide: const BorderSide(
+                      color: Colors.grey,
+                      width: 1.0,
+                      style: BorderStyle.solid,
+                    ),
+                  ),
+                  hintText: 'hintText',
+                ),
+                cursorColor: Colors.green[300],
+                style: GoogleFonts.nunito(
+                  color: Colors.black,
+                  fontSize: 18,
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 50),
+              child: InkWell(
+                  onTap: () async {
+                    if (_formKey.currentState!.validate()) {
+                      Map<String, String> data = {
+                        "pulserate": pulserate.text,
+                        "bloodpressure": bloodpressure.text,
+                        "bodytemperature": temperature.text,
+                        "breathingrate": breathingrate.text,
+                      };
+                      var output = await hanler.post('/vitals/addvitals', data);
+
+                      Map<String, dynamic> response = json.decode(output.body);
+                      await Fluttertoast.showToast(
+                        msg: response["msg"],
+                        backgroundColor: Colors.green,
+                        gravity: ToastGravity.BOTTOM,
+                        toastLength: Toast.LENGTH_LONG,
+                        fontSize: 23,
+                      ).then((value) {
+                        pulserate.text = '';
+                        bloodpressure.text = '';
+                        temperature.text = '';
+                        breathingrate.text = '';
+                      });
+                    }
+                  },
+                  child: const Button(
+                    label: 'Save',
+                  )),
+            ),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-class CustomTextField extends StatelessWidget {
-  const CustomTextField({
-    Key? key,
-    this.controller,
-    this.hintText,
-    this.labelText,
-    this.keyboardType,
-    this.textInputAction,
-    this.suffixicon,
-  }) : super(key: key);
-
-  final TextEditingController? controller;
-  final String? hintText;
-  final String? labelText;
-  final TextInputType? keyboardType;
-  final TextInputAction? textInputAction;
-  final Widget? suffixicon;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 75,
-      margin: const EdgeInsets.only(top: 5),
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 3),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(5),
-        color: Colors.transparent,
-      ),
-      child: TextFormField(
-        textInputAction: textInputAction,
-        keyboardType: keyboardType,
-        controller: controller,
-        cursorColor: Colors.green[300],
-        readOnly: suffixicon == null ? false : true,
-        style: GoogleFonts.nunito(
-          color: Colors.black,
-          fontSize: 18,
-        ),
-        decoration: InputDecoration(
-          labelStyle: GoogleFonts.nunito(
-            color: Colors.black,
-            fontSize: 18,
-          ),
-          labelText: labelText,
-          suffixIcon: suffixicon,
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(25),
-            borderSide: const BorderSide(
-              color: Colors.grey,
-              width: 1.0,
-              style: BorderStyle.solid,
-            ),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(25),
-            borderSide: const BorderSide(
-              color: Colors.green,
-              width: 2.0,
-              style: BorderStyle.solid,
-            ),
-          ),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(25),
-            borderSide: const BorderSide(
-              color: Colors.black,
-              width: 3.0,
-              style: BorderStyle.solid,
-            ),
-          ),
-          hintText: hintText,
         ),
       ),
     );

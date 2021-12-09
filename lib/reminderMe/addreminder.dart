@@ -76,7 +76,7 @@ class _CompleteProfileStatex extends State<SetReminders> {
                       ),
                     ),
                     const Spacer(),
-                    Button(label: 'Reminders', ontap: () {})
+                    const Button(label: 'Reminders')
                   ],
                 ),
                 const SizedBox(height: 20),
@@ -169,7 +169,8 @@ class _CompleteProfileStatex extends State<SetReminders> {
                 const SizedBox(height: 40),
                 Align(
                     alignment: Alignment.bottomCenter,
-                    child: Button(label: 'save', ontap: () {})),
+                    child: InkWell(
+                        onTap: () {}, child: const Button(label: 'save'))),
               ],
             ),
           ),

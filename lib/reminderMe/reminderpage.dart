@@ -201,10 +201,7 @@ class _RemindersState extends State<ReminderPage> {
           ],
         ),
         const Spacer(),
-        Button(
-          label: 'Add task',
-          ontap: () {},
-        )
+        const Button(label: 'Add task')
       ],
     );
   }
