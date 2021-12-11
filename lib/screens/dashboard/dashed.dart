@@ -62,13 +62,13 @@ class _DashedState extends State<Dashed> {
             child: ProfilePicture(width: size.width)),
       ),
       body: Container(
-        padding: const EdgeInsets.symmetric(vertical: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 5),
         decoration: const BoxDecoration(color: Colors.white),
         width: size.width,
         height: size.height,
         child: ListView(
           scrollDirection: Axis.vertical,
-          padding: const EdgeInsets.symmetric(vertical: 90, horizontal: 15),
+          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
           children: [
             WelcomeProfilePic(user: user),
             const SizedBox(height: 10),
