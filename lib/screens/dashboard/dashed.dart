@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:scarclient/screens/dashboard/profilepic.dart';
 import 'package:scarclient/screens/dashboard/welcomeprofile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -61,158 +63,152 @@ class _DashedState extends State<Dashed> {
             onTap: () => Get.toNamed("/profile"),
             child: ProfilePicture(width: size.width)),
       ),
-      body: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 5),
-        decoration: const BoxDecoration(color: Colors.white),
-        width: size.width,
-        height: size.height,
-        child: ListView(
-          scrollDirection: Axis.vertical,
-          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
-          children: [
-            WelcomeProfilePic(user: user),
-            const SizedBox(height: 10),
-            const Text(
-              'My Health Overview:',
-              style: TextStyle(fontSize: 15),
-            ),
-            const SizedBox(height: 5),
-            Container(
-              height: size.height / 4,
-              width: size.width / 2,
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [
-                    Color(0xFFF1E7E7),
-                    //  Color(0xFF765FA1),
-                    Color(0xFF8BAFA6),
-                  ],
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
-                ),
-                borderRadius: BorderRadius.circular(20),
+      body: ListView(
+        scrollDirection: Axis.vertical,
+        padding: const EdgeInsets.symmetric(horizontal: 15),
+        children: [
+          WelcomeProfilePic(user: user),
+          const SizedBox(height: 10),
+          Text(
+            'My Health Overview:',
+            style: GoogleFonts.nunito(
+                fontSize: 17, fontWeight: FontWeight.bold, color: Colors.black),
+          ),
+          const SizedBox(height: 5),
+          Container(
+            height: size.height / 3.37,
+            width: size.width / 2,
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                colors: [
+                  Color(0xFFF1E7E7),
+                  //  Color(0xFF765FA1),
+                  Color(0xFF8BAFA6),
+                ],
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
               ),
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    vitalsL(Colors.green.withOpacity(0.3)),
-                    vitalsL(Colors.red.withOpacity(0.4)),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        vitlasS(Colors.blue.withOpacity(0.3), Colors.blueGrey),
-                        vitlasS(
-                            Colors.purple.withOpacity(0.1), Colors.pink[50]),
-                      ],
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        circularcard(
-                            Colors.blue.withOpacity(0.1), Colors.grey[400]),
-                        circularcard(
-                            Colors.blue.withOpacity(0.1), Colors.orange[100]),
-                      ],
-                    )
-                  ],
-                ),
-              ),
+              borderRadius: BorderRadius.circular(20),
             ),
-            const SizedBox(height: 20),
-            const Text(
-              'My Drugs:',
-              style: TextStyle(fontSize: 15),
-            ),
-            const SizedBox(height: 5),
-            Container(
-              height: size.height / 5,
-              width: size.width / 2,
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [
-                    Color(0xFFD6A6B1),
-                    //  Color(0xFFA09676),
-                    Color(0xFFFCECEC),
-                  ],
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
-                ),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    ListTile(
-                      hoverColor: Colors.grey[50],
-                      leading: const Text('Name of drug'),
-                      trailing: const ImageIcon(
-                        AssetImage('assets/i-pharmacy-256.png'),
-                        size: 30,
-                      ),
-                    ),
-                    const Divider(color: Colors.black),
-                    ListTile(
-                      hoverColor: Colors.grey[50],
-                      leading: const Text('Name of drug'),
-                      trailing: const ImageIcon(
-                        AssetImage('assets/i-pharmacy-256.png'),
-                        size: 30,
-                      ),
-                    ),
-                    const Divider(color: Colors.black),
-                    ListTile(
-                      hoverColor: Colors.grey[50],
-                      leading: const Text('Name of drug'),
-                      trailing: const ImageIcon(
-                        AssetImage('assets/i-pharmacy-256.png'),
-                        size: 30,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
-            const Text(
-              'My Pharmacies:',
-              style: TextStyle(fontSize: 15),
-            ),
-            const SizedBox(height: 5),
-            Container(
-              height: size.height / 5,
-              width: size.width / 2,
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [
-                    Color(0xFFE0E7B6),
-                    //  Color(0xFFECC8D1),
-                    Color(0xFFD1D6D5),
-                  ],
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
-                ),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                child: SingleChildScrollView(
-                  child: Column(
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  vitalsL(Colors.green.withOpacity(0.3)),
+                  vitalsL(Colors.red.withOpacity(0.4)),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      pharmacy(),
-                      pharmacy(),
-                      pharmacy(),
+                      vitlasS(Colors.blue.withOpacity(0.3), Colors.blueGrey),
+                      vitlasS(Colors.purple.withOpacity(0.1), Colors.pink[50]),
                     ],
                   ),
-                ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      circularcard(
+                          Colors.blue.withOpacity(0.1), Colors.grey[400]),
+                      circularcard(
+                          Colors.blue.withOpacity(0.1), Colors.orange[100]),
+                    ],
+                  )
+                ],
               ),
             ),
-          ],
-        ),
+          ),
+          const SizedBox(height: 20),
+          Text(
+            'My Drugs:',
+            style: GoogleFonts.nunito(
+                fontSize: 17, fontWeight: FontWeight.bold, color: Colors.black),
+          ),
+          const SizedBox(height: 5),
+          Container(
+            height: size.height / 3.6,
+            width: size.width / 2,
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                colors: [
+                  Color(0xFFD6A6B1),
+                  //  Color(0xFFA09676),
+                  Color(0xFFFCECEC),
+                ],
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+              ),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  ListTile(
+                    hoverColor: Colors.grey[50],
+                    leading: const Text('Name of drug'),
+                    trailing: const ImageIcon(
+                      AssetImage('assets/i-pharmacy-256.png'),
+                      size: 30,
+                    ),
+                  ),
+                  const Divider(color: Colors.black),
+                  ListTile(
+                    hoverColor: Colors.grey[50],
+                    leading: const Text('Name of drug'),
+                    trailing: const ImageIcon(
+                      AssetImage('assets/i-pharmacy-256.png'),
+                      size: 30,
+                    ),
+                  ),
+                  const Divider(color: Colors.black),
+                  ListTile(
+                    hoverColor: Colors.grey[50],
+                    leading: const Text('Name of drug'),
+                    trailing: const ImageIcon(
+                      AssetImage('assets/i-pharmacy-256.png'),
+                      size: 30,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 20),
+          Text(
+            'My Pharmacies:',
+            style: GoogleFonts.nunito(
+                fontSize: 17, fontWeight: FontWeight.bold, color: Colors.black),
+          ),
+          const SizedBox(height: 5),
+          Container(
+            height: size.height / 3.6,
+            width: size.width / 2,
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                colors: [
+                  Color(0xFFE0E7B6),
+                  //  Color(0xFFECC8D1),
+                  Color(0xFFD1D6D5),
+                ],
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+              ),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: Column(
+                children: [
+                  pharmacy(),
+                  pharmacy(),
+                  pharmacy(),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -224,8 +220,16 @@ class _DashedState extends State<Dashed> {
       elevation: 5,
       child: ListTile(
           hoverColor: Colors.grey[50],
-          leading: const Text('Name of drug'),
-          trailing: const Text('Location')),
+          leading: Text(
+            'Name of drug',
+            style: GoogleFonts.nunito(
+                fontSize: 17, fontWeight: FontWeight.bold, color: Colors.black),
+          ),
+          trailing: Text(
+            'Location',
+            style: GoogleFonts.nunito(
+                fontSize: 17, fontWeight: FontWeight.bold, color: Colors.black),
+          )),
     );
   }
 

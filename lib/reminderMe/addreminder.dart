@@ -9,6 +9,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:scarclient/reminderMe/matbutton.dart';
 import 'package:scarclient/services/authen.dart';
+import 'package:scarclient/reminderMe/reminderhelper.dart';
 
 class SetReminders extends StatefulWidget {
   const SetReminders({Key? key}) : super(key: key);
@@ -29,6 +30,16 @@ class _CompleteProfileStatex extends State<SetReminders> {
     super.initState();
   }
 
+  bool valid = false;
+  List<String> dayinter = [
+    'sunday',
+    'monday',
+    'tuesday',
+    'wednesday',
+    'thursday',
+    'friday',
+    'saturday'
+  ];
   var _endtime = "10:30 AM";
   String _starttime = DateFormat('hh:mm a').format(DateTime.now()).toString();
   DateTime? birthDate = DateTime.now();
@@ -36,16 +47,17 @@ class _CompleteProfileStatex extends State<SetReminders> {
   final _formKey = GlobalKey<FormState>();
   int selectedinterval = 5;
   NetworkHanler handler = NetworkHanler();
-  final TextEditingController _firstname = TextEditingController();
-  final TextEditingController _surname = TextEditingController();
+  final TextEditingController _title = TextEditingController();
+  final TextEditingController _drug = TextEditingController();
   final TextEditingController _interval = TextEditingController();
-  final TextEditingController _dob = TextEditingController();
+  final TextEditingController _day = TextEditingController();
   final TextEditingController _startime = TextEditingController();
   final TextEditingController _endtme = TextEditingController();
 
   bool validate = false;
   bool progress = false;
   Widget page = const CircularProgressIndicator();
+  int intervalcount = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -81,45 +93,112 @@ class _CompleteProfileStatex extends State<SetReminders> {
                 ),
                 const SizedBox(height: 20),
                 CustomTextField(
-                  controller: _firstname,
+                  controller: _title,
                   labelText: "Title",
                   hintText: "Title",
                   keyboardType: TextInputType.text,
                   textInputAction: TextInputAction.next,
                 ),
                 CustomTextField(
-                    labelText: "Add side note",
-                    controller: _surname,
-                    hintText: "Add side note",
+                    labelText: "Drug",
+                    controller: _drug,
+                    hintText: "Drug",
                     keyboardType: TextInputType.text,
                     textInputAction: TextInputAction.next),
                 CustomTextField(
-                  labelText: "Date of Birth",
-                  controller: _dob,
-                  hintText: DateFormat.yMd().format(birthDate!),
+                  labelText: "Select day interval",
+                  controller: _day,
+                  hintText: 'select day',
                   textInputAction: TextInputAction.next,
                   suffixicon: IconButton(
-                    onPressed: () {
-                      showDatePicker(
-                              context: context,
-                              initialDate: DateTime.now(),
-                              firstDate: DateTime(2021),
-                              lastDate: DateTime.now())
-                          .then((date) {
-                        _dob.text =
-                            DateFormat(DateFormat.YEAR_MONTH_WEEKDAY_DAY)
-                                .format(date!);
-                        setState(() {
-                          birthDate = date;
-                        });
-                      });
-                    },
+                    onPressed: () => showDialog<String>(
+                      context: context,
+                      builder: (BuildContext context) => AlertDialog(
+                        content: ListView(
+                          children: [
+                            CheckboxListTile(
+                                value: valid,
+                                title: Text(dayinter[0]),
+                                onChanged: (valid) {
+                                  setState(() {
+                                    this.valid = valid!;
+                                    intervalcount += 1;
+                                  });
+                                }),
+                            CheckboxListTile(
+                                value: valid,
+                                title: Text(dayinter[1]),
+                                onChanged: (valid) {
+                                  setState(() {
+                                    this.valid = valid!;
+                                    intervalcount += 1;
+                                  });
+                                }),
+                            CheckboxListTile(
+                                value: valid,
+                                title: Text(dayinter[2]),
+                                onChanged: (valid) {
+                                  setState(() {
+                                    this.valid = valid!;
+                                    intervalcount += 1;
+                                  });
+                                }),
+                            CheckboxListTile(
+                                value: valid,
+                                title: Text(dayinter[3]),
+                                onChanged: (valid) {
+                                  setState(() {
+                                    this.valid = valid!;
+                                    intervalcount += 1;
+                                  });
+                                }),
+                            CheckboxListTile(
+                                value: valid,
+                                title: Text(dayinter[4]),
+                                onChanged: (valid) {
+                                  setState(() {
+                                    this.valid = valid!;
+                                    intervalcount += 1;
+                                  });
+                                }),
+                            CheckboxListTile(
+                                value: valid,
+                                title: Text(dayinter[5]),
+                                onChanged: (valid) {
+                                  setState(() {
+                                    this.valid = valid!;
+                                    intervalcount += 1;
+                                  });
+                                }),
+                            CheckboxListTile(
+                                value: valid,
+                                title: Text(dayinter[6]),
+                                onChanged: (valid) {
+                                  setState(() {
+                                    this.valid = valid!;
+                                    intervalcount += 1;
+                                  });
+                                }),
+                          ],
+                        ),
+                        actions: <Widget>[
+                          TextButton(
+                            onPressed: () => Navigator.pop(context, 'Cancel'),
+                            child: const Text('Cancel'),
+                          ),
+                          TextButton(
+                            onPressed: () => Navigator.pop(context, 'OK'),
+                            child: const Text('OK'),
+                          ),
+                        ],
+                      ),
+                    ),
                     icon: const Icon(Icons.calendar_today),
                     color: Colors.black26,
                   ),
                 ),
                 CustomTextField(
-                  labelText: "Start time",
+                  labelText: "Reminder time",
                   controller: _startime,
                   hintText: _starttime,
                   keyboardType: TextInputType.phone,
@@ -132,20 +211,7 @@ class _CompleteProfileStatex extends State<SetReminders> {
                   ),
                 ),
                 CustomTextField(
-                  labelText: "End time",
-                  controller: _endtme,
-                  hintText: _endtime,
-                  keyboardType: TextInputType.phone,
-                  textInputAction: TextInputAction.next,
-                  suffixicon: IconButton(
-                    onPressed: () {
-                      getusertime(isStarting: false);
-                    },
-                    icon: const Icon(Icons.timelapse_outlined),
-                  ),
-                ),
-                CustomTextField(
-                  hintText: '$selectedinterval',
+                  hintText: '$selectedinterval before time',
                   suffixicon: DropdownButton(
                       elevation: 3,
                       icon: const Icon(Icons.keyboard_arrow_down_rounded,
@@ -165,12 +231,22 @@ class _CompleteProfileStatex extends State<SetReminders> {
                             child: Text(value.toString()));
                       }).toList()),
                   labelText: 'Remind me',
+                  controller: _interval,
                 ),
                 const SizedBox(height: 40),
                 Align(
                     alignment: Alignment.bottomCenter,
                     child: InkWell(
-                        onTap: () {}, child: const Button(label: 'save'))),
+                        onTap: () {
+                          NotificationService().showNotification(
+                            1,
+                            "To all team members",
+                            "Happy new year!!",
+                            2,
+                            3,
+                          );
+                        },
+                        child: const Button(label: 'save'))),
               ],
             ),
           ),

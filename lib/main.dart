@@ -11,12 +11,16 @@ import 'package:scarclient/screens/startscreen/navigation_index.dart';
 import 'package:scarclient/screens/startscreen/sign_in.dart';
 import 'package:scarclient/screens/startscreen/signup.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:scarclient/reminderMe/reminderhelper.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await NotificationService().initNotification();
+
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
   );
+
   final SharedPreferences sharedPereferences =
       await SharedPreferences.getInstance();
   int? opened = sharedPereferences.getInt('opened');
