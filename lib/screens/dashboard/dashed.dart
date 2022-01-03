@@ -15,6 +15,11 @@ class Dashed extends StatefulWidget {
 
 class _DashedState extends State<Dashed> {
   String user = '';
+  var temp = 0;
+  var pulse = 0;
+  var weight = 0;
+  var rate = 0;
+  var height = 0;
   // NetworkHanler networkhand = NetworkHanler();
 
   @override
@@ -96,21 +101,23 @@ class _DashedState extends State<Dashed> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  vitalsL(Colors.green.withOpacity(0.3)),
-                  vitalsL(Colors.red.withOpacity(0.4)),
+                  vitalsL(pulse, 'Pulse', Colors.green.withOpacity(0.3)),
+                  vitalsL(rate, 'B-rate', Colors.red.withOpacity(0.4)),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      vitlasS(Colors.blue.withOpacity(0.3), Colors.blueGrey),
-                      vitlasS(Colors.purple.withOpacity(0.1), Colors.pink[50]),
+                      vitlasS(weight, 'Weight', Colors.blue.withOpacity(0.3),
+                          Colors.blueGrey),
+                      vitlasS(temp, 'Temp.', Colors.purple.withOpacity(0.1),
+                          Colors.pink[50]),
                     ],
                   ),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      circularcard(
+                      circularcard(height, 'height',
                           Colors.blue.withOpacity(0.1), Colors.grey[400]),
-                      circularcard(
+                      circularcard(height, 'height',
                           Colors.blue.withOpacity(0.1), Colors.orange[100]),
                     ],
                   )
@@ -201,9 +208,9 @@ class _DashedState extends State<Dashed> {
               scrollDirection: Axis.vertical,
               child: Column(
                 children: [
-                  pharmacy(),
-                  pharmacy(),
-                  pharmacy(),
+                  pharmacy('Pharmfamily', 'Spintex'),
+                  pharmacy('Mpharma', 'Adenta'),
+                  pharmacy('Adme', 'Ayeduase'),
                 ],
               ),
             ),
@@ -213,27 +220,25 @@ class _DashedState extends State<Dashed> {
     );
   }
 
-  Card pharmacy() {
+  Card pharmacy(var pharmacy, location) {
     return Card(
       color: Colors.grey[200],
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
       elevation: 5,
       child: ListTile(
           hoverColor: Colors.grey[50],
           leading: Text(
-            'Name of drug',
-            style: GoogleFonts.nunito(
-                fontSize: 17, fontWeight: FontWeight.bold, color: Colors.black),
+            pharmacy,
+            style: GoogleFonts.nunito(fontSize: 17, color: Colors.black),
           ),
           trailing: Text(
-            'Location',
-            style: GoogleFonts.nunito(
-                fontSize: 17, fontWeight: FontWeight.bold, color: Colors.black),
+            location,
+            style: GoogleFonts.nunito(fontSize: 17, color: Colors.black),
           )),
     );
   }
 
-  Widget circularcard(Color scolor, color) => Padding(
+  Widget circularcard(int value, var label, Color scolor, color) => Padding(
         padding: const EdgeInsets.symmetric(vertical: 3),
         child: Card(
           color: color,
@@ -245,13 +250,30 @@ class _DashedState extends State<Dashed> {
             width: 70,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [labels('45'), labels('pulse')],
+              children: [
+                Text(
+                  '$value%',
+                  style: GoogleFonts.nunito(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+                Text(
+                  '$label',
+                  style: GoogleFonts.nunito(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                )
+              ],
             ),
           ),
         ),
       );
 
-  Card vitlasS(Color scolor, color) {
+  Card vitlasS(int value, var label, Color scolor, color) {
     return Card(
       elevation: 4,
       shadowColor: scolor,
@@ -262,15 +284,29 @@ class _DashedState extends State<Dashed> {
         height: 65,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [labels('Temp.'), labels('35%')],
+          children: [
+            Text(
+              '$value%',
+              style: GoogleFonts.nunito(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black),
+            ),
+            Text(
+              '$label',
+              style: GoogleFonts.nunito(
+                fontSize: 15,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Text labels(var label) => Text(label);
-
-  Card vitalsL(Color scolor) {
+  Card vitalsL(int value, var label, Color scolor) {
     return Card(
       elevation: 5,
       shadowColor: scolor,
@@ -280,7 +316,23 @@ class _DashedState extends State<Dashed> {
         height: 135,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [labels('weight'), labels('85kg')],
+          children: [
+            Text(
+              '$value%',
+              style: GoogleFonts.nunito(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black),
+            ),
+            Text(
+              '$label',
+              style: GoogleFonts.nunito(
+                fontSize: 15,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
+            ),
+          ],
         ),
       ),
     );

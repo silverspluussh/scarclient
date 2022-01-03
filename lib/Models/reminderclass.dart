@@ -1,19 +1,26 @@
 class Remindme {
-  late DateTime dueDate;
   String name;
-  String description;
+  String title;
   String drug;
+  String hour;
+  String minute;
+  String day;
   Remindme(
       {required this.drug,
-      required this.dueDate,
+      required this.day,
+      required this.title,
       required this.name,
-      required this.description});
+      required this.hour,
+      required this.minute});
 
   factory Remindme.fromJson(Map<String, dynamic> json) {
     return Remindme(
-        name: json['name'],
-        drug: json['drug'],
-        dueDate: DateTime.parse(json['dueDate'] as String),
-        description: json['description']);
+      name: json['name'],
+      drug: json['drug'],
+      day: json['day'],
+      title: json['title'],
+      hour: json['hour'],
+      minute: json['minute'],
+    );
   }
 }

@@ -8,7 +8,6 @@ import 'package:scarclient/reminderMe/matbutton.dart';
 import 'package:scarclient/services/authen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:get/get.dart';
-import 'package:timezone/timezone.dart' as tz;
 
 class ReminderPage extends StatefulWidget {
   const ReminderPage({Key? key}) : super(key: key);
@@ -104,9 +103,7 @@ class _RemindersState extends State<ReminderPage> {
       future: fetchreminders,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          var alarmtime =
-              DateFormat("hh:mm: aa").format(snapshot.data!.dueDate);
-
+          var addhourmin = "${snapshot.data!.hour}:${snapshot.data!.minute} ";
           return Padding(
             padding: const EdgeInsets.all(10),
             child: Container(
@@ -161,7 +158,7 @@ class _RemindersState extends State<ReminderPage> {
                       ),
                     ),
                     Text(
-                      alarmtime,
+                      addhourmin,
                       style: GoogleFonts.lato(
                         fontSize: 17,
                         fontWeight: FontWeight.bold,

@@ -51,7 +51,7 @@ class Alarm extends StatelessWidget {
               fontWeight: FontWeight.w100,
             ),
           ),
-          const SizedBox(height: 50),
+          const SizedBox(height: 60),
           const RemindView(),
           Text(
             'Timezone:',

@@ -37,6 +37,8 @@ class _SetVitalsState extends State<SetVitals> {
     TextEditingController temperature = TextEditingController();
     TextEditingController bloodpressure = TextEditingController();
     TextEditingController breathingrate = TextEditingController();
+    TextEditingController height = TextEditingController();
+    TextEditingController weight = TextEditingController();
 
     List<String> items = [
       " A fever is indicated when body temperature rises about one degree or more over the normal temperature of 98.6 degrees Fahrenheit, according to the American Academy of Family Physicians. ",
@@ -60,14 +62,14 @@ class _SetVitalsState extends State<SetVitals> {
             const SizedBox(height: 15),
             CarouselSlider(
               options: CarouselOptions(
-                height: MediaQuery.of(context).size.height / 6,
+                height: MediaQuery.of(context).size.height / 5,
                 scrollDirection: Axis.horizontal,
               ),
               items: items.map((i) {
                 return Builder(
                   builder: (BuildContext context) {
                     return Card(
-                      color: Colors.grey,
+                      color: Colors.transparent,
                       margin: const EdgeInsets.symmetric(horizontal: 5.0),
                       elevation: 5,
                       shadowColor: Colors.green,
@@ -96,14 +98,14 @@ class _SetVitalsState extends State<SetVitals> {
               ),
               child: TextField(
                 onChanged: (val) {
-                  pulserate.text = val;
+                  weight.text = val;
                 },
                 decoration: InputDecoration(
                   labelStyle: GoogleFonts.nunito(
                     color: Colors.black,
                     fontSize: 18,
                   ),
-                  labelText: 'Pulse rate',
+                  labelText: 'Weight',
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(25),
                     borderSide: const BorderSide(
@@ -112,7 +114,42 @@ class _SetVitalsState extends State<SetVitals> {
                       style: BorderStyle.solid,
                     ),
                   ),
-                  hintText: 'hintText',
+                  hintText: 'input body weight',
+                ),
+                cursorColor: Colors.green[300],
+                style: GoogleFonts.nunito(
+                  color: Colors.black,
+                  fontSize: 18,
+                ),
+              ),
+            ),
+            Container(
+              height: 50,
+              margin: const EdgeInsets.only(top: 5),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 3),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5),
+                color: Colors.transparent,
+              ),
+              child: TextField(
+                onChanged: (val) {
+                  height.text = val;
+                },
+                decoration: InputDecoration(
+                  labelStyle: GoogleFonts.nunito(
+                    color: Colors.black,
+                    fontSize: 18,
+                  ),
+                  labelText: 'Height',
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(25),
+                    borderSide: const BorderSide(
+                      color: Colors.grey,
+                      width: 1.0,
+                      style: BorderStyle.solid,
+                    ),
+                  ),
+                  hintText: 'add your height',
                 ),
                 cursorColor: Colors.green[300],
                 style: GoogleFonts.nunito(
@@ -236,6 +273,8 @@ class _SetVitalsState extends State<SetVitals> {
                         "bloodpressure": bloodpressure.text,
                         "bodytemperature": temperature.text,
                         "breathingrate": breathingrate.text,
+                        "weight": weight.text,
+                        "height": height.text,
                       };
                       var output = await hanler.post('/vitals/addvitals', data);
 
@@ -251,6 +290,8 @@ class _SetVitalsState extends State<SetVitals> {
                         bloodpressure.text = '';
                         temperature.text = '';
                         breathingrate.text = '';
+                        weight.text = '';
+                        height.text = '';
                       });
                     }
                   },
