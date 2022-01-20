@@ -133,7 +133,7 @@ class _DashedState extends State<Dashed> {
           ),
           const SizedBox(height: 5),
           Container(
-            height: size.height / 3.6,
+            height: size.height / 4.6,
             width: size.width / 2,
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
             decoration: BoxDecoration(
@@ -148,38 +148,7 @@ class _DashedState extends State<Dashed> {
               ),
               borderRadius: BorderRadius.circular(20),
             ),
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  ListTile(
-                    hoverColor: Colors.grey[50],
-                    leading: const Text('Name of drug'),
-                    trailing: const ImageIcon(
-                      AssetImage('assets/i-pharmacy-256.png'),
-                      size: 30,
-                    ),
-                  ),
-                  const Divider(color: Colors.black),
-                  ListTile(
-                    hoverColor: Colors.grey[50],
-                    leading: const Text('Name of drug'),
-                    trailing: const ImageIcon(
-                      AssetImage('assets/i-pharmacy-256.png'),
-                      size: 30,
-                    ),
-                  ),
-                  const Divider(color: Colors.black),
-                  ListTile(
-                    hoverColor: Colors.grey[50],
-                    leading: const Text('Name of drug'),
-                    trailing: const ImageIcon(
-                      AssetImage('assets/i-pharmacy-256.png'),
-                      size: 30,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            child: const Center(child: Text('add drugs')),
           ),
           const SizedBox(height: 20),
           Text(
@@ -204,15 +173,8 @@ class _DashedState extends State<Dashed> {
               ),
               borderRadius: BorderRadius.circular(20),
             ),
-            child: SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              child: Column(
-                children: [
-                  pharmacy('Pharmfamily', 'Spintex'),
-                  pharmacy('Mpharma', 'Adenta'),
-                  pharmacy('Adme', 'Ayeduase'),
-                ],
-              ),
+            child: const Center(
+              child: Text('Add pharacy'),
             ),
           ),
         ],

@@ -36,7 +36,7 @@ class NotificationService {
   }
 
   Future<void> showNotification(
-      int? id, String? title, String? body, int? hours, minutes, days) async {
+      int? id, String? title, String? body, int? hours, minutes) async {
     tz.initializeTimeZones();
 
     await flutterLocalNotificationsPlugin.zonedSchedule(
@@ -44,7 +44,7 @@ class NotificationService {
       title!,
       body!,
       tz.TZDateTime.now(tz.local)
-          .add(Duration(hours: hours!, minutes: minutes!, days: days!))
+          .add(Duration(hours: hours!, minutes: minutes!))
           .subtract(offsetTime),
       const NotificationDetails(
         android: AndroidNotificationDetails('main_channel', 'Main Channel',
@@ -64,7 +64,7 @@ class NotificationService {
     );
   }
 
-  Future<void> cancelAllNotifications() async {
+  Future<void> cancelAllNotifications(int id) async {
     await flutterLocalNotificationsPlugin.cancelAll();
   }
 }

@@ -62,7 +62,7 @@ class _SetVitalsState extends State<SetVitals> {
             const SizedBox(height: 15),
             CarouselSlider(
               options: CarouselOptions(
-                height: MediaQuery.of(context).size.height / 5,
+                height: MediaQuery.of(context).size.height / 4.5,
                 scrollDirection: Axis.horizontal,
               ),
               items: items.map((i) {

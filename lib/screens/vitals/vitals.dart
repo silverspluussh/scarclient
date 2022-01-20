@@ -170,10 +170,15 @@ class _ChartsInfoState extends State<ChartsInfo> {
         ),
       );
     } else {
-      page = const Center(
-        child: Text('Failed to load vitals'),
+      page = Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: const [
+            Text('Vitals not available'),
+            Text('Swipe left to add vitals')
+          ],
+        ),
       );
-      throw Exception('Failed to load album');
     }
   }
 

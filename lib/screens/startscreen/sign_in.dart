@@ -187,8 +187,8 @@ class _SignInState extends State<SignIn> {
 
                         sharedPereferences.setBool(
                             'success', outside['success']);
-                        //   sharedPereferences.setString('_id', outside['_id']);
-                        sharedPereferences.setString('name', "${data['name']}");
+
+                        sharedPereferences.setString('name', username);
 
                         await storage.write(
                             key: 'token', value: outside["token"]);

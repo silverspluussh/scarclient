@@ -4,7 +4,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
 class NetworkHanler {
-  String burl = "https://morning-basin-74575.herokuapp.com";
+  String burl = "https://silverhead-go.herokuapp.com";
 
   FlutterSecureStorage storage = const FlutterSecureStorage();
 

@@ -15,6 +15,7 @@ class _RemindState extends State<Clock> {
   @override
   void initState() {
     super.initState();
+
     if (mounted) {
       setState(() {});
     } else {

@@ -1,8 +1,6 @@
-// ignore_for_file: prefer_typing_uninitialized_variables
+// ignore_for_file: prefer_typing_uninitialized_variables, non_constant_identifier_names
 import 'dart:convert';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -10,16 +8,15 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:scarclient/reminderMe/matbutton.dart';
 import 'package:scarclient/services/authen.dart';
-import 'package:scarclient/reminderMe/reminderhelper.dart';
 
-class SetReminders extends StatefulWidget {
-  const SetReminders({Key? key}) : super(key: key);
+class Drugs extends StatefulWidget {
+  const Drugs({Key? key}) : super(key: key);
 
   @override
-  _CompleteProfileStatex createState() => _CompleteProfileStatex();
+  _Drugstate createState() => _Drugstate();
 }
 
-class _CompleteProfileStatex extends State<SetReminders> {
+class _Drugstate extends State<Drugs> {
   @override
   void initState() {
     if (mounted) {
@@ -31,19 +28,18 @@ class _CompleteProfileStatex extends State<SetReminders> {
     super.initState();
   }
 
-  bool valid = false;
-  var xtitle, xhour, xminute, xdrug, xday;
   final hanler = NetworkHanler();
-  List<int> timeintervals = [1, 2, 3, 4, 5, 6, 7, 0];
-  final _formKey = GlobalKey<FormState>();
-  var selectedday = 0;
-  int keys = 0;
+  final _formKey1 = GlobalKey<FormState>();
 
   NetworkHanler handler = NetworkHanler();
-  final TextEditingController _title = TextEditingController();
-  final TextEditingController _drug = TextEditingController();
-  final TextEditingController hour = TextEditingController();
-  final TextEditingController minute = TextEditingController();
+  final TextEditingController drugname = TextEditingController();
+  final TextEditingController drugType = TextEditingController();
+  final TextEditingController vendorname = TextEditingController();
+  final TextEditingController drugRef = TextEditingController();
+  final TextEditingController codeNumber = TextEditingController();
+  final TextEditingController currentDate = TextEditingController();
+  final TextEditingController expiryDate = TextEditingController();
+  final TextEditingController quantity = TextEditingController();
 
   bool validate = false;
   bool progress = false;
@@ -61,7 +57,7 @@ class _CompleteProfileStatex extends State<SetReminders> {
           height: double.infinity,
           margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           child: Form(
-            key: _formKey,
+            key: _formKey1,
             child: ListView(
               children: [
                 Row(
@@ -78,70 +74,74 @@ class _CompleteProfileStatex extends State<SetReminders> {
                       ),
                     ),
                     const Spacer(),
-                    const Button(label: 'Reminders')
+                    const Button(label: 'Drugstore')
                   ],
                 ),
                 const SizedBox(height: 20),
                 CustomTextField(
-                  controller: _title,
-                  labelText: "Title",
-                  hintText: "Title",
+                  controller: drugname,
+                  labelText: "Name of drug",
+                  hintText: "Drug name",
                   keyboardType: TextInputType.text,
                   textInputAction: TextInputAction.next,
-                  onchange: () {
-                    setState(() {
-                      xtitle = _title.text;
-                    });
-                  },
                 ),
                 CustomTextField(
-                  labelText: "Drug",
-                  controller: _drug,
-                  hintText: "Drug",
+                  labelText: "Drug Type",
+                  controller: drugType,
+                  hintText: "Type of drug",
                   keyboardType: TextInputType.text,
                   textInputAction: TextInputAction.next,
-                  onchange: () {
-                    setState(() {
-                      xdrug = _drug.text;
-                    });
-                  },
                 ),
                 CustomTextField(
-                  labelText: "time in hours",
-                  controller: hour,
-                  hintText: 'input hour of day',
+                  labelText: "Name of vendor",
+                  controller: vendorname,
+                  hintText: 'name of seller',
                   textInputAction: TextInputAction.next,
-                  onchange: () {
-                    setState(() {
-                      xhour = hour.text;
-                    });
-                  },
                 ),
                 CustomTextField(
-                  labelText: "time in minutes",
-                  controller: minute,
-                  hintText: 'input minutes of day',
+                  labelText: "Drug reference",
+                  controller: drugRef,
+                  hintText: 'Drug reference',
                   textInputAction: TextInputAction.next,
-                  onchange: () {
-                    setState(() {
-                      xminute = minute.text;
-                    });
-                  },
+                ),
+                CustomTextField(
+                  hintText: 'code number',
+                  labelText: 'Code number',
+                  controller: codeNumber,
+                ),
+                CustomTextField(
+                  hintText: "current date",
+                  labelText: "current date",
+                  controller: currentDate,
+                ),
+                CustomTextField(
+                  hintText: 'Date of expiry',
+                  labelText: 'Expiry date',
+                  controller: expiryDate,
+                ),
+                CustomTextField(
+                  hintText: 'Quantity',
+                  labelText: 'Quantity',
+                  controller: quantity,
                 ),
                 const SizedBox(height: 40),
                 Align(
                     alignment: Alignment.bottomCenter,
                     child: InkWell(
                         onTap: () async {
-                          if (_formKey.currentState!.validate()) {
+                          if (_formKey1.currentState!.validate()) {
                             Map<String, String> data = {
-                              "title": _title.text,
-                              "drug": _drug.text,
-                              "hour": hour.text,
-                              "minute": minute.text,
+                              "Pharmacy_Name": drugname.text,
+                              "Pharm_Telephone": drugRef.text,
+                              "Pharm_Email": drugType.text,
+                              "Pharm_Location": vendorname.text,
+                              "PharmGpsAddress": currentDate.text,
+                              "OwnerName": expiryDate.text,
+                              "OwnerTelephone": quantity.text,
+                              "OwnerEmail": codeNumber.text,
                             };
-                            var output = await hanler.post(
-                                '/reminders/addreminders', data);
+                            var output =
+                                await hanler.post('/drugs/adddrugs', data);
 
                             Map<String, dynamic> response =
                                 json.decode(output.body);
@@ -153,11 +153,6 @@ class _CompleteProfileStatex extends State<SetReminders> {
                               fontSize: 23,
                             );
                           }
-
-                          await NotificationService()
-                              .showNotification(
-                                  keys, xtitle, xdrug, xhour, xminute)
-                              .then((value) => keys += 1);
 
                           Navigator.pop(context);
                         },

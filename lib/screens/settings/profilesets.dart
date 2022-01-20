@@ -26,7 +26,6 @@ class _CompleteProfileState extends State<CompleteProfile> {
   @override
   void initState() {
     if (mounted) {
-      _nationalityx.text = nationality;
       verifyProfile();
     } else {
       dispose();
@@ -35,13 +34,9 @@ class _CompleteProfileState extends State<CompleteProfile> {
     super.initState();
   }
 
-  final String nationality = "Ghana";
-  String bloodType = "O";
   String countryCode = "233";
   DateTime? birthDate;
   final _formKey = GlobalKey<FormState>();
-
-  final bloodTypes = ["A", "AB", "B", "O"];
 
   NetworkHanler handler = NetworkHanler();
   final TextEditingController _firstname = TextEditingController();
@@ -263,42 +258,6 @@ class _CompleteProfileState extends State<CompleteProfile> {
                   suffixIcon: const Icon(
                     Icons.flag,
                     color: Colors.black26,
-                  ),
-                ),
-                Container(
-                  margin:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text("Blood Type : ",
-                          style: GoogleFonts.nunito(
-                              color: Colors.black,
-                              fontSize: 20,
-                              fontWeight: FontWeight.normal)),
-                      const SizedBox(
-                        width: 20,
-                      ),
-                      DropdownButton(
-                          value: bloodType,
-                          onChanged: (String? newValue) {
-                            setState(() {
-                              bloodType = newValue!;
-                            });
-                          },
-                          items: bloodTypes.map((item) {
-                            return DropdownMenuItem<String>(
-                              value: item,
-                              child: Text(
-                                item,
-                                style: GoogleFonts.nunito(
-                                  color: Colors.black,
-                                  fontSize: 18,
-                                ),
-                              ),
-                            );
-                          }).toList()),
-                    ],
                   ),
                 ),
                 const SizedBox(height: 40),

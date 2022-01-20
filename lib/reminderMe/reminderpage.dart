@@ -20,13 +20,16 @@ class _RemindersState extends State<ReminderPage> {
   NetworkHanler networkhandler = NetworkHanler();
   late Future<Remindme> fetchreminders;
   DateTime select = DateTime.now();
-
+  var errotext = 'error';
   Future<Remindme> fetchAlbum() async {
     var response = await networkhandler.get('/reminders/remindersinfo');
     if (response != null) {
       return Remindme.fromJson(response);
     } else {
-      throw Exception('Failed to load album');
+      setState(() {
+        errotext = 'no reminders found';
+      });
+      throw Exception('no reminders found');
     }
   }
 
@@ -34,8 +37,8 @@ class _RemindersState extends State<ReminderPage> {
   void initState() {
     if (mounted) {
       setState(() {});
-      fetchreminders = fetchAlbum();
       DateTime.now();
+      fetchreminders = fetchAlbum();
     } else {
       return;
     }
@@ -171,6 +174,20 @@ class _RemindersState extends State<ReminderPage> {
           );
         } else if (snapshot.hasError) {
           return Text('${snapshot.error}');
+        } else if (!snapshot.hasData) {
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Text(
+                errotext,
+                style: const TextStyle(
+                  color: Colors.red,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          );
         }
         return const Padding(
           padding: EdgeInsets.symmetric(vertical: 30),

@@ -1,8 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:scarclient/reminderMe/clockdesign.dart';
 
-class Alarm extends StatelessWidget {
+class Alarm extends StatefulWidget {
   const Alarm({
     Key? key,
     required this.size,
@@ -17,6 +19,19 @@ class Alarm extends StatelessWidget {
   final String offsetsign;
 
   @override
+  State<Alarm> createState() => _AlarmState();
+}
+
+class _AlarmState extends State<Alarm> {
+  @override
+  void initState() {
+    super.initState();
+    Timer.periodic(const Duration(seconds: 1), (timer) {
+      setState(() {});
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width,
@@ -24,9 +39,8 @@ class Alarm extends StatelessWidget {
       color: const Color(0xFFFFFFFF),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
-        //mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          SizedBox(height: size.height / 24),
+          SizedBox(height: widget.size.height / 24),
           Text(
             'Clock',
             style: GoogleFonts.lato(
@@ -35,9 +49,9 @@ class Alarm extends StatelessWidget {
               color: Colors.black,
             ),
           ),
-          SizedBox(height: size.height / 25),
+          SizedBox(height: widget.size.height / 25),
           Text(
-            timeformat,
+            widget.timeformat,
             style: GoogleFonts.nunito(
               fontSize: 30,
               fontWeight: FontWeight.w100,
@@ -45,7 +59,7 @@ class Alarm extends StatelessWidget {
           ),
           const SizedBox(height: 10),
           Text(
-            dateformat,
+            widget.dateformat,
             style: GoogleFonts.nunito(
               fontSize: 24,
               fontWeight: FontWeight.w100,
@@ -61,7 +75,7 @@ class Alarm extends StatelessWidget {
             ),
           ),
           Text(
-            '  WAT' + offsetsign,
+            '  WAT' + widget.offsetsign,
             style: GoogleFonts.nunito(
               fontSize: 23,
               fontWeight: FontWeight.w300,

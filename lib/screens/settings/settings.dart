@@ -19,10 +19,14 @@ class _SettingsState extends State<Settings> {
 
     await sharedPereferences.clear();
 
-    Get.toNamed('/startpage');
+    Get.toNamed('/');
   }
 
-  exitapp() {
+  exitapp() async {
+    final SharedPreferences sharedPereferences =
+        await SharedPreferences.getInstance();
+
+    await sharedPereferences.clear();
     SystemNavigator.pop();
   }
 
@@ -133,21 +137,6 @@ class _SettingsState extends State<Settings> {
                       color: Colors.green,
                     ),
                     onTap: () => Get.toNamed("/completeprofile")),
-                dividerx(),
-                ListTile(
-                    leading: const ImageIcon(
-                      AssetImage('assets/profile-19-512.png'),
-                    ),
-                    title: Text(
-                      'Account Settings',
-                      style: GoogleFonts.nunito(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                      ),
-                    ),
-                    trailing: const Icon(Icons.arrow_forward_ios,
-                        color: Colors.green),
-                    onTap: () => Get.toNamed("/account")),
                 dividerx(),
               ],
             ),

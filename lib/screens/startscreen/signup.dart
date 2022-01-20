@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:scarclient/screens/startscreen/navigation_index.dart';
@@ -273,7 +275,7 @@ class _SignUpState extends State<SignUp> {
                         "email": email,
                         "password": password,
                       };
-                      await networkhandle.post('/user/register', data);
+                      await networkhandle.post('/user/adduser', data);
                       Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(builder: (context) => const Home()),
@@ -342,7 +344,7 @@ class _SignUpState extends State<SignUp> {
       });
     }
     var response = await networkhandle.get('/user/checkemail/$email');
-    if (response['status']) {
+    if (response == true) {
       setState(() {
         validate = false;
         errort = 'email is already used';
