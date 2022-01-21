@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:scarclient/screens/dashboard/profilepic.dart';
 import 'package:scarclient/screens/dashboard/welcomeprofile.dart';
+import 'package:scarclient/services/authen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:get/get.dart';
 
@@ -15,23 +16,50 @@ class Dashed extends StatefulWidget {
 
 class _DashedState extends State<Dashed> {
   String user = '';
-  var temp = 0;
-  var pulse = 0;
-  var weight = 0;
-  var rate = 0;
-  var height = 0;
-  // NetworkHanler networkhand = NetworkHanler();
+  String bodytemp = '';
+  String pulser = '';
+  String weight = '';
+  String breatherate = '';
+  String height = '';
+  String pressure = '';
+  bool confirmed = false;
+  NetworkHanler networkhand = NetworkHanler();
 
   @override
   void initState() {
+    getdata();
     if (mounted) {
+      getdata();
+      getuser();
       setState(() {});
     } else {
       dispose();
       return;
     }
     super.initState();
-    getuser();
+  }
+
+  Future getdata() async {
+    var resp = await networkhand.get('/vitals/vitalsinfo');
+
+    if (resp != null) {
+      setState(() {
+        pulser = resp['pulserate'];
+        bodytemp = resp['bodytemperature'];
+        pressure = resp['bloodpressure'];
+        breatherate = resp['breathingrate'];
+      });
+    }
+  }
+
+  void verifyvitals() async {
+    var response = await networkhand.get('/vitals/checkvitals');
+
+    if (response['status'] == false) {
+      setState(() {
+        confirmed = false;
+      });
+    }
   }
 
   Future getuser() async {
@@ -96,34 +124,48 @@ class _DashedState extends State<Dashed> {
               ),
               borderRadius: BorderRadius.circular(20),
             ),
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  vitalsL(pulse, 'Pulse', Colors.green.withOpacity(0.3)),
-                  vitalsL(rate, 'B-rate', Colors.red.withOpacity(0.4)),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      vitlasS(weight, 'Weight', Colors.blue.withOpacity(0.3),
-                          Colors.blueGrey),
-                      vitlasS(temp, 'Temp.', Colors.purple.withOpacity(0.1),
-                          Colors.pink[50]),
-                    ],
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      circularcard(height, 'height',
-                          Colors.blue.withOpacity(0.1), Colors.grey[400]),
-                      circularcard(height, 'height',
-                          Colors.blue.withOpacity(0.1), Colors.orange[100]),
-                    ],
+            child: confirmed
+                ? SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        vitalsL(pulser, 'Pulse', Colors.green.withOpacity(0.3)),
+                        vitalsL(
+                            breatherate, 'B-rate', Colors.red.withOpacity(0.4)),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            vitlasS(weight, 'Weight',
+                                Colors.blue.withOpacity(0.3), Colors.blueGrey),
+                            vitlasS(
+                                bodytemp,
+                                'Temp.',
+                                Colors.purple.withOpacity(0.1),
+                                Colors.pink[50]),
+                          ],
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            circularcard(height, 'height',
+                                Colors.blue.withOpacity(0.1), Colors.grey[400]),
+                            circularcard(
+                                height,
+                                'height',
+                                Colors.blue.withOpacity(0.1),
+                                Colors.orange[100]),
+                          ],
+                        )
+                      ],
+                    ),
                   )
-                ],
-              ),
-            ),
+                : Center(
+                    child: Text(
+                      'Vitals not set',
+                      style: GoogleFonts.lato(fontSize: 20),
+                    ),
+                  ),
           ),
           const SizedBox(height: 20),
           Text(
@@ -148,7 +190,14 @@ class _DashedState extends State<Dashed> {
               ),
               borderRadius: BorderRadius.circular(20),
             ),
-            child: const Center(child: Text('add drugs')),
+            child: Center(
+                child: InkWell(
+              onTap: () => Get.toNamed('/drugstore'),
+              child: Text(
+                'Add Drugs',
+                style: GoogleFonts.lato(fontSize: 20),
+              ),
+            )),
           ),
           const SizedBox(height: 20),
           Text(
@@ -173,8 +222,14 @@ class _DashedState extends State<Dashed> {
               ),
               borderRadius: BorderRadius.circular(20),
             ),
-            child: const Center(
-              child: Text('Add pharacy'),
+            child: Center(
+              child: InkWell(
+                onTap: () => Get.toNamed('/pharmacy'),
+                child: Text(
+                  'Add pharmacy',
+                  style: GoogleFonts.lato(fontSize: 20),
+                ),
+              ),
             ),
           ),
         ],
@@ -200,7 +255,7 @@ class _DashedState extends State<Dashed> {
     );
   }
 
-  Widget circularcard(int value, var label, Color scolor, color) => Padding(
+  Widget circularcard(var value, var label, Color scolor, color) => Padding(
         padding: const EdgeInsets.symmetric(vertical: 3),
         child: Card(
           color: color,
@@ -235,7 +290,7 @@ class _DashedState extends State<Dashed> {
         ),
       );
 
-  Card vitlasS(int value, var label, Color scolor, color) {
+  Card vitlasS(var value, var label, Color scolor, color) {
     return Card(
       elevation: 4,
       shadowColor: scolor,
@@ -268,7 +323,7 @@ class _DashedState extends State<Dashed> {
     );
   }
 
-  Card vitalsL(int value, var label, Color scolor) {
+  Card vitalsL(var value, var label, Color scolor) {
     return Card(
       elevation: 5,
       shadowColor: scolor,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:scarclient/drugstore/adddrug.dart';
 import 'package:scarclient/pharmacies/addpharmacy.dart';
 import 'package:scarclient/reminderMe/addreminder.dart';
 import 'package:scarclient/screens/intro_screens/intro_screen.dart';
@@ -48,7 +49,8 @@ void main() async {
         GetPage(name: "/profile", page: () => const Profilepage()),
         GetPage(name: "/completeprofile", page: () => const CompleteProfile()),
         GetPage(name: "/addreminders", page: () => const SetReminders()),
-        GetPage(name: "/pharmacy", page: () => const Pharmacy())
+        GetPage(name: "/pharmacy", page: () => const Pharmacy()),
+        GetPage(name: "/drugstore", page: () => const Drugs())
       ],
     ),
   );

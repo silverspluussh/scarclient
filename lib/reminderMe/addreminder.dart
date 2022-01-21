@@ -141,6 +141,9 @@ class _CompleteProfileStatex extends State<SetReminders> {
                         );
                       }
 
+                      await NotificationService().schedulecustomNotification(
+                          keys, xtitle, xdrug, xhour, xminute);
+
                       await NotificationService()
                           .showNotification(keys, xtitle, xdrug, xhour, xminute)
                           .then((value) {

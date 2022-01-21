@@ -122,13 +122,12 @@ class _RemindersState extends State<ReminderPage> {
       future: fetchreminders,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          var addhourmin = "${snapshot.data!.hour}:${snapshot.data!.minute} ";
           return Padding(
             padding: const EdgeInsets.all(10),
             child: Container(
-              margin: const EdgeInsets.only(bottom: 20),
-              padding: const EdgeInsets.all(5),
-              height: 140,
+              margin: const EdgeInsets.only(bottom: 10),
+              padding: const EdgeInsets.all(10),
+              height: 155,
               decoration: BoxDecoration(
                   gradient: const LinearGradient(
                     colors: [
@@ -153,9 +152,8 @@ class _RemindersState extends State<ReminderPage> {
                   children: [
                     Row(
                       children: [
-                        const Icon(Icons.history_toggle_off_sharp),
                         Text(
-                          'Home',
+                          snapshot.data!.title.toUpperCase(),
                           style: GoogleFonts.lato(
                             fontSize: 19,
                             fontWeight: FontWeight.bold,
@@ -163,25 +161,44 @@ class _RemindersState extends State<ReminderPage> {
                         ),
                         const Spacer(),
                         Switch(
-                          value: true,
-                          onChanged: (bool value) {},
-                          activeColor: Colors.white,
+                          value: false,
+                          onChanged: (bool value) {
+                            value = true;
+                          },
+                          activeColor: Colors.blue,
+                          inactiveThumbColor: Colors.white,
                         )
                       ],
                     ),
-                    Text(
-                      "Sun - Fri",
-                      style: GoogleFonts.lato(
-                        fontSize: 19,
-                        fontWeight: FontWeight.bold,
+                    Wrap(children: [
+                      Text(
+                        "Set for ${snapshot.data!.hour} hours, ${snapshot.data!.minute} minutes",
+                        style: GoogleFonts.lato(
+                          fontSize: 17,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                    Text(
-                      addhourmin,
-                      style: GoogleFonts.lato(
-                        fontSize: 17,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    ]),
+                    const SizedBox(height: 2),
+                    Row(
+                      children: [
+                        Text(
+                          snapshot.data!.drug.toUpperCase(),
+                          style: GoogleFonts.nunito(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const Spacer(),
+                        IconButton(
+                          color: Colors.red,
+                          onPressed: () {},
+                          icon: const ImageIcon(
+                            AssetImage('assets/delete-94-512.png'),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
