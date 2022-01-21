@@ -2,8 +2,8 @@ class Remindme {
   String name;
   String title;
   String drug;
-  String hour;
-  String minute;
+  int hour;
+  int minute;
   Remindme(
       {required this.drug,
       required this.title,

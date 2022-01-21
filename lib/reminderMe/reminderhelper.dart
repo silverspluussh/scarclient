@@ -36,15 +36,15 @@ class NotificationService {
   }
 
   Future<void> showNotification(
-      int? id, String? title, String? body, int? hours, minutes) async {
+      int id, String title, String body, int hours, minutes) async {
     tz.initializeTimeZones();
 
     await flutterLocalNotificationsPlugin.zonedSchedule(
-      id!,
-      title!,
-      body!,
+      id,
+      title,
+      body,
       tz.TZDateTime.now(tz.local)
-          .add(Duration(hours: hours!, minutes: minutes!))
+          .add(Duration(hours: hours, minutes: minutes))
           .subtract(offsetTime),
       const NotificationDetails(
         android: AndroidNotificationDetails('main_channel', 'Main Channel',
@@ -64,7 +64,61 @@ class NotificationService {
     );
   }
 
-  Future<void> cancelAllNotifications(int id) async {
+  Future<void> repeatNotification(int id, String title, String body) async {
+    AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails(id.toString(), title,
+            channelDescription: body, importance: Importance.min);
+
+    NotificationDetails platformChannelSpecifics =
+        NotificationDetails(android: androidPlatformChannelSpecifics);
+
+    await flutterLocalNotificationsPlugin.periodicallyShow(
+        id, title, body, RepeatInterval.daily, platformChannelSpecifics,
+        androidAllowWhileIdle: true);
+  }
+
+  Future<void> schedulecustomNotification(
+    int id,
+    String title,
+    String body,
+    int hours,
+    minutes,
+  ) async {
+    await flutterLocalNotificationsPlugin.zonedSchedule(
+      id,
+      title,
+      body,
+      schedulecustomtime(hours, minutes),
+      NotificationDetails(
+        android: AndroidNotificationDetails(
+          id.toString(),
+          title,
+          channelDescription: body,
+        ),
+      ),
+      androidAllowWhileIdle: true,
+      uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime,
+      matchDateTimeComponents: DateTimeComponents.time,
+    );
+  }
+
+  Future<void> cancelNotification(int id) async {
+    await flutterLocalNotificationsPlugin.cancel(id);
+  }
+
+  Future<void> cancelAllNotifications() async {
     await flutterLocalNotificationsPlugin.cancelAll();
+  }
+
+  tz.TZDateTime schedulecustomtime(int hour, minute) {
+    final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
+    tz.TZDateTime scheduledDate = tz.TZDateTime(
+        tz.local, now.year, now.month, now.day, now.hour, now.minute);
+    if (scheduledDate.isBefore(now)) {
+      scheduledDate =
+          scheduledDate.add(Duration(days: 1, hours: hour, minutes: minute));
+    }
+    return scheduledDate;
   }
 }

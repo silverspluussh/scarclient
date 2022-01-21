@@ -37,7 +37,7 @@ class _CompleteProfileStatex extends State<SetReminders> {
   List<int> timeintervals = [1, 2, 3, 4, 5, 6, 7, 0];
   final _formKey = GlobalKey<FormState>();
   var selectedday = 0;
-  int keys = 0;
+  int keys = 1;
 
   NetworkHanler handler = NetworkHanler();
   final TextEditingController _title = TextEditingController();
@@ -45,9 +45,8 @@ class _CompleteProfileStatex extends State<SetReminders> {
   final TextEditingController hour = TextEditingController();
   final TextEditingController minute = TextEditingController();
 
-  bool validate = false;
-  bool progress = false;
-  Widget page = const CircularProgressIndicator();
+  bool validate = true;
+  Widget progress = const CircularProgressIndicator();
 
   @override
   Widget build(BuildContext context) {
@@ -88,11 +87,6 @@ class _CompleteProfileStatex extends State<SetReminders> {
                   hintText: "Title",
                   keyboardType: TextInputType.text,
                   textInputAction: TextInputAction.next,
-                  onchange: () {
-                    setState(() {
-                      xtitle = _title.text;
-                    });
-                  },
                 ),
                 CustomTextField(
                   labelText: "Drug",
@@ -100,68 +94,70 @@ class _CompleteProfileStatex extends State<SetReminders> {
                   hintText: "Drug",
                   keyboardType: TextInputType.text,
                   textInputAction: TextInputAction.next,
-                  onchange: () {
-                    setState(() {
-                      xdrug = _drug.text;
-                    });
-                  },
                 ),
                 CustomTextField(
                   labelText: "time in hours",
                   controller: hour,
                   hintText: 'input hour of day',
                   textInputAction: TextInputAction.next,
-                  onchange: () {
-                    setState(() {
-                      xhour = hour.text;
-                    });
-                  },
                 ),
                 CustomTextField(
                   labelText: "time in minutes",
                   controller: minute,
                   hintText: 'input minutes of day',
                   textInputAction: TextInputAction.next,
-                  onchange: () {
-                    setState(() {
-                      xminute = minute.text;
-                    });
-                  },
                 ),
                 const SizedBox(height: 40),
                 Align(
-                    alignment: Alignment.bottomCenter,
-                    child: InkWell(
-                        onTap: () async {
-                          if (_formKey.currentState!.validate()) {
-                            Map<String, String> data = {
-                              "title": _title.text,
-                              "drug": _drug.text,
-                              "hour": hour.text,
-                              "minute": minute.text,
-                            };
-                            var output = await hanler.post(
-                                '/reminders/addreminders', data);
+                  alignment: Alignment.bottomCenter,
+                  child: InkWell(
+                    onTap: () async {
+                      validate = false;
+                      if (_formKey.currentState!.validate()) {
+                        Map<String, String> data = {
+                          "title": _title.text,
+                          "drug": _drug.text,
+                          "hour": hour.text,
+                          "minute": minute.text,
+                        };
+                        var output =
+                            await hanler.post('/reminders/addreminders', data);
 
-                            Map<String, dynamic> response =
-                                json.decode(output.body);
-                            await Fluttertoast.showToast(
-                              msg: response["msg"],
-                              backgroundColor: Colors.green,
-                              gravity: ToastGravity.BOTTOM,
-                              toastLength: Toast.LENGTH_LONG,
-                              fontSize: 23,
-                            );
-                          }
+                        setState(() {
+                          xhour = int.parse(hour.text);
+                          xdrug = _drug.text;
+                          xtitle = _title.text;
+                          xminute = int.parse(minute.text);
+                        });
 
-                          await NotificationService()
-                              .showNotification(
-                                  keys, xtitle, xdrug, xhour, xminute)
-                              .then((value) => keys += 1);
+                        Map<String, dynamic> response =
+                            json.decode(output.body);
+                        await Fluttertoast.showToast(
+                          msg: response["msg"],
+                          backgroundColor: Colors.green,
+                          gravity: ToastGravity.BOTTOM,
+                          toastLength: Toast.LENGTH_LONG,
+                          fontSize: 23,
+                        );
+                      }
 
-                          Navigator.pop(context);
-                        },
-                        child: const Button(label: 'save'))),
+                      await NotificationService()
+                          .showNotification(keys, xtitle, xdrug, xhour, xminute)
+                          .then((value) {
+                        hour.text = '';
+                        _drug.text = "";
+                        _title.text = "";
+                        minute.text = "";
+                        validate = true;
+                      });
+
+                      keys += 1;
+
+                      Navigator.pop(context);
+                    },
+                    child: validate ? const Button(label: 'save') : progress,
+                  ),
+                ),
               ],
             ),
           ),
