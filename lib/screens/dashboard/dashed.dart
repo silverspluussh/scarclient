@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:scarclient/Models/drugsmodel.dart';
+import 'package:scarclient/Models/pharmmodel.dart';
+import 'package:scarclient/Models/vitalsmodel.dart';
 import 'package:scarclient/screens/dashboard/profilepic.dart';
 import 'package:scarclient/screens/dashboard/welcomeprofile.dart';
 import 'package:scarclient/services/authen.dart';
@@ -16,21 +20,19 @@ class Dashed extends StatefulWidget {
 
 class _DashedState extends State<Dashed> {
   String user = '';
-  String bodytemp = '';
-  String pulser = '';
-  String weight = '';
-  String breatherate = '';
-  String height = '';
-  String pressure = '';
   bool confirmed = false;
   NetworkHanler networkhand = NetworkHanler();
+  Future<Pharmacies>? pharmmodel;
+  Future<VitalsModel>? vitalsmodel;
+  Future<Drugs>? drugsmodel;
 
   @override
   void initState() {
-    getdata();
     if (mounted) {
-      getdata();
       getuser();
+      vitalsmodel = getvitalsdata() as Future<VitalsModel>?;
+      pharmmodel = getpharmdata() as Future<Pharmacies>?;
+      drugsmodel = getdrugs() as Future<Drugs>?;
       setState(() {});
     } else {
       dispose();
@@ -39,16 +41,32 @@ class _DashedState extends State<Dashed> {
     super.initState();
   }
 
-  Future getdata() async {
-    var resp = await networkhand.get('/vitals/vitalsinfo');
+  Future<VitalsModel?> getvitalsdata() async {
+    try {
+      var vitals = await networkhand.get('/vitals/vitalsinfo');
+      return vitals;
+    } catch (err) {
+      Fluttertoast.showToast(msg: err.toString());
+      return null;
+    }
+  }
 
-    if (resp != null) {
-      setState(() {
-        pulser = resp['pulserate'];
-        bodytemp = resp['bodytemperature'];
-        pressure = resp['bloodpressure'];
-        breatherate = resp['breathingrate'];
-      });
+  Future<Pharmacies?> getpharmdata() async {
+    try {
+      var response = await networkhand.get('/pharmacy/pharmacydetails');
+      return response;
+    } catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
+      return null;
+    }
+  }
+
+  Future<Drugs?> getdrugs() async {
+    try {
+      var response = await networkhand.get('/drugs/drugdetails');
+      return response;
+    } catch (e) {
+      return null;
     }
   }
 
@@ -124,22 +142,26 @@ class _DashedState extends State<Dashed> {
               ),
               borderRadius: BorderRadius.circular(20),
             ),
-            child: confirmed
-                ? SingleChildScrollView(
+            child: FutureBuilder<VitalsModel>(
+              future: vitalsmodel,
+              builder: (BuildContext context, AsyncSnapshot snapy) {
+                if (snapy.hasData) {
+                  return SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        vitalsL(pulser, 'Pulse', Colors.green.withOpacity(0.3)),
-                        vitalsL(
-                            breatherate, 'B-rate', Colors.red.withOpacity(0.4)),
+                        vitalsL(snapy.data.pulserate, 'Pulse',
+                            Colors.green.withOpacity(0.3)),
+                        vitalsL(snapy.data.breathingrate, 'B-rate',
+                            Colors.red.withOpacity(0.4)),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            vitlasS(weight, 'Weight',
+                            vitlasS(snapy.data.weight, 'Weight',
                                 Colors.blue.withOpacity(0.3), Colors.blueGrey),
                             vitlasS(
-                                bodytemp,
+                                snapy.data.bodytemperature,
                                 'Temp.',
                                 Colors.purple.withOpacity(0.1),
                                 Colors.pink[50]),
@@ -148,60 +170,82 @@ class _DashedState extends State<Dashed> {
                         Column(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            circularcard(height, 'height',
+                            circularcard(snapy.data.height, 'height',
                                 Colors.blue.withOpacity(0.1), Colors.grey[400]),
                             circularcard(
-                                height,
-                                'height',
+                                snapy.data.bloodpressure,
+                                'pressure',
                                 Colors.blue.withOpacity(0.1),
                                 Colors.orange[100]),
                           ],
                         )
                       ],
                     ),
-                  )
-                : Center(
+                  );
+                }
+                if (snapy.hasError) {}
+                if (snapy.connectionState == ConnectionState.none) {}
+                return Center(
+                  child: InkWell(
+                    onTap: () async {
+                      Navigator.pop(context);
+                    },
                     child: Text(
-                      'Vitals not set',
+                      'Add vitals',
                       style: GoogleFonts.lato(fontSize: 20),
                     ),
                   ),
+                );
+              },
+            ),
           ),
           const SizedBox(height: 20),
           Text(
-            'My Drugs:',
+            'My Pharmacies:',
             style: GoogleFonts.nunito(
                 fontSize: 17, fontWeight: FontWeight.bold, color: Colors.black),
           ),
           const SizedBox(height: 5),
           Container(
-            height: size.height / 4.6,
-            width: size.width / 2,
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [
-                  Color(0xFFD6A6B1),
-                  //  Color(0xFFA09676),
-                  Color(0xFFFCECEC),
-                ],
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
+              height: size.height / 4.6,
+              width: size.width / 2,
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [
+                    Color(0xFFD6A6B1),
+                    //  Color(0xFFA09676),
+                    Color(0xFFFCECEC),
+                  ],
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                ),
+                borderRadius: BorderRadius.circular(20),
               ),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Center(
-                child: InkWell(
-              onTap: () => Get.toNamed('/drugstore'),
-              child: Text(
-                'Add Drugs',
-                style: GoogleFonts.lato(fontSize: 20),
-              ),
-            )),
-          ),
+              child: FutureBuilder<Pharmacies>(
+                  future: pharmmodel,
+                  builder: (context, snappy) {
+                    if (snappy.hasData) {}
+                    if (snappy.hasError) {}
+                    if (snappy.connectionState == ConnectionState.none) {}
+
+                    return Center(
+                      child: InkWell(
+                        onTap: () async {
+                          Navigator.pop(context);
+
+                          Get.toNamed('/Pharmacy');
+                        },
+                        child: Text(
+                          'Add Pharmacy',
+                          style: GoogleFonts.lato(fontSize: 20),
+                        ),
+                      ),
+                    );
+                  })),
           const SizedBox(height: 20),
           Text(
-            'My Pharmacies:',
+            'My Drugstore:',
             style: GoogleFonts.nunito(
                 fontSize: 17, fontWeight: FontWeight.bold, color: Colors.black),
           ),
@@ -222,14 +266,25 @@ class _DashedState extends State<Dashed> {
               ),
               borderRadius: BorderRadius.circular(20),
             ),
-            child: Center(
-              child: InkWell(
-                onTap: () => Get.toNamed('/pharmacy'),
-                child: Text(
-                  'Add pharmacy',
-                  style: GoogleFonts.lato(fontSize: 20),
-                ),
-              ),
+            child: FutureBuilder<Drugs>(
+              future: drugsmodel,
+              builder: (BuildContext context, AsyncSnapshot snappy) {
+                if (snappy.hasData) {}
+                if (snappy.hasError) {}
+                if (snappy.connectionState == ConnectionState.none) {}
+                return Center(
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.pop(context);
+                      Get.toNamed('/drugstore');
+                    },
+                    child: Text(
+                      'Add Drugs',
+                      style: GoogleFonts.lato(fontSize: 20),
+                    ),
+                  ),
+                );
+              },
             ),
           ),
         ],

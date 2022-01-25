@@ -141,11 +141,9 @@ class _CompleteProfileStatex extends State<SetReminders> {
                         );
                       }
 
-                      await NotificationService().schedulecustomNotification(
-                          keys, xtitle, xdrug, xhour, xminute);
-
                       await NotificationService()
-                          .showNotification(keys, xtitle, xdrug, xhour, xminute)
+                          .schedulecustomNotification(
+                              keys, xtitle, xdrug, xhour, xminute)
                           .then((value) {
                         hour.text = '';
                         _drug.text = "";
@@ -153,6 +151,16 @@ class _CompleteProfileStatex extends State<SetReminders> {
                         minute.text = "";
                         validate = true;
                       });
+
+                      /*  await NotificationService()
+                          .showNotification(keys, xtitle, xdrug, xhour, xminute)
+                          .then((value) {
+                        hour.text = '';
+                        _drug.text = "";
+                        _title.text = "";
+                        minute.text = "";
+                        validate = true;
+                      });*/
 
                       keys += 1;
 
