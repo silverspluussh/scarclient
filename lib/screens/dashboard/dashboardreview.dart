@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:scarclient/screens/dashboard/profilepic.dart';
+import 'package:scarclient/screens/dashboard/welcomeprofile.dart';
 import 'package:scarclient/services/authen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -25,6 +26,10 @@ class _DashyState extends State<Dashy> {
       pharmacydata();
       drugsdata();
       getuser();
+      verifydrugspage();
+      verifypharmacypage();
+      verifyvitalspage();
+
       setState(() {});
     }
   }
@@ -35,12 +40,112 @@ class _DashyState extends State<Dashy> {
   var pharm_req, pharm_resp;
   var drugs_req, drugs_resp;
 
-  late Widget page;
-  late Widget vitalspage = const CircularProgressIndicator();
-  late Widget pharmpage = const CircularProgressIndicator();
-  late Widget drugspage = const CircularProgressIndicator();
+  Widget page = Center(
+      child: Container(
+    decoration: const BoxDecoration(
+      color: Colors.white,
+    ),
+    child: Image.asset('assets/healthh.png'),
+  ));
+
+  Widget vitalspage = const CircularProgressIndicator();
+  Widget pharmpage = const CircularProgressIndicator();
+  Widget drugspage = const CircularProgressIndicator();
 
   var user = '';
+
+  Widget pagedata(double height, width) {
+    if (vitals_req == true && pharm_req == true && drugs_req == true) {
+      setState(() {
+        page = Column(
+          children: [
+            Text(
+              'My Health Overview:',
+              style: GoogleFonts.nunito(
+                  fontSize: 17,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black),
+            ),
+            const SizedBox(height: 5),
+            Container(
+              height: height,
+              width: width,
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [
+                    Color(0xFFF1E7E7),
+                    //  Color(0xFF765FA1),
+                    Color(0xFF8BAFA6),
+                  ],
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                ),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: vitalspage,
+            ),
+            const SizedBox(height: 20),
+            Text(
+              'My Pharmacies:',
+              style: GoogleFonts.nunito(
+                  fontSize: 17,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black),
+            ),
+            const SizedBox(height: 5),
+            Container(
+              height: height,
+              width: width,
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [
+                    Color(0xFFD6A6B1),
+                    //  Color(0xFFA09676),
+                    Color(0xFFFCECEC),
+                  ],
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                ),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: pharmpage,
+            ),
+            const SizedBox(height: 20),
+            Text(
+              'My Drugstore:',
+              style: GoogleFonts.nunito(
+                  fontSize: 17,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black),
+            ),
+            const SizedBox(height: 5),
+            Container(
+                height: height,
+                width: width,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [
+                      Color(0xFFE0E7B6),
+                      //  Color(0xFFECC8D1),
+                      Color(0xFFD1D6D5),
+                    ],
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                  ),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: drugspage)
+          ],
+        );
+      });
+    }
+
+    return page;
+  }
 
   vitalsdata() async {
     vitals_resp = await networkhandler.get('/vitals/vitalsinfo');
@@ -69,6 +174,60 @@ class _DashyState extends State<Dashy> {
         user = 'user001';
       }
     });
+  }
+
+  verifydrugspage() async {
+    if (drugs_req == true && drugs_resp != null) {
+      setState(() {
+        drugspage = Card(
+          color: Colors.grey[200],
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+          elevation: 5,
+          child: ListTile(
+            hoverColor: Colors.grey[50],
+            leading: Text(
+              '${drugs_resp['drugname']}',
+              style: GoogleFonts.nunito(fontSize: 17, color: Colors.black),
+            ),
+            trailing: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  '${drugs_resp['quantity']}',
+                  style: GoogleFonts.nunito(fontSize: 17, color: Colors.black),
+                ),
+                const ImageIcon(
+                  AssetImage('assets/i-pharmacy-256.png'),
+                ),
+              ],
+            ),
+          ),
+        );
+      });
+    } else {
+      setState(() {
+        drugspage = Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Drugstore not available'.toUpperCase(),
+                style: GoogleFonts.lato(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                'Add Drugs'.toUpperCase(),
+                style:
+                    GoogleFonts.lato(fontSize: 18, fontWeight: FontWeight.bold),
+              )
+            ],
+          ),
+        );
+      });
+    }
   }
 
   verifypharmacypage() async {
@@ -170,6 +329,18 @@ class _DashyState extends State<Dashy> {
           child: ProfilePicture(width: size.width),
         ),
       ),
+      body: ListView(
+        scrollDirection: Axis.vertical,
+        padding: const EdgeInsets.symmetric(horizontal: 15),
+        children: [
+          WelcomeProfilePic(user: user),
+          const SizedBox(height: 10),
+          pagedata(
+            size.height / 3.4,
+            size.width / 2,
+          ),
+        ],
+      ),
     );
   }
 
@@ -181,8 +352,8 @@ class _DashyState extends State<Dashy> {
           shadowColor: scolor,
           shape: const CircleBorder(),
           child: SizedBox(
-            height: 65,
-            width: 70,
+            height: 80,
+            width: 90,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

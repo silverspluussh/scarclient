@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:scarclient/reminderMe/clockpage.dart';
 import 'package:scarclient/reminderMe/reminderpage.dart';
-import 'package:scarclient/screens/dashboard/dashed.dart';
+import 'package:scarclient/screens/dashboard/dashboardreview.dart';
 import 'package:scarclient/screens/settings/settings.dart';
 import 'package:scarclient/screens/vitals/vitals.dart';
 
@@ -32,7 +32,7 @@ class _HomeState extends State<Home> {
   int _currentIndex = 0;
 
   final navigationtabs = const [
-    Center(child: Dashed()),
+    Center(child: Dashy()),
     Center(child: ReminderPage()),
     Center(child: Clock()),
     Center(child: Vitals()),
