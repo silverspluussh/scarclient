@@ -1,15 +1,15 @@
 // ignore_for_file: non_constant_identifier_names
 
 class Drugs {
-  String name;
-  String drugname;
-  String drugType;
-  String vendorname;
-  String drugRef;
-  String codeNumber;
-  String currentDate;
-  String expiryDate;
-  String quantity;
+  String? name;
+  String? drugname;
+  String? drugType;
+  String? vendorname;
+  String? drugRef;
+  String? codeNumber;
+  String? currentDate;
+  String? expiryDate;
+  String? quantity;
 
   Drugs(
       {required this.drugname,

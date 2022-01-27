@@ -1,17 +1,17 @@
 // ignore_for_file: non_constant_identifier_names
 
 class Pharmacies {
-  String name;
-  String Pharmacy_Name;
-  String Pharm_Telephone;
-  String Pharm_Email;
-  String Pharm_Location;
-  String PharmGpsAddress;
-  String OwnerName;
-  String OwnerTelephone;
-  String OwnerEmail;
-  String StringDate;
-  String CodeNumber;
+  String? name;
+  String? Pharmacy_Name;
+  String? Pharm_Telephone;
+  String? Pharm_Email;
+  String? Pharm_Location;
+  String? PharmGpsAddress;
+  String? OwnerName;
+  String? OwnerTelephone;
+  String? OwnerEmail;
+  String? StringDate;
+  String? CodeNumber;
   Pharmacies(
       {required this.PharmGpsAddress,
       required this.CodeNumber,

@@ -1,0 +1,75 @@
+Center(
+              child: InkWell(
+                onTap: () async {
+                  Navigator.pop(context);
+
+                  Get.toNamed('/drugstore');
+                },
+                child: Text(
+                  'Add Drugs',
+                  style: GoogleFonts.lato(fontSize: 20),
+                ),
+              ),
+            ),
+
+
+
+            confirmed
+                ? SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        vitalsL(pulser, 'Pulse', Colors.green.withOpacity(0.3)),
+                        vitalsL(
+                            breatherate, 'B-rate', Colors.red.withOpacity(0.4)),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            vitlasS(weight, 'Weight',
+                                Colors.blue.withOpacity(0.3), Colors.blueGrey),
+                            vitlasS(
+                                bodytemp,
+                                'Temp.',
+                                Colors.purple.withOpacity(0.1),
+                                Colors.pink[50]),
+                          ],
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            circularcard(height, 'height',
+                                Colors.blue.withOpacity(0.1), Colors.grey[400]),
+                            circularcard(
+                                height,
+                                'height',
+                                Colors.blue.withOpacity(0.1),
+                                Colors.orange[100]),
+                          ],
+                        )
+                      ],
+                    ),
+                  )
+                : Center(
+                    child: Text(
+                      'Vitals not set\n goto vitals page to\n set new vitals.',
+                      style: GoogleFonts.lato(fontSize: 20),
+                    ),
+                  ),
+
+
+
+
+
+                  Center(
+              child: InkWell(
+                onTap: () {
+                  Navigator.pop(context);
+                  Get.toNamed('/drugstore');
+                },
+                child: Text(
+                  'Add Drugs',
+                  style: GoogleFonts.lato(fontSize: 20),
+                ),
+              ),
+            ),

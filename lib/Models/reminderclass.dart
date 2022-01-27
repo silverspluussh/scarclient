@@ -1,9 +1,9 @@
 class Remindme {
-  String name;
-  String title;
-  String drug;
-  int hour;
-  int minute;
+  String? name;
+  String? title;
+  String? drug;
+  int? hour;
+  int? minute;
   Remindme(
       {required this.drug,
       required this.title,
@@ -13,11 +13,11 @@ class Remindme {
 
   factory Remindme.fromJson(Map<String, dynamic> json) {
     return Remindme(
-      name: json['name']!,
-      drug: json['drug']!,
-      title: json['title']!,
-      hour: json['hour']!,
-      minute: json['minute']!,
+      name: json['name'],
+      drug: json['drug'],
+      title: json['title'],
+      hour: json['hour'],
+      minute: json['minute'],
     );
   }
 }

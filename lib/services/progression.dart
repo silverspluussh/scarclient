@@ -1,6 +1,4 @@
-import 'dart:async';
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 
 class ProgressBar extends StatefulWidget {
@@ -14,9 +12,11 @@ class _ProgressBarState extends State<ProgressBar> {
   @override
   void initState() {
     super.initState();
-    Timer.periodic(const Duration(seconds: 10), (timer) {
+    if (mounted) {
       setState(() {});
-    });
+    } else {
+      dispose();
+    }
   }
 
   @override
@@ -24,11 +24,11 @@ class _ProgressBarState extends State<ProgressBar> {
     Size size = MediaQuery.of(context).size;
     return TweenAnimationBuilder(
         tween: Tween(begin: 0.0, end: 1.0),
-        duration: const Duration(seconds: 3),
+        duration: const Duration(seconds: 1),
         builder: (context, value, child) {
           return Container(
-            width: size.width,
-            height: size.height,
+            width: size.width - 20,
+            height: size.height - 20,
             decoration: const BoxDecoration(),
             child: Stack(
               children: [
@@ -43,8 +43,8 @@ class _ProgressBarState extends State<ProgressBar> {
                         .createShader(rect);
                   },
                   child: Container(
-                    width: size.width,
-                    height: size.height,
+                    width: size.width - 20,
+                    height: size.height - 20,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       image: DecorationImage(
@@ -55,8 +55,8 @@ class _ProgressBarState extends State<ProgressBar> {
                 ),
                 Center(
                   child: Container(
-                    width: size.width - 30,
-                    height: size.height - 30,
+                    width: size.width - 40,
+                    height: size.height - 40,
                     decoration: const BoxDecoration(
                       color: Colors.white,
                       shape: BoxShape.circle,

@@ -119,11 +119,16 @@ class _ChartsInfoState extends State<ChartsInfo> {
   }
 
   getdata() async {
-    var pulse, bodytemp, pressure, breathrate;
+    String? pulse;
+    String? bodytemp;
+    String? pressure;
+
+    String? breathrate;
     var resp = await networkhandle.get('/vitals/vitalsinfo');
+    var req = await networkhandle.get('/vitals/checkvitals');
     //print(resp['pulserate']);
 
-    if (resp != null) {
+    if (resp != null && req['status'] == true) {
       setState(() {
         pulse = resp['pulserate'];
         bodytemp = resp['bodytemperature'];
@@ -133,52 +138,57 @@ class _ChartsInfoState extends State<ChartsInfo> {
 
       List<Vitalsinfo> getdatachart() {
         final List<Vitalsinfo> datachart = [
-          Vitalsinfo('Pulse rate', double.parse(pulse)),
-          Vitalsinfo('Temperature', double.parse(bodytemp)),
-          Vitalsinfo('Blood Pressure', double.parse(pressure)),
-          Vitalsinfo('Breathing Rate', double.parse(breathrate)),
+          Vitalsinfo('Pulse rate', double.parse(pulse!)),
+          Vitalsinfo('Temperature', double.parse(bodytemp!)),
+          Vitalsinfo('Blood Pressure', double.parse(pressure!)),
+          Vitalsinfo('Breathing Rate', double.parse(breathrate!)),
         ];
 
         return datachart;
       }
 
-      page = SfCircularChart(
-        title: ChartTitle(
-          text: "VITALS",
-          textStyle: GoogleFonts.nunito(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: Colors.brown,
+      setState(() {
+        page = SfCircularChart(
+          title: ChartTitle(
+            text: "VITALS",
+            textStyle: GoogleFonts.nunito(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Colors.brown,
+            ),
           ),
-        ),
-        tooltipBehavior: tooltipbehave,
-        series: <CircularSeries>[
-          RadialBarSeries<Vitalsinfo, String>(
-            dataSource: getdatachart(),
-            xValueMapper: (Vitalsinfo data, _) => data.vital,
-            yValueMapper: (Vitalsinfo data, _) => data.reads,
-            enableTooltip: true,
-            maximumValue: 150,
-          ),
-        ],
-        legend: Legend(
-          textStyle: const TextStyle(fontSize: 17, fontWeight: FontWeight.w300),
-          iconHeight: 20,
-          iconWidth: 20,
-          isVisible: true,
-          overflowMode: LegendItemOverflowMode.wrap,
-        ),
-      );
-    } else {
-      page = Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: const [
-            Text('Vitals not available'),
-            Text('Swipe left to add vitals')
+          tooltipBehavior: tooltipbehave,
+          series: <CircularSeries>[
+            RadialBarSeries<Vitalsinfo, String>(
+              dataSource: getdatachart(),
+              xValueMapper: (Vitalsinfo data, _) => data.vital,
+              yValueMapper: (Vitalsinfo data, _) => data.reads,
+              enableTooltip: true,
+              maximumValue: 150,
+            ),
           ],
-        ),
-      );
+          legend: Legend(
+            textStyle:
+                const TextStyle(fontSize: 17, fontWeight: FontWeight.w300),
+            iconHeight: 20,
+            iconWidth: 20,
+            isVisible: true,
+            overflowMode: LegendItemOverflowMode.wrap,
+          ),
+        );
+      });
+    } else {
+      setState(() {
+        page = Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: const [
+              Text('Vitals not available'),
+              Text('Swipe left to add vitals')
+            ],
+          ),
+        );
+      });
     }
   }
 

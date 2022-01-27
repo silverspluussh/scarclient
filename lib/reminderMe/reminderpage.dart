@@ -153,7 +153,7 @@ class _RemindersState extends State<ReminderPage> {
                     Row(
                       children: [
                         Text(
-                          snapshot.data!.title.toUpperCase(),
+                          '${snapshot.data!.title}',
                           style: GoogleFonts.lato(
                             fontSize: 19,
                             fontWeight: FontWeight.bold,
@@ -183,7 +183,7 @@ class _RemindersState extends State<ReminderPage> {
                     Row(
                       children: [
                         Text(
-                          snapshot.data!.drug.toUpperCase(),
+                          '${snapshot.data!.drug}',
                           style: GoogleFonts.nunito(
                             color: Colors.white,
                             fontSize: 18,

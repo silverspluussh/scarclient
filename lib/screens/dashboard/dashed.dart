@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:scarclient/Models/drugsmodel.dart';
 import 'package:scarclient/Models/pharmmodel.dart';
@@ -8,7 +7,6 @@ import 'package:scarclient/Models/vitalsmodel.dart';
 import 'package:scarclient/screens/dashboard/profilepic.dart';
 import 'package:scarclient/screens/dashboard/welcomeprofile.dart';
 import 'package:scarclient/services/authen.dart';
-import 'package:scarclient/services/progression.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:get/get.dart';
 
@@ -23,17 +21,17 @@ class _DashedState extends State<Dashed> {
   String user = '';
   bool confirmed = false;
   NetworkHanler networkhand = NetworkHanler();
-  Future<Pharmacies>? pharmmodel;
-  Future<VitalsModel>? vitalsmodel;
-  Future<Drugs>? drugsmodel;
+  late Future<Pharmacies> pharmmodel;
+  late Future<VitalsModel> vitalsmodel;
+  late Future<Drugs> drugsmodel;
 
   @override
   void initState() {
     if (mounted) {
       getuser();
-      vitalsmodel = getvitalsdata() as Future<VitalsModel>?;
-      pharmmodel = getpharmdata() as Future<Pharmacies>?;
-      drugsmodel = getdrugs() as Future<Drugs>?;
+      vitalsmodel = getvitalsdata();
+      pharmmodel = getpharmdata();
+      drugsmodel = getdrugs();
       setState(() {});
     } else {
       dispose();
@@ -42,32 +40,35 @@ class _DashedState extends State<Dashed> {
     super.initState();
   }
 
-  Future<VitalsModel?> getvitalsdata() async {
-    try {
-      var vitals = await networkhand.get('/vitals/vitalsinfo');
-      return vitals;
-    } catch (err) {
-      Fluttertoast.showToast(msg: err.toString());
-      return null;
+  Future<VitalsModel> getvitalsdata() async {
+    var vitals = await networkhand.get('/vitals/vitalsinfo');
+    var req = await networkhand.get('/vitals/checkvitals');
+
+    if (vitals != null) {
+      return VitalsModel.fromJson(vitals);
+    } else {
+      return req['status'];
     }
   }
 
-  Future<Pharmacies?> getpharmdata() async {
-    try {
-      var response = await networkhand.get('/pharmacy/pharmacydetails');
-      return response;
-    } catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
-      return null;
+  Future<Pharmacies> getpharmdata() async {
+    var response = await networkhand.get('/pharmacy/pharmdetails');
+    var request = await networkhand.get('/pharmacy/checkpharmacy');
+
+    if (response != null) {
+      return Pharmacies.fromJson(response);
+    } else {
+      return request['status'];
     }
   }
 
-  Future<Drugs?> getdrugs() async {
-    try {
-      var response = await networkhand.get('/drugs/drugdetails');
-      return response;
-    } catch (e) {
-      return null;
+  Future<Drugs> getdrugs() async {
+    var response = await networkhand.get('/drugs/drugsdetails');
+    var request = await networkhand.get('/drugs/checkdrugs');
+    if (response != null) {
+      return Drugs.fromJson(response);
+    } else {
+      return request['status'];
     }
   }
 
@@ -186,29 +187,27 @@ class _DashedState extends State<Dashed> {
                 }
                 if (snapy.hasError) {
                   return Center(
-                    child: InkWell(
-                      onTap: () async {
-                        Navigator.pop(context);
-                      },
-                      child: Text(
-                        'Vitals cannot be found',
-                        style: GoogleFonts.lato(fontSize: 20),
-                      ),
+                    child: Text(
+                      'Vitals cannot be found',
+                      style: GoogleFonts.lato(fontSize: 20),
+                    ),
+                  );
+                }
+                if (!snapy.hasData) {
+                  return Center(
+                    child: Text(
+                      'No records found',
+                      style: GoogleFonts.lato(fontSize: 20),
                     ),
                   );
                 }
                 if (snapy.connectionState == ConnectionState.waiting) {
-                  return const Center(child: ProgressBar());
+                  return const Center(child: CircularProgressIndicator());
                 }
                 return Center(
-                  child: InkWell(
-                    onTap: () async {
-                      Navigator.pop(context);
-                    },
-                    child: Text(
-                      'Add vitals',
-                      style: GoogleFonts.lato(fontSize: 20),
-                    ),
+                  child: Text(
+                    'Add vitals',
+                    style: GoogleFonts.lato(fontSize: 20),
                   ),
                 );
               },
@@ -241,21 +240,39 @@ class _DashedState extends State<Dashed> {
               future: pharmmodel,
               builder: (context, snappy) {
                 if (snappy.hasData) {
-                  return pharmacy(
-                      snappy.data!.Pharmacy_Name, snappy.data!.Pharm_Location);
+                  return pharmacy('${snappy.data!.Pharmacy_Name}',
+                      '${snappy.data!.Pharm_Location}');
                 }
-                if (snappy.hasError) {}
+                if (snappy.hasError) {
+                  return Center(
+                    child: InkWell(
+                      onTap: () async {
+                        Get.toNamed('/Pharmacy');
+                      },
+                      child: Text(
+                        'Add Pharmacy',
+                        style: GoogleFonts.lato(fontSize: 20),
+                      ),
+                    ),
+                  );
+                }
+                if (!snappy.hasData) {
+                  return Center(
+                    child: Text(
+                      'no records found',
+                      style: GoogleFonts.lato(fontSize: 20),
+                    ),
+                  );
+                }
                 if (snappy.connectionState == ConnectionState.waiting) {
                   return const Center(
-                    child: ProgressBar(),
+                    child: CircularProgressIndicator(),
                   );
                 }
 
                 return Center(
                   child: InkWell(
                     onTap: () async {
-                      Navigator.pop(context);
-
                       Get.toNamed('/Pharmacy');
                     },
                     child: Text(
@@ -302,7 +319,7 @@ class _DashedState extends State<Dashed> {
                     child: ListTile(
                       hoverColor: Colors.grey[50],
                       leading: Text(
-                        snappy.data!.drugname,
+                        '${snappy.data!.drugname}',
                         style: GoogleFonts.nunito(
                             fontSize: 17, color: Colors.black),
                       ),
@@ -310,7 +327,7 @@ class _DashedState extends State<Dashed> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            snappy.data!.quantity,
+                            '${snappy.data!.quantity}',
                             style: GoogleFonts.nunito(
                                 fontSize: 17, color: Colors.black),
                           ),
@@ -319,6 +336,14 @@ class _DashedState extends State<Dashed> {
                           ),
                         ],
                       ),
+                    ),
+                  );
+                }
+                if (!snappy.hasData) {
+                  return Center(
+                    child: Text(
+                      'No records can be found',
+                      style: GoogleFonts.lato(fontSize: 20),
                     ),
                   );
                 }
@@ -332,13 +357,12 @@ class _DashedState extends State<Dashed> {
                 }
                 if (snappy.connectionState == ConnectionState.waiting) {
                   return const Center(
-                    child: ProgressBar(),
+                    child: CircularProgressIndicator(),
                   );
                 }
                 return Center(
                   child: InkWell(
                     onTap: () {
-                      Navigator.pop(context);
                       Get.toNamed('/drugstore');
                     },
                     child: Text(
@@ -355,21 +379,29 @@ class _DashedState extends State<Dashed> {
     );
   }
 
-  Card pharmacy(var pharmacy, location) {
-    return Card(
-      color: Colors.grey[200],
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-      elevation: 5,
-      child: ListTile(
+  Widget pharmacy(String? pharmacy, String? location) {
+    if (pharmacy != null || location != null) {
+      return ListTile(
           hoverColor: Colors.grey[50],
           leading: Text(
-            pharmacy,
+            pharmacy!,
             style: GoogleFonts.nunito(fontSize: 17, color: Colors.black),
           ),
           trailing: Text(
-            location,
+            location!,
             style: GoogleFonts.nunito(fontSize: 17, color: Colors.black),
-          )),
+          ));
+    }
+    return Center(
+      child: InkWell(
+        onTap: () async {
+          Get.toNamed('/Pharmacy');
+        },
+        child: Text(
+          'Add Pharmacy',
+          style: GoogleFonts.lato(fontSize: 20),
+        ),
+      ),
     );
   }
 
