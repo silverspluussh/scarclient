@@ -32,8 +32,9 @@ dependencies:
   intl: ^0.17.0
   json_annotation: ^4.3.0
   pull_to_refresh: ^2.0.0
-  syncfusion_flutter_charts: ^19.3.53
+  retry: ^3.1.0
   shared_preferences: ^2.0.12
+  syncfusion_flutter_charts: ^19.3.53
   timezone: ^0.8.0
 
 dev_dependencies:

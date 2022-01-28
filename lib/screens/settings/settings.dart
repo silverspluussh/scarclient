@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:get/get.dart';
+import 'package:scarclient/screens/startscreen/sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Settings extends StatefulWidget {
@@ -19,15 +20,17 @@ class _SettingsState extends State<Settings> {
 
     await sharedPereferences.clear();
 
-    Get.toNamed('/');
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => const SignIn()),
+        (route) => false);
   }
 
   exitapp() async {
     final SharedPreferences sharedPereferences =
         await SharedPreferences.getInstance();
 
-    await sharedPereferences.clear();
-    SystemNavigator.pop();
+    await sharedPereferences.clear().then((value) => SystemNavigator.pop());
   }
 
   @override

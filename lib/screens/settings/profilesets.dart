@@ -114,7 +114,7 @@ class _CompleteProfileState extends State<CompleteProfile> {
 
   verifyProfile() async {
     var response = await handler.get('/profile/checkprofile');
-    if (response['status'] == true) {
+    if (response['status'] == false) {
       setState(() {
         validate = true;
         page = Container(
@@ -332,12 +332,12 @@ class _CompleteProfileState extends State<CompleteProfile> {
           child: Column(
             children: [
               SizedBox(height: MediaQuery.of(context).size.height / 2.5),
-              const Text('Profile not set'),
+              const Text('Profile is already set'),
               TextButton.icon(
-                onPressed: () => Get.toNamed('/completeprofile'),
+                onPressed: () => Get.toNamed('/profile'),
                 icon: const ImageIcon(AssetImage('assets/profile-19-512.png')),
                 label: const Text(
-                  'Set Profile',
+                  'Goto Profile',
                   style: TextStyle(
                     fontSize: 19,
                     fontWeight: FontWeight.bold,

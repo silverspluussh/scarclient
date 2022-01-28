@@ -40,13 +40,70 @@ class _DashyState extends State<Dashy> {
   var pharm_req, pharm_resp;
   var drugs_req, drugs_resp;
 
-  Widget page = Center(
-      child: Container(
-    decoration: const BoxDecoration(
-      color: Colors.white,
-    ),
-    child: Image.asset('assets/healthh.png'),
-  ));
+  Widget page = Stack(
+    children: [
+      Container(
+        decoration: const BoxDecoration(
+          color: Colors.white,
+        ),
+        child: Image.asset('assets/healthh.png'),
+      ),
+      Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 80),
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(bottom: 15.0),
+                child: Card(
+                  elevation: 6,
+                  color: Colors.green.withOpacity(0.3),
+                  child: Text(
+                    'Swipe to vitals page to add',
+                    style: GoogleFonts.lato(
+                        fontSize: 22, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 15.0),
+                child: InkWell(
+                  onTap: () {
+                    Get.toNamed('/pharmacy');
+                  },
+                  child: Card(
+                    elevation: 6,
+                    color: Colors.blue.withOpacity(0.3),
+                    child: Text(
+                      'Add a pharmacy',
+                      style: GoogleFonts.lato(
+                          fontSize: 22, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+              ),
+              InkWell(
+                onTap: () {
+                  Get.toNamed('/drugstore');
+                },
+                child: Card(
+                  elevation: 6,
+                  color: Colors.orange.withOpacity(0.3),
+                  child: Text(
+                    'Add your drugs',
+                    style: GoogleFonts.lato(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      )
+    ],
+  );
 
   Widget vitalspage = const CircularProgressIndicator();
   Widget pharmpage = const CircularProgressIndicator();
@@ -143,26 +200,25 @@ class _DashyState extends State<Dashy> {
         );
       });
     }
-
     return page;
   }
 
-  vitalsdata() async {
+  Future vitalsdata() async {
     vitals_resp = await networkhandler.get('/vitals/vitalsinfo');
     vitals_req = await networkhandler.get('/vitals/checkvitals');
   }
 
-  pharmacydata() async {
+  Future pharmacydata() async {
     pharm_resp = await networkhandler.get('/pharmacy/pharmdetails');
     pharm_req = await networkhandler.get('/pharmacy/checkpharmacy');
   }
 
-  drugsdata() async {
+  Future drugsdata() async {
     drugs_resp = await networkhandler.get('/drugs/drugsdetails');
     drugs_req = await networkhandler.get('/drugs/checkdrugs');
   }
 
-  getuser() async {
+  Future getuser() async {
     final SharedPreferences sharedPereferences =
         await SharedPreferences.getInstance();
 
@@ -176,7 +232,7 @@ class _DashyState extends State<Dashy> {
     });
   }
 
-  verifydrugspage() async {
+  Future verifydrugspage() async {
     if (drugs_req == true && drugs_resp != null) {
       setState(() {
         drugspage = Card(
@@ -230,7 +286,7 @@ class _DashyState extends State<Dashy> {
     }
   }
 
-  verifypharmacypage() async {
+  Future verifypharmacypage() async {
     if (pharm_resp != null && pharm_req == true) {
       setState(() {
         pharmpage =
@@ -259,7 +315,7 @@ class _DashyState extends State<Dashy> {
     }
   }
 
-  verifyvitalspage() async {
+  Future verifyvitalspage() async {
     if (vitals_req == true && vitals_resp != null) {
       return SingleChildScrollView(
         scrollDirection: Axis.horizontal,

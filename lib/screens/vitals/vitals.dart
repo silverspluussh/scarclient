@@ -109,13 +109,7 @@ class _ChartsInfoState extends State<ChartsInfo> {
       dispose();
       return;
     }
-
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 
   getdata() async {
@@ -181,10 +175,19 @@ class _ChartsInfoState extends State<ChartsInfo> {
       setState(() {
         page = Center(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: const [
-              Text('Vitals not available'),
-              Text('Swipe left to add vitals')
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Vitals not available',
+                style: GoogleFonts.lato(fontSize: 20),
+              ),
+              Text(
+                'Swipe left to add vitals',
+                style: GoogleFonts.lato(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              )
             ],
           ),
         );

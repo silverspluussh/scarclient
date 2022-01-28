@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_typing_uninitialized_variables, non_constant_identifier_names
+
 import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -18,34 +20,127 @@ class ReminderPage extends StatefulWidget {
 
 class _RemindersState extends State<ReminderPage> {
   NetworkHanler networkhandler = NetworkHanler();
-  late Future<Remindme> fetchreminders;
   DateTime select = DateTime.now();
-  Widget status = const CircularProgressIndicator();
+  Widget status = Center(
+      child: Container(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 10,
+            vertical: 10,
+          ),
+          height: 50,
+          width: 70,
+          decoration: const BoxDecoration(),
+          child: const CircularProgressIndicator()));
 
-  checkreminders() async {
-    var response = await networkhandler.get('/reminders/checkreminders');
-    if (response['status'] == false) {
+  var reminder_req;
+  var reminder_resp;
+
+  Future getreminders() async {
+    reminder_req = await networkhandler.get('/reminders/checkreminders');
+    reminder_resp = await networkhandler.get('/reminders/remindersinfo');
+  }
+
+  Future verifyreminders() async {
+    if (reminder_req == true && reminder_resp != null) {
       setState(() {
-        status = const Text(
-          'No reminders found',
-          style: TextStyle(
-            color: Colors.red,
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
+        status = Padding(
+          padding: const EdgeInsets.all(10),
+          child: Container(
+            margin: const EdgeInsets.only(bottom: 10),
+            padding: const EdgeInsets.all(10),
+            height: 155,
+            decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [
+                    Color(0xFF7BA051),
+                    Color(0xFF635497),
+                  ],
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                ),
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.green.withOpacity(0.3),
+                    blurRadius: 9,
+                    spreadRadius: 3,
+                  )
+                ]),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        '${reminder_resp['title']}',
+                        style: GoogleFonts.lato(
+                          fontSize: 19,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const Spacer(),
+                      Switch(
+                        value: false,
+                        onChanged: (bool value) {
+                          value = true;
+                        },
+                        activeColor: Colors.blue,
+                        inactiveThumbColor: Colors.white,
+                      )
+                    ],
+                  ),
+                  Wrap(children: [
+                    Text(
+                      "Set for ${reminder_resp['hour']} hours, ${reminder_resp['minute']} minutes",
+                      style: GoogleFonts.lato(
+                        fontSize: 17,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ]),
+                  const SizedBox(height: 2),
+                  Row(
+                    children: [
+                      Text(
+                        '${reminder_resp['drug']}',
+                        style: GoogleFonts.nunito(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const Spacer(),
+                      IconButton(
+                        color: Colors.red,
+                        onPressed: () {},
+                        icon: const ImageIcon(
+                          AssetImage('assets/delete-94-512.png'),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
           ),
         );
       });
-    }
-  }
-
-  Future<Remindme> fetchAlbum() async {
-    var response = await networkhandler.get('/reminders/remindersinfo');
-    if (response != null) {
-      return Remindme.fromJson(response);
     } else {
-      throw Exception(
-        'no reminders found',
-      );
+      setState(() {
+        status = Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          decoration: const BoxDecoration(),
+          child: Text(
+            "       No reminders set at the moment",
+            style: GoogleFonts.lato(
+              fontSize: 17,
+              color: Colors.redAccent,
+            ),
+          ),
+        );
+      });
     }
   }
 
@@ -53,10 +148,11 @@ class _RemindersState extends State<ReminderPage> {
   void initState() {
     if (mounted) {
       setState(() {});
+      getreminders();
+      verifyreminders();
       DateTime.now();
-      fetchreminders = fetchAlbum();
     } else {
-      return;
+      dispose();
     }
     super.initState();
   }
@@ -74,7 +170,7 @@ class _RemindersState extends State<ReminderPage> {
             SizedBox(height: MediaQuery.of(context).size.height / 20),
             _addreminderbar(),
             _datepickerbar(),
-            _futurereminderlist(),
+            status,
             _addreminders()
           ],
         ),
@@ -114,109 +210,6 @@ class _RemindersState extends State<ReminderPage> {
           select = datechanges;
         },
       ),
-    );
-  }
-
-  FutureBuilder<Remindme> _futurereminderlist() {
-    return FutureBuilder<Remindme>(
-      future: fetchreminders,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return Padding(
-            padding: const EdgeInsets.all(10),
-            child: Container(
-              margin: const EdgeInsets.only(bottom: 10),
-              padding: const EdgeInsets.all(10),
-              height: 155,
-              decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [
-                      Color(0xFF7BA051),
-                      Color(0xFF635497),
-                    ],
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                  ),
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.green.withOpacity(0.3),
-                      blurRadius: 9,
-                      spreadRadius: 3,
-                    )
-                  ]),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Text(
-                          '${snapshot.data!.title}',
-                          style: GoogleFonts.lato(
-                            fontSize: 19,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const Spacer(),
-                        Switch(
-                          value: false,
-                          onChanged: (bool value) {
-                            value = true;
-                          },
-                          activeColor: Colors.blue,
-                          inactiveThumbColor: Colors.white,
-                        )
-                      ],
-                    ),
-                    Wrap(children: [
-                      Text(
-                        "Set for ${snapshot.data!.hour} hours, ${snapshot.data!.minute} minutes",
-                        style: GoogleFonts.lato(
-                          fontSize: 17,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ]),
-                    const SizedBox(height: 2),
-                    Row(
-                      children: [
-                        Text(
-                          '${snapshot.data!.drug}',
-                          style: GoogleFonts.nunito(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const Spacer(),
-                        IconButton(
-                          color: Colors.red,
-                          onPressed: () {},
-                          icon: const ImageIcon(
-                            AssetImage('assets/delete-94-512.png'),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          );
-        } else if (snapshot.hasError) {
-          return Text('${snapshot.error}');
-        } else if (!snapshot.hasData) {
-          return Center(
-            child: Padding(padding: const EdgeInsets.all(10.0), child: status),
-          );
-        }
-        return const Padding(
-          padding: EdgeInsets.symmetric(vertical: 30),
-          child: Center(child: CircularProgressIndicator()),
-        );
-      },
     );
   }
 

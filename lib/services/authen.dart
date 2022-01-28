@@ -1,7 +1,10 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:retry/retry.dart';
 
 class NetworkHanler {
   String burl = "https://silverhead-go.herokuapp.com";
@@ -13,9 +16,12 @@ class NetworkHanler {
     url = Uri.parse(url);
     var token = await storage.read(key: "token");
 
-    var response = await http.get(
-      url,
-      headers: {"Authorization": "Bearer $token"},
+    var response = await retry(
+      () => http.get(
+        url,
+        headers: {"Authorization": "Bearer $token"},
+      ).timeout(const Duration(seconds: 5)),
+      retryIf: (e) => e is SocketException || e is TimeoutException,
     );
     if (response.statusCode == 200 || response.statusCode == 201) {
       return json.decode(response.body);
@@ -27,13 +33,18 @@ class NetworkHanler {
     var token = await storage.read(key: "token");
     url = formatter(url);
     url = Uri.parse(url);
-    var response = await http.post(
-      url,
-      headers: {
-        'Content-type': "application/json",
-        "Authorization": "Bearer $token"
-      },
-      body: json.encode(body),
+    var response = await retry(
+      () => http
+          .post(
+            url,
+            headers: {
+              'Content-type': "application/json",
+              "Authorization": "Bearer $token"
+            },
+            body: json.encode(body),
+          )
+          .timeout(const Duration(seconds: 5)),
+      retryIf: (e) => e is SocketException || e is TimeoutException,
     );
     return response;
   }
